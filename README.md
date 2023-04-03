@@ -13,6 +13,8 @@ npm i
 npm run dev
 # 打包
 npm run build
+# 代码提交
+git cz
 ```
 
 ## 项目结构
