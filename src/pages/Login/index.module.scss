@@ -1,0 +1,85 @@
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 64px);
+  background-color: $bg-primary-color;
+
+  .login-box {
+    display: flex;
+    width: 920px;
+    height: 480px;
+  }
+
+  .login-box-bg {
+    width: 504px;
+    height: 480px;
+    background: url('@/assets/login-box-bg.png') center no-repeat;
+  }
+
+  .right-side {
+    flex: 1;
+    padding: 50px 58px 0;
+    background-color: #fff;
+    border: 1px solid #e8e9ea;
+    border-left: 0;
+    border-radius: 2px;
+  }
+
+  .method-list {
+    display: flex;
+    margin-bottom: 40px;
+
+    .method {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-evenly;
+      box-sizing: border-box;
+      width: 110px;
+      height: 70px;
+      margin-right: 16px;
+      border: 1px solid #e8e9ea;
+      border-radius: 2px;
+      cursor: pointer;
+
+      .name {
+        color: #575d69;
+        font-size: 14px;
+      }
+
+      .icon {
+        position: absolute;
+        top: -1px;
+        right: 0;
+        width: 20px;
+        height: 21px;
+        background: url('@/assets/login-selected.png') center no-repeat;
+      }
+
+      &.selected {
+        background-color: #f2f5fb;
+        border-color: $primary-color;
+
+        .name {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+
+  .tool {
+    display: flex;
+    justify-content: space-between;
+
+    p {
+      color: #1e55d2;
+      cursor: pointer;
+    }
+
+    .fpw {
+      margin-left: 4px;
+    }
+  }
+}

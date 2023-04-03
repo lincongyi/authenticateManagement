@@ -1,0 +1,39 @@
+$primary-color: #1e55d1;
+$bg-primary-color: #f3f5f8;
+
+$light-font-primary-color: #1e2636;
+$dark-font-primary-color: #dbdbdb;
+
+$themes: (
+  light:(
+    'font-primary-color':$light-font-primary-color,
+  ),
+  dark:(
+    'font-primary-color':$dark-font-primary-color,
+  )
+);
+
+// 遍历主题
+@mixin themeify {
+  @each $theme-name, $theme-map in $themes {
+    //!global 把局部变量强升为全局变量
+    $theme-map: $theme-map !global;
+    //判断html的data-theme的属性值 #{}是sass的插值表达式
+    //& sass嵌套里的父容器标识  @content是混合器插槽，像vue的slot
+    [data-theme="#{$theme-name}"] & {
+      @content;
+    }
+  }
+}
+
+// 声明一个根据Key获取颜色的function
+@function themed($key) {
+  @return map-get($theme-map, $key);
+}
+
+// 字体颜色
+@mixin font-primary-color {
+  @include themeify {
+    color: themed('font-primary-color');
+  }
+}

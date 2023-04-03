@@ -1,0 +1,15 @@
+.tips {
+  margin-bottom: 14px;
+  color: #575d69;
+  font-size: 14px;
+  line-height: 1.5;
+
+  .emphasize {
+    font-weight: bold;
+  }
+}
+
+[data-theme='light'] .emphasize,
+[data-theme='dark'] .emphasize {
+  @include font-primary-color;
+}

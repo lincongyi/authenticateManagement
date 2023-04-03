@@ -1,0 +1,27 @@
+.content {
+  width: 1000px;
+  min-height: calc(100vh - 64px);
+  margin: 0 auto;
+}
+
+.back-column {
+  display: flex;
+  align-items: center;
+  line-height: 78px;
+
+  .back-btn {
+    font-size: 14px;
+    cursor: pointer;
+  }
+}
+
+.result-box {
+  padding: 0 220px;
+  background-color: #fff;
+}
+
+.register-box {
+  padding: 40px;
+  padding-top: 0;
+  background-color: #fff;
+}

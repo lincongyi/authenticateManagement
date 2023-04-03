@@ -1,0 +1,29 @@
+.content {
+  width: 1000px;
+  min-height: calc(100vh - 64px);
+  margin: 0 auto;
+}
+
+.title-wrap {
+  position: relative;
+  padding: 24px 0;
+  color: $light-font-primary-color;
+  text-align: center;
+
+  .back-btn {
+    position: absolute;
+    left: 0;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+}
+
+.register-box {
+  margin: 0 auto;
+  padding: 30px 150px;
+  background-color: #fff;
+}
