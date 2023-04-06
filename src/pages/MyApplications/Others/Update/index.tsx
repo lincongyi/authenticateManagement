@@ -18,7 +18,7 @@ import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
-import UpdateCheckModal from './components/UpdateCheckModal'
+import UpdateCheckModal from '../components/UpdateCheckModal'
 
 const Update = () => {
   const [form] = Form.useForm()

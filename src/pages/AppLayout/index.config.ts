@@ -3,6 +3,7 @@ import {
   HomeOutlined,
   ProfileOutlined,
   AppstoreOutlined,
+  SolutionOutlined,
   FileExclamationOutlined,
   FileUnknownOutlined,
 } from '@ant-design/icons'
@@ -28,6 +29,11 @@ export const getMenu = (): TMenuItem[] => {
       label: '我的应用',
       key: 'myApps',
       icon: React.createElement(AppstoreOutlined),
+    },
+    {
+      label: '我的申请',
+      key: 'myApplications',
+      icon: React.createElement(SolutionOutlined),
     },
     {
       label: '问题帮助',

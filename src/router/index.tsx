@@ -93,6 +93,18 @@ const routes: TRoutes[] = [
         ]
       },
       {
+        path: 'main', // 首页
+        element: lazyLoad('Main')
+      },
+      {
+        path: 'appServiceCenter', // 应用服务中心
+        element: lazyLoad('AppServiceCenter')
+      },
+      {
+        path: 'myApps', // 我的应用
+        element: lazyLoad('MyApps')
+      },
+      {
         path: 'myApplications', // 我的申请
         element: lazyLoad('MyApplications'),
         children: [
@@ -113,18 +125,6 @@ const routes: TRoutes[] = [
             element: lazyLoad('MyApplications/Others/Update')
           }
         ]
-      },
-      {
-        path: 'main', // 首页
-        element: lazyLoad('Main')
-      },
-      {
-        path: 'appServiceCenter', // 应用服务中心
-        element: lazyLoad('AppServiceCenter')
-      },
-      {
-        path: 'myApps', // 我的应用
-        element: lazyLoad('MyApps')
       },
       {
         path: 'helps', // 问题帮助

@@ -9,11 +9,6 @@ import { logout } from '@api/index'
 
 export const dropdownList: TMenuItem[] = [
   { key: 'myAccount', label: '账号信息', icon: 'myAccount' },
-  {
-    key: 'myApplications/identity/test',
-    label: '我的申请',
-    icon: 'myApplications'
-  },
   { key: 'logout', label: '退出', icon: 'logout' }
 ]
 

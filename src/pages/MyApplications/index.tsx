@@ -9,16 +9,14 @@ const { Sider, Header, Content } = Layout
 
 const items: MenuProps['items'] = getMenu()
 
-const MyApplications: React.FC = () => {
+const MyApplications = () => {
   // 当前地址高亮菜单
   const { pathname } = useLocation()
   const parentPath = 'myApplications'
-  const name = pathname.substring(
-    pathname.indexOf(parentPath) + parentPath.length
-  )
-  const currentPath = ['', '/'].includes(name) ? '/identity/test' : name
 
-  const [path, setPath] = useState(currentPath)
+  const [path, setPath] = useState(
+    pathname.substring(pathname.indexOf(parentPath) + parentPath.length)
+  )
 
   const navigate = useNavigate()
   /**
@@ -26,37 +24,34 @@ const MyApplications: React.FC = () => {
    */
   const switchMenu: MenuProps['onClick'] = e => {
     setPath(e.key)
+    console.log(e.key)
     navigate(`/app/myApplications${e.key}`)
   }
 
-  // 头部标题
+  /**
+   * 头部标题
+   */
   const [header, setHeader] = useState('')
-  useEffect(() => {
-    const menu = getMenu()
+  const menu = getMenu()
 
+  /**
+   * 获取当前菜单项标题
+   */
+  useEffect(() => {
     /**
-     * 获取当前菜单项标题
+     * 所有子菜单
      */
-    const getTitle = (menu: TMenuItem[]): string => {
-      let title = ''
-      const pathnameList = currentPath.substring(1).split('/')
-      for (let i = 0; i < menu.length; i++) {
-        const { key, children } = menu[i]
-        if (key === pathnameList[0]) {
-          for (let j = 0; j < children!.length; j++) {
-            const { key, label } = children![j]
-            if (key.includes(pathnameList[1])) {
-              title = label
-              break
-            }
-          }
-        }
-        if (title) break
-      }
-      return title
-    }
-    const title = getTitle(menu)
-    setHeader(title)
+    const children = menu.reduce(
+      (prev: TMenuItem[] | [], next: TMenuItem) => [...prev, ...next.children!],
+      []
+    )
+    /**
+     * 当前子菜单
+     */
+    const item = children.find(item => item.key === path)
+
+    if (!item) return
+    setHeader(item.label)
   }, [pathname])
 
   return (
