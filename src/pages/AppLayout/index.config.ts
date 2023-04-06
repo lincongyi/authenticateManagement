@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  HomeOutlined,
   ProfileOutlined,
   AppstoreOutlined,
   FileExclamationOutlined,
@@ -7,12 +8,17 @@ import {
 } from '@ant-design/icons'
 
 /**
- * 返回菜单
- * @returns {Array} 菜单数组
+ * 静态菜单列表数据
+ * @returns {Array} 菜单列表
  */
 export const getMenu = (): TMenuItem[] => {
   // 菜单项必填写 key
   return [
+    {
+      label: '首页',
+      key: 'main',
+      icon: React.createElement(HomeOutlined),
+    },
     {
       label: '应用服务中心',
       key: 'appServiceCenter',

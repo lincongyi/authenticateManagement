@@ -1,0 +1,35 @@
+.subtitle {
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.colunm {
+  padding: 24px 16px;
+  border-radius: 4px;
+}
+
+.colunm01 {
+  background-image: linear-gradient(139deg, #fffaf4 0%, #fff4e6 100%);
+}
+
+.colunm02 {
+  background-image: linear-gradient(139deg, #f3fff1 0%, #e6ffe3 100%);
+}
+
+.colunm03 {
+  background-image: linear-gradient(148deg, rgb(250 111 111 / 5%) 0%, rgb(242 60 60 / 15%) 100%);
+}
+
+.content {
+  padding-right: 32px;
+  font-weight: bold;
+  font-size: 28px;
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+@for $i from 1 through 3 {
+  .icon0#{$i} {
+    background-image: url('@/assets/main-pannel2-icon0#{$i}.png');
+  }
+}

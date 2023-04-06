@@ -13,7 +13,7 @@ import { login } from '@api/login'
 
 const { Content } = Layout
 
-const Login: React.FC = () => {
+const Login = () => {
   const [selectedIndex, setSelectedIndex] = useState(0)
   /**
    * 选择登录方式
@@ -84,7 +84,7 @@ const Login: React.FC = () => {
       JSON.stringify({ accountNumber: data!.accountNumber })
     )
 
-    if (!search) navigate('/app/appServiceCenter')
+    if (!search) navigate('/app/main')
     else {
       const searchParams = new URLSearchParams(search.substring(1))
       navigate(searchParams.get('redirect') as To)

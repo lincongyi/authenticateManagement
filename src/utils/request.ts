@@ -29,8 +29,10 @@ request.interceptors.response.use(
       message.warning({
         content: retMessage,
         onClose: () => {
-          const redirect = window.location.hash.substring(1)
-          if (retCode === 40512) { window.location.href = `#/login?redirect=${redirect}` }
+          if (retCode === 40512) {
+            const redirect = window.location.hash.substring(1)
+            window.location.href = `#/login?redirect=${redirect}`
+          }
         },
       })
       return Promise.reject(retMessage)

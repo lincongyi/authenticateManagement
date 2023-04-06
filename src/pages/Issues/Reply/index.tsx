@@ -26,6 +26,7 @@ import locale from 'antd/locale/zh_CN'
 import AddModal from './components/AddModal'
 // import CheckModal from './components/CheckModal'
 import UpdateModal from './components/UpdateModal'
+import { useStore } from '@stores/index'
 
 const { RangePicker } = DatePicker
 
@@ -55,6 +56,9 @@ const Reply = () => {
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
   }
+
+  const { themeStore } = useStore()
+  const colorPrimary = themeStore.antdThemeColor
 
   const [addModalOpen, setAddModalOpen] = useState(false)
   /**
@@ -155,7 +159,7 @@ const Reply = () => {
               <Avatar
                 shape='square'
                 size='large'
-                style={{ backgroundColor: '#1E55D2' }}
+                style={{ backgroundColor: colorPrimary }}
               >
                 app
               </Avatar>

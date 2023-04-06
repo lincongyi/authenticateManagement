@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+
+  .subtitle {
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .colunm {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 0 24px;
+    border-right: 1px solid $border-color;
+
+    &:nth-child(1) {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+      border-right: 0;
+    }
+  }
+
+  .content {
+    padding-right: 44px;
+    font-weight: bold;
+    font-size: 28px;
+    background-repeat: no-repeat;
+    background-position: right center;
+  }
+
+  @for $i from 1 through 3 {
+    .icon0#{$i} {
+      background-image: url('@/assets/main-pannel1-icon0#{$i}.png');
+    }
+  }
+}

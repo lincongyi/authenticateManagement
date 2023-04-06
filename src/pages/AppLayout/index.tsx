@@ -15,11 +15,12 @@ import { ColorChangeHandler, SketchPicker } from 'react-color'
 import Header, { dropdownList } from '@components/Header'
 import { getMenu } from './index.config'
 import { runInAction } from 'mobx'
+
 const { Content, Sider } = Layout
 
 const items: MenuProps['items'] = getMenu()
 
-const AppLayout: React.FC = () => {
+const AppLayout = () => {
   const [collapsed, setCollapsed] = useState(false)
   const {
     token: { colorBgContainer }

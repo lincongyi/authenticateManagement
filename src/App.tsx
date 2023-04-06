@@ -1,13 +1,13 @@
 import React from 'react'
 import 'reset-css'
 import './App.scss'
-import { HashRouter, Routes, useRoutes } from 'react-router-dom'
+import { HashRouter, Routes } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd'
 import { useStore } from './stores'
 import { observer } from 'mobx-react-lite'
 import { routes, renderRoute } from './router'
 
-function App () {
+const App = () => {
   const { themeStore } = useStore()
   const colorPrimary = themeStore.antdThemeColor
   const isLightTheme = themeStore.mainTheme === 'light'

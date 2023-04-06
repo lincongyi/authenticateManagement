@@ -115,6 +115,10 @@ const routes: TRoutes[] = [
         ]
       },
       {
+        path: 'main', // 首页
+        element: lazyLoad('Main')
+      },
+      {
         path: 'appServiceCenter', // 应用服务中心
         element: lazyLoad('AppServiceCenter')
       },

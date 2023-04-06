@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useStore } from '@stores/index'
 import {
   Avatar,
   Badge,
@@ -61,6 +62,9 @@ const Daily = () => {
   const onUpload = () => {
     setUploadModalOpen(true)
   }
+
+  const { themeStore } = useStore()
+  const colorPrimary = themeStore.antdThemeColor
 
   const [addModalOpen, setAddModalOpen] = useState(false)
   /**
@@ -162,7 +166,7 @@ const Daily = () => {
               <Avatar
                 shape='square'
                 size='large'
-                style={{ backgroundColor: '#1E55D2' }}
+                style={{ backgroundColor: colorPrimary }}
               >
                 app
               </Avatar>
