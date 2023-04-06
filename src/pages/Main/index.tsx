@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useStore } from '@stores/index'
 import { useNavigate } from 'react-router-dom'
 import style from './index.module.scss'
-import { Alert, Button, Col, Row } from 'antd'
+import { Alert, Button, Carousel, Col, Row } from 'antd'
 import { AlertOutlined } from '@ant-design/icons'
 import Pannel1 from './components/Pannel1'
 import Pannel2 from './components/Pannel2'
@@ -43,6 +43,26 @@ const Main = () => {
     const userInfo: TUserInfo = JSON.parse(localStorage.getItem('userInfo')!)
     setAccountNumber(userInfo.accountNumber)
   }, [])
+
+  /**
+   * 消息推送内容
+   */
+  const [newsList] = useState([
+    {
+      id: 1,
+      message:
+        '3月应用中心全新上架三款企业级应用，当月申请可享不限流3月应用中心全新上架三款企业级应用，当月申请可享不限流'
+    },
+    {
+      id: 2,
+      message: '4月应用中心全新上架三款企业级应用'
+    },
+    {
+      id: 3,
+      message:
+        '5月应用中心全新上架三款企业级应用，当月申请可享不限流5月应用中心全新上架三款企业级应用，当月申请可享不限流'
+    }
+  ])
 
   /**
    * 跳转到消息通知
@@ -143,10 +163,14 @@ const Main = () => {
 
         <div className={style['right-side']}>
           <div className={style.notice}>
-            <AlertOutlined />
-            <div className={style.news} onClick={toNews}>
-              3月应用中心全新上架三款企业级应用，当月申请可享不限流3月应用中心全新上架三款企业级应用，当月申请可享不限流
-            </div>
+            <AlertOutlined style={{ float: 'left', marginTop: 3 }} />
+            <Carousel dots={{ className: 'carousel-dot' }} autoplay>
+              {newsList.map(item => (
+                <div className={style.news} onClick={toNews} key={item.id}>
+                  {item.message}
+                </div>
+              ))}
+            </Carousel>
           </div>
           <div className={style['update-time']}>数据更新时间：{updateTime}</div>
         </div>

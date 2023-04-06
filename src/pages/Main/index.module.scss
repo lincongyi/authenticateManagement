@@ -32,13 +32,16 @@
   }
 
   .notice {
-    display: flex;
+    overflow: hidden;
   }
 
   .news {
-    margin: 0 10px;
+    height: 40px;
+    padding: 0 10px;
     overflow: hidden;
+    color: #fff;
     white-space: nowrap;
+    text-align: left;
     text-overflow: ellipsis;
     cursor: pointer;
   }
