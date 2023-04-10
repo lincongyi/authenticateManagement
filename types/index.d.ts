@@ -49,7 +49,7 @@ declare type TCompanyInfo = {
 }
 
 declare type TResetParams = {
-  type: 0 | 1 // 预留方式：0-手机；1-邮箱
+  type: 0 | 1 | 2 // 预留方式：0-手机；1-邮箱；2-扫码
   key: string // 手机号 or 邮箱
   imgCaptcha: string // 图片验证码
   captcha: string // 邮箱或短信验证码

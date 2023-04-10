@@ -152,7 +152,7 @@ const SettingsModal = ({
                   <>
                     {fields.map(({ key, name, ...restField }, index) => (
                       <React.Fragment key={key}>
-                        <div className={style.title}>
+                        <div className={`${style.title} font-primary-color`}>
                           {index + 1}.已选中：{checkedList[index]}
                         </div>
                         <Row className={style['selected-item']}>

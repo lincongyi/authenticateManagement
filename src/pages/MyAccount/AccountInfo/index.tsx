@@ -29,33 +29,27 @@ const AccountInfo = () => {
   }
 
   return (
-    <>
-      <Row className={style['account-wrap']}>
-        <Col span={24}>
-          <div className={style.column}>
-            <label className={style['column-key']}>登录账号：</label>
-            <span className={style['column-value']}>
-              {userInfo?.accountNumber}
-            </span>
-          </div>
-        </Col>
-        <Col span={24}>
-          <div className={style.column}>
-            <label className={style['column-key']}>登录密码：</label>
-            <span className={style['column-value']}>{userInfo?.password}</span>
-          </div>
-        </Col>
-        <Col span={24}>
-          <Button
-            type='primary'
-            icon={<EditOutlined />}
-            onClick={updatePassword}
-          >
-            修改密码
-          </Button>
-        </Col>
-      </Row>
-    </>
+    <Row className={style['account-wrap']}>
+      <Col span={24}>
+        <div className={style.column}>
+          <label className='font-primary-color'>登录账号：</label>
+          <span className={style['column-value']}>
+            {userInfo?.accountNumber}
+          </span>
+        </div>
+      </Col>
+      <Col span={24}>
+        <div className={style.column}>
+          <label className='font-primary-color'>登录密码：</label>
+          <span className={style['column-value']}>{userInfo?.password}</span>
+        </div>
+      </Col>
+      <Col span={24}>
+        <Button type='primary' icon={<EditOutlined />} onClick={updatePassword}>
+          修改密码
+        </Button>
+      </Col>
+    </Row>
   )
 }
 

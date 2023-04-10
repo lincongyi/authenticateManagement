@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import style from './index.module.scss'
 import { Button, Col, Result, Row, Steps } from 'antd'
-import Info from './components/Info'
-import Code from './components/Code'
+import Methods from './components/Methods'
+import Authentication from './components/Authentication'
 import Password from './components/Password'
 import { useNavigate } from 'react-router-dom'
 
@@ -22,8 +22,8 @@ const AccountSettings = () => {
    * @param {object} values 表单返回值
    */
   const onNext = (values?: object) => {
+    // console.log(values)
     if (values) setResetParams({ ...resetParams, ...values })
-    console.log(resetParams)
     setCurrent(current + 1)
   }
 
@@ -31,7 +31,7 @@ const AccountSettings = () => {
    * 上一步
    */
   const onPrev = () => {
-    setCurrent(current - 1)
+    if (current) setCurrent(current - 1)
   }
 
   const navigate = useNavigate()
@@ -42,13 +42,17 @@ const AccountSettings = () => {
 
   const steps = [
     {
-      title: '填写账号信息',
-      content: <Info onNext={onNext} />
+      title: '选择认证方式',
+      content: <Methods onNext={onNext} />
     },
     {
-      title: '输入验证码',
+      title: '进入认证',
       content: (
-        <Code onNext={onNext} onPrev={onPrev} resetParams={resetParams} />
+        <Authentication
+          onNext={onNext}
+          onPrev={onPrev}
+          resetParams={resetParams}
+        />
       )
     },
     {
@@ -73,7 +77,7 @@ const AccountSettings = () => {
     }
   ]
 
-  const items = steps.map(item => ({ key: item.title, title: item.title }))
+  const items = steps.map((item, index) => ({ key: index, title: item.title }))
   return (
     <Row justify='center'>
       <Col span={20}>

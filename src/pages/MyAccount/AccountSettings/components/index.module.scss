@@ -1,15 +1,43 @@
-.tips {
-  margin-bottom: 14px;
-  color: #575d69;
-  font-size: 14px;
-  line-height: 1.5;
-
-  .emphasize {
-    font-weight: bold;
-  }
+.method-title {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
 }
 
-[data-theme='light'] .emphasize,
-[data-theme='dark'] .emphasize {
-  @include font-primary-color;
+.method-list {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 32px 0;
+
+  .method-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+    width: 160px;
+    height: 160px;
+    padding: 18px 0;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px 0 rgb(30 85 210 / 25%);
+    cursor: pointer;
+
+    .select {
+      width: 16px;
+      height: 16px;
+      background-image: url('@/assets/accountSetting-unselected.png');
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    &.active {
+      border-color: $primary-color;
+
+      .select {
+        background-image: url('@/assets/accountSetting-selected.png');
+      }
+    }
+  }
 }

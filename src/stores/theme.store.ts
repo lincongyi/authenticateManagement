@@ -13,7 +13,7 @@ class ThemeStore {
     return this.mainTheme
   }
 
-  antdThemeColor: string = '#1E55D1' // antd主题样式
+  antdThemeColor = '#1E55D1' // antd主题样式
 
   setAntdThemeColor = (color: string) => {
     this.antdThemeColor = color

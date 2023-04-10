@@ -129,7 +129,7 @@ const Helps = () => {
         <Col span={10}>
           <Typography.Title level={4}>{title}</Typography.Title>
           <Divider />
-          <div className={style.description}>
+          <div className={`${style.description} font-primary-color`}>
             {description}
             <div className='tr'>
               <Button type='link' onClick={onCopy}>

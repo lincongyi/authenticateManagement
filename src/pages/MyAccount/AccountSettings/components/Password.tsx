@@ -85,10 +85,10 @@ const Password = ({
       </Form.Item>
       <Form.Item>
         <Space>
+          <Button onClick={() => onPrev()}>上一步</Button>
           <Button type='primary' htmlType='submit'>
             下一步
           </Button>
-          <Button onClick={() => onPrev()}>上一步</Button>
         </Space>
       </Form.Item>
     </Form>

@@ -50,7 +50,7 @@ const retrievePassword = (params: object): Promise<TResponse> => {
 }
 
 /**
- * 校验预留手机号or邮箱的图形验证码是否正确
+ * 重置密码
  */
 const currentResetPassword = (params: object): Promise<TResponse> => {
   return request.post('/account/currentResetPassword', params)

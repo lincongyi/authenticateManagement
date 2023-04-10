@@ -6,6 +6,10 @@
   color: $primary-color;
 }
 
+.font-primary-color {
+  @include font-primary-color;
+}
+
 .tool {
   position: fixed;
   bottom: 0;
@@ -53,6 +57,10 @@
     background-color: #000;
     content: '';
   }
+}
+
+.tc {
+  text-align: center;
 }
 
 .tr {
