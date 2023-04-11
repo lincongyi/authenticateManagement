@@ -7,7 +7,7 @@ type TInfo = {
   totalCount: number
   todayCount: number
 }
-const Pannel1 = ({ title, info }: { title: string; info: TInfo }) => {
+const Panel1 = ({ title, info }: { title: string; info: TInfo }) => {
   return (
     <>
       <Card title={title} headStyle={{ borderBottom: 0 }} bordered={false}>
@@ -36,4 +36,4 @@ const Pannel1 = ({ title, info }: { title: string; info: TInfo }) => {
   )
 }
 
-export default Pannel1
+export default Panel1

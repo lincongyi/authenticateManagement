@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Descriptions, Image, Button } from 'antd'
+import { Button, Divider, Collapse } from 'antd'
 import { useNavigate } from 'react-router-dom'
+import { EditOutlined, ExceptionOutlined } from '@ant-design/icons'
+import CompanyDescriptions from './components/CompanyDescriptions'
 import { currentCompanyInfo } from '@api/myAccount'
-import { reverseArray } from '@utils/index'
+
+const { Panel } = Collapse
 
 const CompanyInfo = () => {
-  const navigate = useNavigate()
-
   const [companyInfo, setCompanyInfo] = useState<TCompanyInfo>()
+
   useEffect(() => {
     ;(async () => {
       const { data } = await currentCompanyInfo()
@@ -16,57 +18,68 @@ const CompanyInfo = () => {
     })()
   }, [])
 
+  const navigate = useNavigate()
   /**
    * 单位注册信息修改申请
    */
-  const toEditCompany = () => {
-    navigate('/app/myAccount/companySettings')
-  }
+  const toEditCompany = () => navigate('/app/myAccount/companySettings')
 
   return (
     <>
-      <Descriptions bordered>
-        <Descriptions.Item label='单位名称：'>
-          {companyInfo?.companyName}
-        </Descriptions.Item>
-        <Descriptions.Item label='管理员姓名：'>
-          {companyInfo?.accountNumber}
-        </Descriptions.Item>
-        <Descriptions.Item label='统一社会信用代码：'>
-          {companyInfo?.certificateNum}
-        </Descriptions.Item>
-        <Descriptions.Item label='单位简称：'>
-          {companyInfo?.companyShortName}
-        </Descriptions.Item>
-        <Descriptions.Item label='管理员手机号：'>
-          {companyInfo?.adminPhone}
-        </Descriptions.Item>
-        <Descriptions.Item label='接入地区：'>
-          {companyInfo?.areaList &&
-            reverseArray(companyInfo.areaList).map(
-              (item: TAreaItem) => item.name
-            )}
-        </Descriptions.Item>
-        <Descriptions.Item label='管理员邮箱：'>
-          {companyInfo?.adminEmail}
-        </Descriptions.Item>
-        <Descriptions.Item label='信用代码证书：'>
-          <Image
-            width={200}
-            src={`${
-              companyInfo
-                ? `data:image/png;base64,${companyInfo.certificatePhoto}`
-                : ''
-            }`}
-            fallback='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3PTWBSGcbGzM6GCKqlIBRV0dHRJFarQ0eUT8LH4BnRU0NHR0UEFVdIlFRV7TzRksomPY8uykTk/zewQfKw/9znv4yvJynLv4uLiV2dBoDiBf4qP3/ARuCRABEFAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghggQAQZQKAnYEaQBAQaASKIAQJEkAEEegJmBElAoBEgghgg0Aj8i0JO4OzsrPv69Wv+hi2qPHr0qNvf39+iI97soRIh4f3z58/u7du3SXX7Xt7Z2enevHmzfQe+oSN2apSAPj09TSrb+XKI/f379+08+A0cNRE2ANkupk+ACNPvkSPcAAEibACyXUyfABGm3yNHuAECRNgAZLuYPgEirKlHu7u7XdyytGwHAd8jjNyng4OD7vnz51dbPT8/7z58+NB9+/bt6jU/TI+AGWHEnrx48eJ/EsSmHzx40L18+fLyzxF3ZVMjEyDCiEDjMYZZS5wiPXnyZFbJaxMhQIQRGzHvWR7XCyOCXsOmiDAi1HmPMMQjDpbpEiDCiL358eNHurW/5SnWdIBbXiDCiA38/Pnzrce2YyZ4//59F3ePLNMl4PbpiL2J0L979+7yDtHDhw8vtzzvdGnEXdvUigSIsCLAWavHp/+qM0BcXMd/q25n1vF57TYBp0a3mUzilePj4+7k5KSLb6gt6ydAhPUzXnoPR0dHl79WGTNCfBnn1uvSCJdegQhLI1vvCk+fPu2ePXt2tZOYEV6/fn31dz+shwAR1sP1cqvLntbEN9MxA9xcYjsxS1jWR4AIa2Ibzx0tc44fYX/16lV6NDFLXH+YL32jwiACRBiEbf5KcXoTIsQSpzXx4N28Ja4BQoK7rgXiydbHjx/P25TaQAJEGAguWy0+2Q8PD6/Ki4R8EVl+bzBOnZY95fq9rj9zAkTI2SxdidBHqG9+skdw43borCXO/ZcJdraPWdv22uIEiLA4q7nvvCug8WTqzQveOH26fodo7g6uFe/a17W3+nFBAkRYENRdb1vkkz1CH9cPsVy/jrhr27PqMYvENYNlHAIesRiBYwRy0V+8iXP8+/fvX11Mr7L7ECueb/r48eMqm7FuI2BGWDEG8cm+7G3NEOfmdcTQw4h9/55lhm7DekRYKQPZF2ArbXTAyu4kDYB2YxUzwg0gi/41ztHnfQG26HbGel/crVrm7tNY+/1btkOEAZ2M05r4FB7r9GbAIdxaZYrHdOsgJ/wCEQY0J74TmOKnbxxT9n3FgGGWWsVdowHtjt9Nnvf7yQM2aZU/TIAIAxrw6dOnAWtZZcoEnBpNuTuObWMEiLAx1HY0ZQJEmHJ3HNvGCBBhY6jtaMoEiJB0Z29vL6ls58vxPcO8/zfrdo5qvKO+d3Fx8Wu8zf1dW4p/cPzLly/dtv9Ts/EbcvGAHhHyfBIhZ6NSiIBTo0LNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiECRCjUbEPNCRAhZ6NSiAARCjXbUHMCRMjZqBQiQIRCzTbUnAARcjYqhQgQoVCzDTUnQIScjUohAkQo1GxDzQkQIWejUogAEQo121BzAkTI2agUIkCEQs021JwAEXI2KoUIEKFQsw01J0CEnI1KIQJEKNRsQ80JECFno1KIABEKNdtQcwJEyNmoFCJAhELNNtScABFyNiqFCBChULMNNSdAhJyNSiEC/wGgKKC4YMA4TAAAAABJRU5ErkJggg=='
-          />
-        </Descriptions.Item>
-      </Descriptions>
-      <div className={style['edit-company-btn']}>
-        <Button type='primary' onClick={toEditCompany}>
-          单位注册信息修改申请
+      <div className={style['tool-bar']}>
+        <div className={style.warning}>
+          <i className={style['warning-icon']}></i>修改申请审批中
+        </div>
+        <Button
+          type='primary'
+          icon={<EditOutlined />}
+          style={{ marginLeft: 48 }}
+          onClick={toEditCompany}
+        >
+          修改申请信息
         </Button>
       </div>
+
+      <CompanyDescriptions companyInfo={companyInfo} />
+
+      <div className={`${style.title} font-primary-color`}>申请记录</div>
+      <Divider />
+
+      <Collapse bordered={false} expandIconPosition='end' ghost={true}>
+        <Panel
+          style={{ borderBottom: '1px solid #E8E9EA' }}
+          header={
+            <>
+              <ExceptionOutlined style={{ marginRight: 20 }} />
+              2023.03.12 23:12:14 提交申请，申请表单如下
+            </>
+          }
+          key='1'
+        >
+          <CompanyDescriptions companyInfo={companyInfo} />
+        </Panel>
+        <Panel
+          style={{
+            borderBottom: `${false} && '1px solid #E8E9EA'`,
+            paddingInlineStart: 4
+          }}
+          header={
+            <>
+              <ExceptionOutlined
+                style={{ marginRight: 20 }}
+                className='font-primary-color'
+              />
+              <span className='font-primary-color'>
+                2023.03.12 23:12:14 申请审批通过，已更新单位信息
+              </span>
+            </>
+          }
+          collapsible='disabled'
+          key='2'
+          showArrow={false}
+        ></Panel>
+      </Collapse>
+      <Divider />
     </>
   )
 }

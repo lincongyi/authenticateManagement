@@ -31,7 +31,7 @@ type TInfo = {
   subtitle: string
   count: number
 }
-const Pannel2 = ({
+const Panel2 = ({
   title,
   info,
   getData
@@ -104,4 +104,4 @@ const Pannel2 = ({
   )
 }
 
-export default Pannel2
+export default Panel2

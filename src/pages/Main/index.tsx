@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import style from './index.module.scss'
 import { Alert, Button, Carousel, Col, Row } from 'antd'
 import { AlertOutlined } from '@ant-design/icons'
-import Pannel1 from './components/Pannel1'
-import Pannel2 from './components/Pannel2'
+import Panel1 from './components/Panel1'
+import Panel2 from './components/Panel2'
 import Statistics from './components/Statistics'
 
 const Main = () => {
@@ -178,10 +178,10 @@ const Main = () => {
 
       <Row gutter={[20, 20]}>
         <Col span={12}>
-          <Pannel1 title='我的应用' info={myAppInfo} />
+          <Panel1 title='我的应用' info={myAppInfo} />
         </Col>
         <Col span={12}>
-          <Pannel1 title='我的基础服务' info={myService} />
+          <Panel1 title='我的基础服务' info={myService} />
         </Col>
         <Col span={12}>
           <Statistics />
@@ -189,14 +189,14 @@ const Main = () => {
         <Col span={12}>
           <Row gutter={[0, 20]}>
             <Col span={24}>
-              <Pannel2
+              <Panel2
                 title='我的申请'
                 info={myApplications}
                 getData={getMyApplications}
               />
             </Col>
             <Col span={24}>
-              <Pannel2
+              <Panel2
                 title='我的工单'
                 info={myWorkOrder}
                 getData={getMyWorkOrder}

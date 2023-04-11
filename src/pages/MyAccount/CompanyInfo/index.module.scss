@@ -1,4 +1,38 @@
-.edit-company-btn {
-  margin: 20px 0;
-  text-align: center;
+.tool-bar {
+  display: flex;
+  margin-bottom: 16px;
+
+  .warning {
+    flex: 1;
+    box-sizing: border-box;
+    height: 32px;
+    color: #ffb118;
+    line-height: 32px;
+    background: rgb(255 178 23 / 10%);
+    border: 1px solid rgb(255 177 19 / 50%);
+    border-radius: 2px;
+  }
+
+  .warning-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0 14px;
+    vertical-align: text-bottom;
+    background: url('@/assets/companyInfo-approving.png') center no-repeat;
+  }
+}
+
+.title {
+  margin-top: 48px;
+  font-weight: bold;
+}
+
+.record-item {
+  padding: 12px 16px;
+  font-size: 13.5px;
+}
+
+.panel {
+  border-bottom: 1px solid $border-color;
 }
