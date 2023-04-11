@@ -9,12 +9,23 @@ import { currentCompanyInfo } from '@api/myAccount'
 const { Panel } = Collapse
 
 const CompanyInfo = () => {
+  /**
+   * 当前单位信息
+   */
   const [companyInfo, setCompanyInfo] = useState<TCompanyInfo>()
+  /**
+   * 是否有审批中的单位信息单，禁用修改按钮
+   */
+  const [isApproving, setIsApproving] = useState(true)
 
+  /**
+   * 初始化当前单位信息
+   */
   useEffect(() => {
     ;(async () => {
       const { data } = await currentCompanyInfo()
       setCompanyInfo(data as TCompanyInfo)
+      setTimeout(() => setIsApproving(false), 1000)
     })()
   }, [])
 
@@ -34,6 +45,7 @@ const CompanyInfo = () => {
           type='primary'
           icon={<EditOutlined />}
           style={{ marginLeft: 48 }}
+          disabled={isApproving}
           onClick={toEditCompany}
         >
           修改申请信息
