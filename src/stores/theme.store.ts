@@ -1,24 +1,29 @@
 // 主题模块
 import { makeAutoObservable } from 'mobx'
 
-class ThemeStore {
-  constructor () {
-    makeAutoObservable(this)
-  }
+type TThemeStore = {
+  mainTheme: 'light' | 'dark'
+  setMainTheme: (theme: 'light' | 'dark') => 'light' | 'dark'
+  antdThemeColor: string
+  setAntdThemeColor: (color: string) => string
+}
 
-  mainTheme: 'light' | 'dark' = 'light' // 全局主题样式
+const ThemeStore = () => {
+  return makeAutoObservable({
+    mainTheme: 'light', // 全局主题样式 'light' | 'dark'
 
-  setMainTheme = (theme: 'light' | 'dark') => {
-    this.mainTheme = theme
-    return this.mainTheme
-  }
+    setMainTheme (theme: 'light' | 'dark') {
+      this.mainTheme = theme
+      return this.mainTheme
+    },
 
-  antdThemeColor = '#1E55D1' // antd主题样式
+    antdThemeColor: '#1E55D1', // antd主题样式
 
-  setAntdThemeColor = (color: string) => {
-    this.antdThemeColor = color
-    return this.antdThemeColor
-  }
+    setAntdThemeColor (color: string) {
+      this.antdThemeColor = color
+      return this.antdThemeColor
+    }
+  } as TThemeStore)
 }
 
 export default ThemeStore

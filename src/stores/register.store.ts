@@ -1,23 +1,26 @@
 // 注册模块
 import { makeAutoObservable } from 'mobx'
 
-class RegisterStore {
-  constructor () {
-    makeAutoObservable(this)
-  }
+type TRegisterStore = {
+  registerInfo: TProcess
+  setRegisterInfo: (info: Partial<TProcess>) => TProcess
+}
 
-  registerInfo: TProcess = {
-    taskId: '',
-    state: -1, // 0.审核通过；1.审核中；3.驳回；
-    processInstanceId: '',
-    starter: '',
-    comment: '',
-  }
+const RegisterStore = () => {
+  return makeAutoObservable({
+    registerInfo: {
+      taskId: '',
+      state: -1, // 0.审核通过；1.审核中；3.驳回；
+      processInstanceId: '',
+      starter: '',
+      comment: ''
+    },
 
-  setRegisterInfo = (info: Partial<TProcess>) => {
-    this.registerInfo = { ...this.registerInfo, ...info }
-    return this.registerInfo
-  }
+    setRegisterInfo (info: Partial<TProcess>) {
+      this.registerInfo = { ...this.registerInfo, ...info }
+      return this.registerInfo
+    }
+  } as TRegisterStore)
 }
 
 export default RegisterStore
