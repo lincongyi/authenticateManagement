@@ -39,7 +39,7 @@ git cz
 
 ***
 
-## 项目页面
+## 项目模块
 
 - Home 首页
 
@@ -51,11 +51,13 @@ git cz
 
 - MyAccount 账号信息
 
-- MyApplications 我的申请
+- Main 首页
 
 - AppServiceCenter 应用服务中心
 
 - MyApps 我的应用
+
+- MyApplications 我的申请
 
 - Helps 问题帮助
 

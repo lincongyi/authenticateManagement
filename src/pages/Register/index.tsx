@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import style from './index.module.scss'
 import { Form, Input, Button, Space, Upload, message } from 'antd'
@@ -18,6 +18,18 @@ import MessageCaptcha from '@components/MessageCaptcha'
 import EmailCaptcha from '@components/EmailCaptcha'
 
 const Register = () => {
+  /**
+   * 离开当前页面触发提示
+   */
+  useEffect(() => {
+    window.onbeforeunload = e => {
+      return false
+    }
+    return () => {
+      window.onbeforeunload = () => {}
+    }
+  }, [])
+
   const navigate = useNavigate()
 
   /**
@@ -67,7 +79,6 @@ const Register = () => {
   }
 
   const normFile = (e: any) => {
-    console.log('Upload event:', e)
     if (Array.isArray(e)) {
       return e
     }

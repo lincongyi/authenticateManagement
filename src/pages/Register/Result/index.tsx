@@ -15,7 +15,6 @@ import { observer } from 'mobx-react-lite'
 
 const RegisterResult = () => {
   const navigate = useNavigate()
-
   /**
    * 返回
    */
@@ -59,9 +58,7 @@ const RegisterResult = () => {
   /**
    * 去登录
    */
-  const toLogin = () => {
-    navigate('/login')
-  }
+  const toLogin = () => navigate('/login')
 
   /**
    * 催办
