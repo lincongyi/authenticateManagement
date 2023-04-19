@@ -22,7 +22,6 @@ import {
   PlusOutlined,
   ExclamationCircleOutlined
 } from '@ant-design/icons'
-import type { RangeValue } from 'rc-picker/lib/interface.d'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
@@ -32,17 +31,31 @@ import AddModal from './components/AddModal'
 import CheckModal from './components/CheckModal'
 import UpdateModal from './components/UpdateModal'
 import SettingsModal from './components/SettingsModal'
+import { rangePresets, disabledDate } from '@utils/date'
 
 const { RangePicker } = DatePicker
 
 const Daily = () => {
   const [form] = Form.useForm()
 
+  const [dateRange, setDateRange] = useState<string[]>([])
+
   /**
-   * 设置表单中日期的值
+   * 日期范围发生变化的回调
    */
-  const onChange = (date: RangeValue<Dayjs>, dateString: [string, string]) =>
-    form.setFieldValue('date', dateString)
+  const onRangeChange = (
+    dates: null | (Dayjs | null)[],
+    dateStrings: string[]
+  ) => {
+    setDateRange(dateStrings)
+  }
+
+  /**
+   * 关闭日期选择器的回调
+   */
+  const onOpenChange = (open: boolean) => {
+    if (!open) form.setFieldValue('dateRange', dateRange)
+  }
 
   /**
    * 查询
@@ -120,7 +133,9 @@ const Daily = () => {
 
   const [settingsModalOpen, setSettingsModalOpen] = useState(false)
 
-  // 表格分页参数
+  /**
+   * 表格分页参数
+   */
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -311,7 +326,12 @@ const Daily = () => {
               <Col span={12}>
                 <Form.Item label='创建时间' name='date'>
                   <ConfigProvider locale={locale}>
-                    <RangePicker onChange={onChange} />
+                    <RangePicker
+                      presets={rangePresets}
+                      disabledDate={disabledDate}
+                      onChange={onRangeChange}
+                      onOpenChange={onOpenChange}
+                    />
                   </ConfigProvider>
                 </Form.Item>
               </Col>

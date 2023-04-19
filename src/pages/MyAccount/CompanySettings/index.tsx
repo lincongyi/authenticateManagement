@@ -44,7 +44,7 @@ const CompanySettings = () => {
       const { data: currentInfo } = await currentCompanyInfo()
 
       const { data } = await getProcessByKey({
-        userId: currentInfo.companyId,
+        userId: currentInfo.accountNumber,
         key: 'UPDATE_COMPANY_INFO'
       })
       // 如果当前任务返回空 or 驳回状态，即可走提交申请流程，否则当前申请审批在审核中，不可重复提交申请

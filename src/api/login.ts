@@ -1,9 +1,16 @@
 import { request } from '@utils/request'
 
+type TLoginResponse = {
+  token: string
+  accountNumber: string // 用户名
+  userId: string
+  idNum: string // 证件号码
+}
+
 /**
  * 登录
  */
-const login = (params: object): Promise<TResponse> => {
+const login = (params: object): Promise<TResponse<TLoginResponse>> => {
   return request.post('/login', params)
 }
 

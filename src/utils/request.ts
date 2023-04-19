@@ -4,24 +4,24 @@ import { loadEnv } from '@utils/index'
 const { MODE, VITE_AUTH_BASE_URL } = loadEnv()
 const request = axios.create({
   baseURL: MODE === 'development' ? '/api' : VITE_AUTH_BASE_URL,
-  timeout: 5000,
+  timeout: 5000
 })
 
 // 添加请求拦截器
 request.interceptors.request.use(
-  (config) => {
+  config => {
     const token = localStorage.getItem('token')
     if (token) config.headers!.token = `${token}`
     return config
   },
-  (error) => {
+  error => {
     return Promise.reject(error)
   }
 )
 
 // 添加响应拦截器
 request.interceptors.response.use(
-  (response) => {
+  response => {
     const { retCode } = response.data
     if (!retCode) return response.data
     else {
@@ -33,12 +33,12 @@ request.interceptors.response.use(
             const redirect = window.location.hash.substring(1)
             window.location.href = `#/login?redirect=${redirect}`
           }
-        },
+        }
       })
       return Promise.reject(retMessage)
     }
   },
-  (error) => {
+  error => {
     const { retMessage = '网络错误' } = error.response.data
     message.warning(retMessage)
     return Promise.reject(error)

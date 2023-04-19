@@ -15,9 +15,11 @@ import {
 const AddModal = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   const [form] = Form.useForm()
 
+  /* eslint-disable no-template-curly-in-string */
   const validateMessages = {
     required: '请输入${label}'
   }
+  /* eslint-disable no-template-curly-in-string */
 
   // 分类级别
   const levelOptions = [

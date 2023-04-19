@@ -1,34 +1,15 @@
 import React, { useState } from 'react'
 import { Card, ConfigProvider, DatePicker } from 'antd'
-import type { RangePickerProps } from 'antd/es/date-picker'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import LineChart from './LineChart'
+import { rangePresets, disabledDate, dateFormat } from '@utils/date'
 
 const { RangePicker } = DatePicker
 
-/**
- * 预设常用的日期范围
- */
-const rangePresets: {
-  label: string
-  value: [Dayjs, Dayjs]
-}[] = [
-  { label: '近7日', value: [dayjs().add(-7, 'd'), dayjs()] },
-  { label: '近14日', value: [dayjs().add(-14, 'd'), dayjs()] },
-  { label: '近30日', value: [dayjs().add(-30, 'd'), dayjs()] }
-]
-
-/**
- * Can not select days after todays
- */
-const disabledDate: RangePickerProps['disabledDate'] = current =>
-  current && current >= dayjs().endOf('day')
-
 const Statistics = () => {
-  const dateFormat = 'YYYY-MM-DD'
   const [dateRange, setDateRange] = useState<string[]>([
     dayjs().add(-7, 'd').format(dateFormat),
     dayjs().format(dateFormat)
@@ -44,7 +25,7 @@ const Statistics = () => {
   }
 
   /**
-   * 关闭日历的回调
+   * 关闭日期选择器的回调
    */
   const onOpenChange = (open: boolean) => {
     if (!open) console.log('close')
