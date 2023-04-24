@@ -3,7 +3,6 @@ import path from 'path'
 import react from '@vitejs/plugin-react'
 import { visualizer } from 'rollup-plugin-visualizer'
 
-
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   const { VITE_AUTH_BASE_URL } = loadEnv(mode, process.cwd())
@@ -16,8 +15,8 @@ export default defineConfig(({ mode }) => {
         filename: 'visualizer.html',
         open: true,
         gzipSize: true,
-        brotliSize: true,
-      }),
+        brotliSize: true
+      })
     ],
     server: {
       host: '0.0.0.0',
@@ -25,9 +24,9 @@ export default defineConfig(({ mode }) => {
         '/api': {
           target: VITE_AUTH_BASE_URL,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-      },
+          rewrite: path => path.replace(/^\/api/, '')
+        }
+      }
     },
     build: {
       sourcemap: true
@@ -40,14 +39,15 @@ export default defineConfig(({ mode }) => {
         '@utils': path.resolve(__dirname, './src/utils'),
         '@stores': path.resolve(__dirname, './src/stores'),
         '@api': path.resolve(__dirname, './src/api'),
-      },
+        '@mock': path.resolve(__dirname, './src/mock')
+      }
     },
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@import "./src/assets/mixin.scss";',
-        },
-      },
-    },
+          additionalData: '@import "./src/assets/mixin.scss";'
+        }
+      }
+    }
   }
 })

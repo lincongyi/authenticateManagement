@@ -12,7 +12,9 @@ import {
   Input,
   Row,
   Space,
-  Table
+  Table,
+  Tag,
+  Timeline
 } from 'antd'
 import { SingleValueType } from 'rc-cascader/lib/Cascader'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
@@ -20,9 +22,16 @@ import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import { rangePresets, disabledDate } from '@utils/date'
+import type {
+  TDictList,
+  TDictValue,
+  Option,
+  TState,
+  TDataType
+} from './index.d'
 import { dictList } from './index.config'
-import { Option, TDictValue, TDictList, TDataType } from './index.d'
 // import { getApplyCount } from '@api/myApplications'
+import { getApplyCount, getApplyList } from '@mock/myApplications'
 
 const { RangePicker } = DatePicker
 
@@ -51,50 +60,99 @@ const formatData = (array: TDictList[] | TDictValue[]) => {
 }
 
 const options = formatData(dictList)
+/**
+ * 扁平化处理options
+ * @returns {Option[]}
+ */
+const flattenOptions = options.reduce(
+  (prev: Option[], next: Option) => [...prev, ...next.children!],
+  []
+)
+
+/**
+ * 根据key值返回中文字符串
+ */
+const formatDictValue = (key: string) => {
+  const result = flattenOptions.find(item => item.value === key)
+  return result?.label || ''
+}
 
 const MyApplications = () => {
-  // useEffect(() => {
-  //   ;(async () => {
-  //     const { data } = await getApplyCount()
-  //     console.log(data)
-  //   })()
-  // }, [])
+  const stateInfo = [
+    { title: '全部申请' },
+    { title: '审批通过', options: ['check'] },
+    { title: '审批中', options: ['check', 'urge', 'withdraw'] },
+    { title: '审批不通过', options: ['check'] },
+    { title: '撤回', options: ['check', 'reapply'] }
+  ]
 
-  const [stateList] = useState([
-    { text: '全部申请', count: 10, badgeCount: 1, hasBadge: true },
-    {
-      state: 0,
-      text: '审批中',
-      count: 2,
-      badgeCount: 1,
-      hasBadge: true,
-      options: ['check', 'urge', 'withdraw']
-    },
-    {
-      state: 1,
-      text: '审批通过',
-      count: 3,
-      badgeCount: 2,
-      hasBadge: true,
-      options: ['check']
-    },
-    {
-      state: 2,
-      text: '审批未通过',
-      count: 4,
-      badgeCount: 3,
-      hasBadge: false,
-      options: ['check']
-    },
-    {
-      state: 3,
-      text: '撤回',
-      count: 1,
-      badgeCount: 1,
-      hasBadge: true,
-      options: ['check', 'reapply']
-    }
-  ])
+  type TStateList = TState & { title: string; options?: string[] }
+  const [stateList, setStateList] = useState<TStateList[]>()
+  /**
+   *
+   * @param {number} state 审批状态
+   * @returns {string} 审批状态中文
+   */
+  const stateToString = (state: number) => {
+    const result = stateList && stateList.find(item => item.state === state)
+    return result?.title || ''
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      /**
+       * 初始化审批状态
+       */
+      const { data: applyCount } = await getApplyCount({
+        endTime: '',
+        startTime: ''
+      })
+      const list = applyCount.map((item: TState, index: number) => ({
+        ...item,
+        ...stateInfo[index]
+      }))
+      setStateList(list)
+    })()
+  }, [])
+
+  useEffect(() => {
+    ;(async () => {
+      /**
+       * 初始化表格数据
+       */
+      const { data } = await getApplyList({
+        instanceId: '',
+        keys: [],
+        unifyName: '',
+        processState: -1,
+        startTime: '',
+        endTime: '',
+        pageNum: 1,
+        pageSize: 10
+      })
+      const list = data.list.map((item: TDataType) => {
+        const timeline = item.nodes.map(__item => {
+          return {
+            color: ['blue', 'gray', 'red', 'orange'][__item.isPass],
+            children: (
+              <span
+                style={{
+                  color: ['blue', 'gray', 'red', 'orange'][__item.isPass]
+                }}
+              >
+                {__item.name}({__item.userCount})
+              </span>
+            )
+          }
+        })
+        return { ...item, timeline }
+      })
+      setDataSource(list)
+      const { pageNum, pageSize, total } = data
+      setPagination({ ...pagination, pageNum, pageSize, total })
+    })()
+  }, [])
+
   const [activeState, setActiveState] = useState(0)
 
   const [form] = Form.useForm()
@@ -168,9 +226,9 @@ const MyApplications = () => {
    * 表格分页参数
    */
   const [pagination, setPagination] = useState({
-    current: 1,
+    pageNum: 1,
     pageSize: 10,
-    total: 31
+    total: 0
   })
 
   /**
@@ -183,47 +241,53 @@ const MyApplications = () => {
   const columns: ColumnsType<TDataType> = [
     {
       title: '序号',
-      dataIndex: 'key',
-      key: 'key'
+      key: 'order',
+      width: 60,
+      align: 'center',
+      render: (values: TDataType, record, index) => `${index + 1}`
     },
     {
       title: '审批单号',
-      dataIndex: 'number',
-      key: 'number'
-    },
-    {
-      title: '申请类型',
-      dataIndex: 'type',
-      key: 'type',
+      dataIndex: 'processInstanceId',
       ellipsis: true
     },
     {
+      title: '申请类型',
+      ellipsis: true,
+      render: (values: TDataType) => formatDictValue(values.key)
+    },
+    {
       title: '应用/服务名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'unifyName',
       ellipsis: true
     },
     {
       title: '审批状态',
-      dataIndex: 'state',
-      key: 'state',
-      ellipsis: true
+      align: 'center',
+      render: (values: TDataType) => (
+        <Tag
+          color={['success', 'processing', 'error', 'default'][values.state]}
+        >
+          {stateToString(values.state)}
+        </Tag>
+      )
     },
     {
       title: '审批进度',
-      dataIndex: 'schedule',
-      key: 'schedule',
-      ellipsis: true
+      width: 150,
+      render: (values: TDataType) => (
+        <>
+          <Timeline items={values.timeline} />
+        </>
+      )
     },
     {
       title: '申请时间',
-      dataIndex: 'applyDate',
-      key: 'date'
+      dataIndex: 'addTime'
     },
     {
       title: '审批时间',
-      dataIndex: 'approveDate',
-      key: 'date'
+      dataIndex: 'modTime'
     },
     {
       title: '操作',
@@ -231,124 +295,87 @@ const MyApplications = () => {
       width: 300,
       render: (values: TDataType) => (
         <>
-          {stateList[values.state].options!.map((item, index) => {
-            return (
-              <React.Fragment key={index}>
-                {item === 'check' && (
-                  <>
-                    <Button type='link' onClick={() => onCheck(values)}>
-                      查看
-                    </Button>
-                  </>
-                )}
-                {item === 'urge' && (
-                  <>
-                    <Button type='link' onClick={() => onUrge(values)}>
-                      催办
-                    </Button>
-                  </>
-                )}
-                {item === 'withdraw' && (
-                  <>
-                    <Button
-                      type='link'
-                      style={{ color: '#ff7875' }}
-                      onClick={() => onWithdraw(values)}
-                    >
-                      撤回
-                    </Button>
-                  </>
-                )}
-                {item === 'reapply' && (
-                  <>
-                    <Button
-                      type='link'
-                      style={{ color: '#ff7875' }}
-                      onClick={() => onReapply(values)}
-                    >
-                      重新申请
-                    </Button>
-                  </>
-                )}
-                {index !== stateList[values.state].options!.length - 1 && (
-                  <Divider type='vertical' />
-                )}
-              </React.Fragment>
-            )
-          })}
+          {stateList?.length &&
+            stateList[values.state + 1].options?.map((item, index) => {
+              return (
+                <React.Fragment key={index}>
+                  {item === 'check' && (
+                    <>
+                      <Button type='link' onClick={() => onCheck(values)}>
+                        查看
+                      </Button>
+                    </>
+                  )}
+                  {item === 'urge' && (
+                    <>
+                      <Button type='link' onClick={() => onUrge(values)}>
+                        催办
+                      </Button>
+                    </>
+                  )}
+                  {item === 'withdraw' && (
+                    <>
+                      <Button
+                        type='link'
+                        style={{ color: '#ff7875' }}
+                        onClick={() => onWithdraw(values)}
+                      >
+                        撤回
+                      </Button>
+                    </>
+                  )}
+                  {item === 'reapply' && (
+                    <>
+                      <Button
+                        type='link'
+                        style={{ color: '#ff7875' }}
+                        onClick={() => onReapply(values)}
+                      >
+                        重新申请
+                      </Button>
+                    </>
+                  )}
+                  {index !==
+                    stateList[values.state + 1].options!.length - 1 && (
+                    <Divider type='vertical' />
+                  )}
+                </React.Fragment>
+              )
+            })}
         </>
       )
     }
   ]
 
-  const data: TDataType[] = [
-    {
-      key: '1',
-      number: '0002390126',
-      type: '1-1',
-      name: '大白互联科技',
-      state: 1,
-      schedule: 'schedule',
-      applyDate: '2023.03.12 13:56:47'
-    },
-    {
-      key: '2',
-      number: '0002390127',
-      type: '1-1',
-      name: '南沙政务网',
-      state: 2,
-      schedule: 'schedule',
-      applyDate: '2023.03.12 13:56:47',
-      approveDate: '2023.03.12 13:56:47'
-    },
-    {
-      key: '3',
-      number: '0002390128',
-      type: '1-1',
-      name: '实人+实名认证',
-      state: 3,
-      schedule: 'schedule',
-      applyDate: '2023.03.12 13:56:47',
-      approveDate: '2023.03.12 13:56:47'
-    },
-    {
-      key: '4',
-      number: '0002390129',
-      type: '1-1',
-      name: '实人+实名认证',
-      state: 4,
-      schedule: 'schedule',
-      applyDate: '2023.03.12 13:56:47',
-      approveDate: '2023.03.12 13:56:47'
-    }
-  ]
+  const [dataSource, setDataSource] = useState<TDataType[]>([])
 
   return (
     <>
       <div className={style['state-filter']}>
-        {stateList.map((item, index) => {
-          return (
-            <div style={{ marginRight: 20 }} key={item.text}>
-              {item.hasBadge ? (
-                <Badge count={item.badgeCount} overflowCount={99}>
+        {stateList?.length &&
+          stateList.map((item, index) => {
+            return (
+              <div style={{ marginRight: 20 }} key={index}>
+                {item.badgeCount ? (
+                  <Badge count={item.badgeCount} overflowCount={99}>
+                    <Button
+                      type={index === activeState ? 'primary' : 'default'}
+                      onClick={() => setActiveState(index)}
+                    >
+                      {item.title} ({item.count})
+                    </Button>
+                  </Badge>
+                ) : (
                   <Button
                     type={index === activeState ? 'primary' : 'default'}
                     onClick={() => setActiveState(index)}
                   >
-                    {item.text} ({item.count})
+                    {item.title} ({item.count})
                   </Button>
-                </Badge>
-              ) : (
-                <Button
-                  type={index === activeState ? 'primary' : 'default'}
-                  onClick={() => setActiveState(index)}
-                >
-                  {item.text} ({item.count})
-                </Button>
-              )}
-            </div>
-          )
-        })}
+                )}
+              </div>
+            )
+          })}
       </div>
       <Divider />
 
@@ -415,9 +442,10 @@ const MyApplications = () => {
         <Col span={24}>
           <ConfigProvider locale={locale}>
             <Table
+              rowKey='id'
               className='myApplications-table'
               columns={columns}
-              dataSource={data}
+              dataSource={dataSource}
               pagination={pagination}
               onChange={onTableChange}
             />

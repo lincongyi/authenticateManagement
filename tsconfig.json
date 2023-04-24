@@ -16,13 +16,14 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@pages/*":["./src/pages/*"],
-      "@components/*":["./src/components/*"],
-      "@utils/*":["./src/utils/*"],
-      "@stores/*":["./src/stores/*"],
-      "@api/*":["./src/api/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@components/*": ["./src/components/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@stores/*": ["./src/stores/*"],
+      "@api/*": ["./src/api/*"],
+      "@mock/*": ["./src/mock/*"]
     }
   },
-  "include": ["src","**/*.d.ts"],
+  "include": ["src", "**/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

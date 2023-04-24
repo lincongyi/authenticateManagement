@@ -119,7 +119,7 @@ const Classification = () => {
   }
 
   const [pagination, setPagination] = useState({
-    current: 1,
+    pageNum: 1,
     pageSize: 10,
     total: 31
   }) // 表格分页参数

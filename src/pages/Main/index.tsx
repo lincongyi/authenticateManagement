@@ -105,7 +105,7 @@ const Main = () => {
   const [myApplications] = useState([
     { subtitle: '审批中', count: 100 },
     { subtitle: '审批通过', count: 200 },
-    { subtitle: '审批未通过', count: 300 }
+    { subtitle: '审批不通过', count: 300 }
   ])
 
   /**

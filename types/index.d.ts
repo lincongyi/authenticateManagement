@@ -1,4 +1,4 @@
-declare type TMenuItem = {
+type TMenuItem = {
   label: string
   key: string
   icon?: React.FunctionComponentElement<{}> | string
@@ -6,7 +6,7 @@ declare type TMenuItem = {
   children?: TMenuItem[]
 }
 
-declare type TResponse<T = any> = {
+type TResponse<T = any> = {
   ret?: boolean
   detailMessage?: string
   retCode: number
@@ -14,11 +14,11 @@ declare type TResponse<T = any> = {
   data?: T
 }
 
-declare type TUserInfo = {
+type TUserInfo = {
   accountNumber: string
 }
 
-declare type TProcess = {
+type TProcess = {
   taskId?: string // 任务id
   state: -1 | 0 | 1 | 3 // -1.未知状态，重定向页面；0.审核通过；1.审核中；3.驳回；
   processInstanceId: string // 流程id
@@ -26,7 +26,7 @@ declare type TProcess = {
   comment: string // 提示信息
 }
 
-declare type TAreaItem = {
+type TAreaItem = {
   code: string
   id: number
   level: string
@@ -34,7 +34,7 @@ declare type TAreaItem = {
   parentCode: string
 }
 
-declare type TCompanyInfo = {
+type TCompanyInfo = {
   companyName: string // 单位名称
   accountNumber: string // 管理员姓名
   certificateNum: string // 统一社会信用代码
@@ -48,7 +48,7 @@ declare type TCompanyInfo = {
   companyId?: string
 }
 
-declare type TResetParams = {
+type TResetParams = {
   type: 0 | 1 | 2 // 预留方式：0-手机；1-邮箱；2-扫码
   key: string // 手机号 or 邮箱
   imgCaptcha: string // 图片验证码
