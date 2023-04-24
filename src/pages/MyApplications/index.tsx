@@ -16,7 +16,6 @@ import {
   Tag,
   Timeline
 } from 'antd'
-import { SingleValueType } from 'rc-cascader/lib/Cascader'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
@@ -35,6 +34,7 @@ import {
   getApplyCount,
   getApplyList
 } from '@mock/myApplications'
+import type { TGetApplyListParams } from '@mock/myApplications'
 
 const { RangePicker } = DatePicker
 
@@ -81,6 +81,11 @@ const MyApplications = () => {
     const result = stateList && stateList.find(item => item.state === state)
     return result?.title || ''
   }
+
+  /**
+   * 申请状态按钮group
+   */
+  const [activeState, setActiveState] = useState<0 | 1 | 2 | 3 | 4>(0)
 
   useEffect(() => {
     ;(async () => {
@@ -129,54 +134,54 @@ const MyApplications = () => {
     return result?.label || ''
   }
 
-  useEffect(() => {
-    ;(async () => {
+  /**
+   * 渲染表格数据
+   */
+  const renderTable = async (params: TGetApplyListParams) => {
+    const { data } = await getApplyList(params)
+    const list = data.list.map((item: TDataType) => {
       /**
-       * 初始化表格数据
+       * 处理审批进度组件数据
        */
-      const { data } = await getApplyList({
-        instanceId: '',
-        keys: [],
-        unifyName: '',
-        processState: -1,
-        startTime: '',
-        endTime: '',
-        pageNum: 1,
-        pageSize: 10
+      const timeline = item.nodes.map(__item => {
+        return {
+          color: ['blue', 'gray', 'red', 'orange'][__item.isPass],
+          children: (
+            <span
+              style={{
+                color: ['blue', 'gray', 'red', 'orange'][__item.isPass]
+              }}
+            >
+              {__item.name}({__item.userCount})
+            </span>
+          )
+        }
       })
-      const list = data.list.map((item: TDataType) => {
-        const timeline = item.nodes.map(__item => {
-          return {
-            color: ['blue', 'gray', 'red', 'orange'][__item.isPass],
-            children: (
-              <span
-                style={{
-                  color: ['blue', 'gray', 'red', 'orange'][__item.isPass]
-                }}
-              >
-                {__item.name}({__item.userCount})
-              </span>
-            )
-          }
-        })
-        return { ...item, timeline }
-      })
-      setDataSource(list)
-      const { pageNum, pageSize, total } = data
-      setPagination({ ...pagination, current: pageNum, pageSize, total })
-    })()
-  }, [])
-
-  const [activeState, setActiveState] = useState(0)
-
-  const [form] = Form.useForm()
+      return { ...item, timeline }
+    })
+    setDataSource(list)
+    const { pageNum, pageSize, total } = data
+    setPagination({ ...pagination, current: pageNum, pageSize, total })
+  }
 
   /**
-   * 申请类型发生变化的回调
+   * 监听申请状态切换
    */
-  const onChange = (value: SingleValueType[]) => {
-    console.log(value)
-  }
+  useEffect(() => {
+    form.resetFields()
+    setPagination({ ...pagination, current: 1 })
+    const params: TGetApplyListParams = {
+      processState: activeState - 1,
+      ...form.getFieldsValue(),
+      startTime: undefined,
+      endTime: undefined,
+      pageNum: 1,
+      pageSize: 10
+    }
+    renderTable(params)
+  }, [activeState])
+
+  const [form] = Form.useForm()
 
   const [dateRange, setDateRange] = useState<string[]>([])
 
@@ -202,14 +207,34 @@ const MyApplications = () => {
    */
   const onReset = () => {
     form.resetFields()
-    setActiveState(0)
+  }
+
+  type TValues = {
+    instanceId: string | undefined
+    keys: [string[]] | undefined
+    unifyName: string | undefined
+    dateRange: string[]
   }
 
   /**
    * 查询
    */
-  const onFinish = (values: any) => {
-    console.log('Success:', values)
+  const onFinish = (values: TValues) => {
+    const keys = values.keys?.map((item: string[]) => item.at(-1))
+    const [startTime, endTime] = values.dateRange
+      ? values.dateRange
+      : [undefined, undefined]
+    const params = {
+      ...values,
+      keys,
+      startTime,
+      endTime,
+      processState: activeState - 1,
+      pageNum: 1,
+      pageSize: 10
+    } as TGetApplyListParams
+    renderTable(params)
+    console.log('params', params)
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -244,6 +269,21 @@ const MyApplications = () => {
     pageSize: 10,
     total: 0
   })
+
+  useEffect(() => {
+    const dateRange = form.getFieldValue('dateRange')
+    const [startTime, endTime] = dateRange || [undefined, undefined]
+    const params: TGetApplyListParams = {
+      processState: activeState - 1,
+      ...form.getFieldsValue(),
+      startTime,
+      endTime,
+      pageNum: pagination.current,
+      pageSize: 10
+    }
+    console.log('params', params)
+    renderTable(params)
+  }, [pagination.current])
 
   /**
    * 分页、排序、筛选变化时触发
@@ -374,7 +414,7 @@ const MyApplications = () => {
                   <Badge count={item.badgeCount} overflowCount={99}>
                     <Button
                       type={index === activeState ? 'primary' : 'default'}
-                      onClick={() => setActiveState(index)}
+                      onClick={() => setActiveState(index as 0 | 1 | 2 | 3)}
                     >
                       {item.title} ({item.count})
                     </Button>
@@ -382,7 +422,7 @@ const MyApplications = () => {
                 ) : (
                   <Button
                     type={index === activeState ? 'primary' : 'default'}
-                    onClick={() => setActiveState(index)}
+                    onClick={() => setActiveState(index as 0 | 1 | 2 | 3)}
                   >
                     {item.title} ({item.count})
                   </Button>
@@ -404,17 +444,16 @@ const MyApplications = () => {
           >
             <Row gutter={20}>
               <Col span={6}>
-                <Form.Item label='审批单号' name='number'>
+                <Form.Item label='审批单号' name='instanceId'>
                   <Input placeholder='请输入审批单号' maxLength={10} />
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='申请类型：' name='type'>
+                <Form.Item label='申请类型：' name='keys'>
                   <Cascader
                     placeholder='请选择申请类型'
                     style={{ width: '100%' }}
                     options={processKeyList}
-                    onChange={e => onChange(e)}
                     multiple
                     maxTagCount='responsive'
                     showCheckedStrategy={Cascader.SHOW_CHILD}
@@ -422,7 +461,7 @@ const MyApplications = () => {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='应用/服务名称：' name='bane'>
+                <Form.Item label='应用/服务名称：' name='unifyName'>
                   <Input placeholder='请输入应用/服务名称' maxLength={10} />
                 </Form.Item>
               </Col>

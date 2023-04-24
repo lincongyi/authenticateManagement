@@ -123,13 +123,13 @@ export const mockApplyList = Mock.mock({
   }
 })
 
-type TGetApplyListParams = {
-  instanceId: string // 审批单号,
-  keys: string[] // 申请类型
-  unifyName: string // 应用/服务名称
-  processState: number // 审批状态
-  startTime: string // 开始日期
-  endTime: string // 结束日期
+export type TGetApplyListParams = {
+  instanceId: string | undefined // 审批单号,
+  keys: (string | undefined)[] | undefined // 申请类型
+  unifyName: string | undefined // 应用/服务名称
+  processState: -1 | 0 | 1 | 2 | 3 // 审批状态
+  startTime: string | undefined // 开始日期
+  endTime: string | undefined // 结束日期
   pageNum: number
   pageSize: number
 }
