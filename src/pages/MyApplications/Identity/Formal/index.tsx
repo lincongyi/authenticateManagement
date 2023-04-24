@@ -20,6 +20,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import FormalCheckModal from './components/FormalCheckModal'
+import type { IdentityFormalDataType } from '@pages/MyApplications/index.d'
 
 const Formal = () => {
   const [form] = Form.useForm()
@@ -92,7 +93,7 @@ const Formal = () => {
 
   // 表格分页参数
   const [pagination, setPagination] = useState({
-    pageNum: 1,
+    current: 1,
     pageSize: 10,
     total: 31
   })

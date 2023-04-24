@@ -29,9 +29,12 @@ import type {
   TState,
   TDataType
 } from './index.d'
-import { dictList } from './index.config'
 // import { getApplyCount } from '@api/myApplications'
-import { getApplyCount, getApplyList } from '@mock/myApplications'
+import {
+  getdictionary,
+  getApplyCount,
+  getApplyList
+} from '@mock/myApplications'
 
 const { RangePicker } = DatePicker
 
@@ -59,24 +62,6 @@ const formatData = (array: TDictList[] | TDictValue[]) => {
   return list
 }
 
-const options = formatData(dictList)
-/**
- * 扁平化处理options
- * @returns {Option[]}
- */
-const flattenOptions = options.reduce(
-  (prev: Option[], next: Option) => [...prev, ...next.children!],
-  []
-)
-
-/**
- * 根据key值返回中文字符串
- */
-const formatDictValue = (key: string) => {
-  const result = flattenOptions.find(item => item.value === key)
-  return result?.label || ''
-}
-
 const MyApplications = () => {
   const stateInfo = [
     { title: '全部申请' },
@@ -89,7 +74,6 @@ const MyApplications = () => {
   type TStateList = TState & { title: string; options?: string[] }
   const [stateList, setStateList] = useState<TStateList[]>()
   /**
-   *
    * @param {number} state 审批状态
    * @returns {string} 审批状态中文
    */
@@ -107,13 +91,43 @@ const MyApplications = () => {
         endTime: '',
         startTime: ''
       })
-      const list = applyCount.map((item: TState, index: number) => ({
+      const list = applyCount?.map((item: TState, index: number) => ({
         ...item,
         ...stateInfo[index]
       }))
       setStateList(list)
     })()
   }, [])
+
+  const [processKeyList, setProcessKeyList] = useState<Option[]>()
+  useEffect(() => {
+    ;(async () => {
+      /**
+       * 初始化申请类型
+       */
+      const { data } = await getdictionary({
+        typeValues: ['processKeyList']
+      })
+      const { dictList } = data.processKeyList
+      setProcessKeyList(formatData(dictList))
+    })()
+  }, [])
+
+  /**
+   * 根据key值返回中文字符串
+   */
+  const formatDictValue = (key: string) => {
+    /**
+     * 扁平化处理options
+     * @returns {Option[]}
+     */
+    const flattenOptions = processKeyList?.reduce(
+      (prev: Option[], next: Option) => [...prev, ...next.children!],
+      []
+    )
+    const result = flattenOptions?.find(item => item.value === key)
+    return result?.label || ''
+  }
 
   useEffect(() => {
     ;(async () => {
@@ -149,7 +163,7 @@ const MyApplications = () => {
       })
       setDataSource(list)
       const { pageNum, pageSize, total } = data
-      setPagination({ ...pagination, pageNum, pageSize, total })
+      setPagination({ ...pagination, current: pageNum, pageSize, total })
     })()
   }, [])
 
@@ -226,7 +240,7 @@ const MyApplications = () => {
    * 表格分页参数
    */
   const [pagination, setPagination] = useState({
-    pageNum: 1,
+    current: 1,
     pageSize: 10,
     total: 0
   })
@@ -397,8 +411,9 @@ const MyApplications = () => {
               <Col span={6}>
                 <Form.Item label='申请类型：' name='type'>
                   <Cascader
+                    placeholder='请选择申请类型'
                     style={{ width: '100%' }}
-                    options={options}
+                    options={processKeyList}
                     onChange={e => onChange(e)}
                     multiple
                     maxTagCount='responsive'

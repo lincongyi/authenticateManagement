@@ -19,6 +19,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import UpdateCheckModal from '../components/UpdateCheckModal'
+import type { OthersUpdateDataType } from '@pages/MyApplications/index.d'
 
 const Update = () => {
   const [form] = Form.useForm()
@@ -91,7 +92,7 @@ const Update = () => {
 
   // 表格分页参数
   const [pagination, setPagination] = useState({
-    pageNum: 1,
+    current: 1,
     pageSize: 10,
     total: 31
   })
