@@ -141,9 +141,10 @@ const AppLayout = () => {
                 onClick: () => setCollapsed(!collapsed)
               }
             )}
-            <Breadcrumb style={{ margin: '16px 0' }}>
-              <Breadcrumb.Item>{breadcrumbName}</Breadcrumb.Item>
-            </Breadcrumb>
+            <Breadcrumb
+              style={{ margin: '16px 0' }}
+              items={[{ title: breadcrumbName }]}
+            ></Breadcrumb>
           </Space>
           <Content
             style={{
