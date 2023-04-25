@@ -64,5 +64,5 @@ export {
   applyUpdateCompanyInfo,
   resubmitCompany,
   retrievePassword,
-  currentResetPassword,
+  currentResetPassword
 }

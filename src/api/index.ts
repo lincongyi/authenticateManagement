@@ -27,7 +27,7 @@ const sendCaptcha = (params: object): Promise<TResponse> => {
 const imgCaptcha = (query: object): Promise<Blob> => {
   return request.get('/captcha/imgCaptcha', {
     responseType: 'blob',
-    params: query,
+    params: query
   })
 }
 
@@ -45,6 +45,13 @@ const getProcessByKey = (params: object): Promise<TResponse> => {
   return request.post('/getProcessByKey', params)
 }
 
+/**
+ * 获取二维码
+ */
+const getQrcode = (): Promise<TResponse> => {
+  return request.get('/user/qrcode')
+}
+
 export {
   logout,
   getAreacodes,
@@ -52,4 +59,5 @@ export {
   imgCaptcha,
   verifyCaptcha,
   getProcessByKey,
+  getQrcode
 }

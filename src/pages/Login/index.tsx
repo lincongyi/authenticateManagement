@@ -7,9 +7,10 @@ import {
   QrcodeOutlined,
   QuestionCircleOutlined
 } from '@ant-design/icons'
-import { Layout, Button, Form, Input, message, Popover } from 'antd'
+import { Layout, Button, Form, Input, Popover } from 'antd'
 import Header from '@components/Header'
 import { login } from '@api/login'
+import ScanQrcode from '@components/ScanQrcode'
 
 const { Content } = Layout
 
@@ -20,7 +21,7 @@ const Login = () => {
    */
 
   const switchLoginMethod = (index: number) => {
-    if (index) return message.warning('暂未支持扫码登录')
+    // if (index) return message.warning('暂未支持扫码登录')
     setSelectedIndex(index)
   }
   const methodList = [
@@ -94,6 +95,10 @@ const Login = () => {
     console.log(errorInfo)
   }
 
+  const handleScanCode = (token: string) => {
+    console.log(token)
+  }
+
   const initialValues = {
     accountNumber: 'cy0318',
     password: 'Aa112233'
@@ -125,7 +130,7 @@ const Login = () => {
                 ))}
               </ul>
             </div>
-            <div className={style.account}>
+            {!selectedIndex ? (
               <Form
                 name='login'
                 className={style['login-form']}
@@ -185,7 +190,12 @@ const Login = () => {
                   </Button>
                 </Form.Item>
               </Form>
-            </div>
+            ) : (
+              <div className={style['qrcode-wrap']}>
+                <p className={style.tips}>请使用微警认证App或微信扫描二维码</p>
+                <ScanQrcode callback={handleScanCode} size={200} />
+              </div>
+            )}
           </div>
         </div>
       </Content>

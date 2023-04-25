@@ -67,5 +67,5 @@ export {
   emailPattern,
   handleCopy,
   getBase64,
-  reverseArray,
+  reverseArray
 }
