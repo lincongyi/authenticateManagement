@@ -29,7 +29,7 @@ export type TDataType = {
   unifyName: string // 应用/服务名称
   addTime: string // 申请时间
   modTime: string // 审批时间
-  completeTime: string // 结束时间
+  completeTime: string // 审批完成时间
   starter: string // 申请人
   isNoticeUser: boolean // 是否被查看过
   nodes: {

@@ -23,14 +23,30 @@
   }
 }
 
+.apply-btn {
+  margin-left: 48px;
+
+  &.is-approving {
+    color: rgb(0 0 0 / 25%);
+    background-color: rgb(0 0 0 / 4%);
+    border: 1px solid #d9d9d9;
+  }
+}
+
+.approve-tips {
+  padding: 12px 16px;
+  line-height: 1.5714;
+  border-bottom: 1px solid rgb(232 233 234);
+}
+
 .title {
   margin-top: 48px;
+  margin-bottom: 16px;
   font-weight: bold;
 }
 
-.record-item {
-  padding: 12px 16px;
-  font-size: 13.5px;
+.record-wrap {
+  border-top: 1px solid rgb(232 233 234);
 }
 
 .panel {

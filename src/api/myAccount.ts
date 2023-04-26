@@ -3,7 +3,7 @@ import { request } from '@utils/request'
 /**
  * 获取当前公司信息
  */
-const currentCompanyInfo = (): Promise<TResponse> => {
+const currentCompanyInfo = (): Promise<TResponse<TCompanyInfo>> => {
   return request.get('/account/currentCompanyInfo')
 }
 

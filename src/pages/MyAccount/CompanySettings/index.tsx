@@ -44,18 +44,18 @@ const CompanySettings = () => {
       const { data: currentInfo } = await currentCompanyInfo()
 
       const { data } = await getProcessByKey({
-        userId: currentInfo.accountNumber,
+        userId: currentInfo!.accountNumber,
         key: 'UPDATE_COMPANY_INFO'
       })
       // 如果当前任务返回空 or 驳回状态，即可走提交申请流程，否则当前申请审批在审核中，不可重复提交申请
       if (!data || data.instanceInfo.state === 3) {
         form.setFieldsValue(currentInfo)
-        if (currentInfo.areaList) {
-          form.setFieldValue('areaCode', currentInfo.areaList[0].code)
+        if (currentInfo!.areaList) {
+          form.setFieldValue('areaCode', currentInfo!.areaList[0].code)
         }
         setCompanyInfo(currentInfo)
         setCertificateFile(
-          `data:image/png;base64,${currentInfo.certificatePhoto}`
+          `data:image/png;base64,${currentInfo!.certificatePhoto}`
         )
       }
       if (data) {
@@ -128,17 +128,13 @@ const CompanySettings = () => {
    * 提交数据
    */
   const onFinish = async (values: TCompanyInfo & { adminName: string }) => {
-    const { companyId } = companyInfo as TCompanyInfo
-    const {
-      companyName,
-      companyShortName,
-      adminName,
-      certificateNum,
-      areaCode
-    } = values
+    const { companyId, adminName, adminPhone, adminEmail } =
+      companyInfo as TCompanyInfo
+    const { companyName, companyShortName, certificateNum, areaCode } = values
     const certificatePhoto = certificateFile.substring(
       certificateFile.indexOf('base64,') + 7
     )
+
     let content = ''
     if (process.state === 3) {
       const { taskId, processInstanceId: instanceId, starter } = process
@@ -149,6 +145,9 @@ const CompanySettings = () => {
         companyName,
         companyShortName,
         certificateNum,
+        adminName,
+        adminPhone,
+        adminEmail,
         certificatePhoto,
         areaCode
       })
@@ -159,6 +158,8 @@ const CompanySettings = () => {
         companyName,
         companyShortName,
         adminName,
+        adminPhone,
+        adminEmail,
         certificateNum,
         certificatePhoto,
         areaCode
@@ -224,7 +225,7 @@ const CompanySettings = () => {
             >
               <Input showCount maxLength={20} />
             </Form.Item>
-            <Form.Item name='adminPhone' label='管理员手机号' required>
+            <Form.Item label='管理员手机号' required>
               <>
                 {companyInfo?.adminPhone}
                 <Button
@@ -237,7 +238,7 @@ const CompanySettings = () => {
                 </Button>
               </>
             </Form.Item>
-            <Form.Item name='adminEmail' label='管理员邮箱' required>
+            <Form.Item label='管理员邮箱' required>
               <>
                 {companyInfo?.adminEmail}
                 <Button

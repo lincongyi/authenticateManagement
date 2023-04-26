@@ -6,7 +6,7 @@ import { reverseArray } from '@utils/index'
 const CompanyDescriptions = ({
   companyInfo
 }: {
-  companyInfo: TCompanyInfo | undefined
+  companyInfo: TCompanyInfo | TApplyRecord['info'] | undefined
 }) => {
   return (
     <>
@@ -15,7 +15,7 @@ const CompanyDescriptions = ({
           {companyInfo?.companyName}
         </Descriptions.Item>
         <Descriptions.Item label='管理员姓名：'>
-          {companyInfo?.accountNumber}
+          {companyInfo?.adminName}
         </Descriptions.Item>
         <Descriptions.Item label='统一社会信用代码：'>
           {companyInfo?.certificateNum}
@@ -27,16 +27,17 @@ const CompanyDescriptions = ({
           {companyInfo?.adminPhone}
         </Descriptions.Item>
         <Descriptions.Item label='接入地区：'>
-          {companyInfo?.areaList &&
-            reverseArray(companyInfo.areaList).map(
-              (item: TAreaItem) => item.name
-            )}
+          {companyInfo?.areaList
+            ? reverseArray(companyInfo.areaList).map(
+                (item: TAreaItem) => item.name
+              )
+            : companyInfo?.areaCode}
         </Descriptions.Item>
         <Descriptions.Item label='管理员邮箱：'>
           {companyInfo?.adminEmail}
         </Descriptions.Item>
         <Descriptions.Item label='信用代码证书：'>
-          {companyInfo ? (
+          {companyInfo && companyInfo.certificatePhoto ? (
             <Image
               width={200}
               src={`data:image/png;base64,${companyInfo.certificatePhoto}`}

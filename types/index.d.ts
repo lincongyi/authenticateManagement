@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 type TMenuItem = {
   label: string
   key: string
@@ -34,18 +35,50 @@ type TAreaItem = {
   parentCode: string
 }
 
+type TApplyRecord = {
+  id: string
+  addTime: string // 创建时间
+  modTime: string // 审批时间
+  completeTime: string | null // 审批完成时间
+  state: 0 | 1 | 2 | 3 // 申请状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+  tips: string // 提示
+  info: {
+    companyId: string
+    companyName: string
+    adminName: string
+    adminPhone: string
+    adminEmail: string
+    certificateNum: string
+    companyShortName: string
+    areaCode: string
+    areaList?: TAreaItem[]
+    unifyName: string
+    certificatePhoto: string
+  }
+  node:
+    | []
+    | {
+        name: string // 审批进度节点name
+        userCount: number // 当前节点人数
+        isPass: 0 | 1 | 2 | 3 // 当前节点状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+      }[]
+}
+
 type TCompanyInfo = {
+  companyId?: string
   companyName: string // 单位名称
-  accountNumber: string // 管理员姓名
+  accountNumber: string // 管理员账号
   certificateNum: string // 统一社会信用代码
   companyShortName: string // 单位简称
   adminPhone: string // 管理员手机号
-  areaList: TAreaItem[] // 接入地区
+  areaList?: TAreaItem[] // 接入地区
   areaCode: string
+  adminName: string // 管理员姓名
+  adminPhone: string // 管理员手机号
   adminEmail: string // 管理员邮箱
-  certificatePhoto: string // 信用代码证书
-  userId?: string
-  companyId?: string
+  certificatePhoto: string // 信用代码证书base64
+  hasApply: boolean // 是否正在审批
+  applyRecord?: [] | TApplyRecord[] // 修改记录
 }
 
 type TResetParams = {
