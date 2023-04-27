@@ -9,17 +9,13 @@ import { rangePresets, disabledDate, dateFormat } from '@utils/date'
 
 const { RangePicker } = DatePicker
 
-type TInfo = {
-  subtitle: string
-  count: number
-}
 const Panel2 = ({
   title,
   info,
   getData
 }: {
   title: string
-  info: TInfo[]
+  info: TPannel2Info[]
   getData: Function
 }) => {
   const [dateRange, setDateRange] = useState<string[]>([
@@ -70,7 +66,7 @@ const Panel2 = ({
                 className={`${style.colunm} ${style['colunm0' + (index + 1)]}`}
                 key={index}
               >
-                <div className={style.subtitle}>{item.subtitle}</div>
+                <div className={style.title}>{item.title}</div>
                 <div
                   className={`${style.content} ${style['icon0' + (index + 1)]}`}
                 >

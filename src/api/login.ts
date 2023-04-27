@@ -5,6 +5,7 @@ type TLoginResponse = {
   accountNumber: string // 用户名
   userId: string
   idNum: string // 证件号码
+  companyName: string // 单位名称
 }
 
 /**

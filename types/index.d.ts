@@ -17,6 +17,7 @@ type TResponse<T = any> = {
 
 type TUserInfo = {
   accountNumber: string
+  companyName: string
 }
 
 type TProcess = {
@@ -88,4 +89,9 @@ type TResetParams = {
   captcha: string // 邮箱或短信验证码
   password: string // 密码
   confirmPassword: string // 确认密码
+}
+
+type TPannel2Info = {
+  title: string
+  count: number
 }

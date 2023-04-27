@@ -7,6 +7,7 @@ import { AlertOutlined } from '@ant-design/icons'
 import Panel1 from './components/Panel1'
 import Panel2 from './components/Panel2'
 import Statistics from './components/Statistics'
+import { getApplyCount } from '@api/myApplications'
 
 const Main = () => {
   const { themeStore } = useStore()
@@ -35,13 +36,30 @@ const Main = () => {
    * 用户名
    */
   const [accountNumber, setAccountNumber] = useState('')
-  /**
-   * 初始化用户名
-   */
   useEffect(() => {
+    /**
+     * 初始化用户名
+     */
     if (!localStorage.getItem('userInfo')) return navigate('/login')
     const userInfo: TUserInfo = JSON.parse(localStorage.getItem('userInfo')!)
     setAccountNumber(userInfo.accountNumber)
+
+    /**
+     * 初始化我的申请数据
+     */
+    ;(async () => {
+      const { data } = await getApplyCount({
+        endTime: '',
+        startTime: ''
+      })
+      // 审批中
+      const item1 = { title: '审批中', count: data![2].count }
+      // 审批通过
+      const item2 = { title: '审批通过', count: data![1].count }
+      // 审批不通过
+      const item3 = { title: '审批不通过', count: data![3].count }
+      setMyApplications([item1, item2, item3])
+    })()
   }, [])
 
   /**
@@ -102,11 +120,7 @@ const Main = () => {
   /**
    * 我的申请
    */
-  const [myApplications] = useState([
-    { subtitle: '审批中', count: 100 },
-    { subtitle: '审批通过', count: 200 },
-    { subtitle: '审批不通过', count: 300 }
-  ])
+  const [myApplications, setMyApplications] = useState<TPannel2Info[]>()
 
   /**
    * 获取我的申请数据
@@ -119,8 +133,8 @@ const Main = () => {
    * 我的工单
    */
   const [myWorkOrder] = useState([
-    { subtitle: '待处理', count: 400 },
-    { subtitle: '已处理', count: 500 }
+    { title: '待处理', count: 400 },
+    { title: '已处理', count: 500 }
   ])
 
   /**
@@ -189,11 +203,13 @@ const Main = () => {
         <Col span={12}>
           <Row gutter={[0, 20]}>
             <Col span={24}>
-              <Panel2
-                title='我的申请'
-                info={myApplications}
-                getData={getMyApplications}
-              />
+              {myApplications && (
+                <Panel2
+                  title='我的申请'
+                  info={myApplications}
+                  getData={getMyApplications}
+                />
+              )}
             </Col>
             <Col span={24}>
               <Panel2

@@ -15,9 +15,11 @@ export const dropdownList: TMenuItem[] = [
 const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
   let userInfo: TUserInfo | undefined
   let accountNumber: string = ''
+  let companyName: string = ''
   if (isLogin) {
     userInfo = JSON.parse(localStorage.getItem('userInfo') as string)
     accountNumber = userInfo?.accountNumber || ''
+    companyName = userInfo?.companyName || ''
   }
 
   const navigate = useNavigate()
@@ -81,6 +83,13 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
         <div className={style['right-side']}>
           {isLogin ? (
             <Space>
+              <Button
+                type='text'
+                style={{ color: '#fff', fontSize: 18, lineHeight: 1 }}
+                onClick={() => navigate('/app/myAccount')}
+              >
+                {companyName}
+              </Button>
               <UserOutlined />
               <Dropdown menu={{ items }} placement='bottomRight' arrow>
                 <Button type='text' style={{ color: '#fff' }}>

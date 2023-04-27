@@ -75,7 +75,10 @@ const Login = () => {
     localStorage.setItem('token', data!.token)
     localStorage.setItem(
       'userInfo',
-      JSON.stringify({ accountNumber: data!.accountNumber })
+      JSON.stringify({
+        accountNumber: data!.accountNumber,
+        companyName: data!.companyName
+      })
     )
 
     if (!search) navigate('/app/main')

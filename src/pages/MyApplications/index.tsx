@@ -29,7 +29,6 @@ import type {
   TState,
   TDataType
 } from './index.d'
-// import { getApplyCount } from '@api/myApplications'
 import {
   getdictionary,
   getApplyCount,
