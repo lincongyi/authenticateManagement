@@ -12,29 +12,29 @@ const CompanyDescriptions = ({
     <>
       <Descriptions bordered className='tc'>
         <Descriptions.Item label='单位名称：'>
-          {companyInfo?.companyName}
+          {companyInfo?.companyName || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='管理员姓名：'>
-          {companyInfo?.adminName}
+          {companyInfo?.adminName || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='统一社会信用代码：'>
-          {companyInfo?.certificateNum}
+          {companyInfo?.certificateNum || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='单位简称：'>
-          {companyInfo?.companyShortName}
+          {companyInfo?.companyShortName || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='管理员手机号：'>
-          {companyInfo?.adminPhone}
+          {companyInfo?.adminPhone || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='接入地区：'>
           {companyInfo?.areaList
             ? reverseArray(companyInfo.areaList).map(
                 (item: TAreaItem) => item.name
               )
-            : companyInfo?.areaCode}
+            : companyInfo?.areaCode || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='管理员邮箱：'>
-          {companyInfo?.adminEmail}
+          {companyInfo?.adminEmail || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='信用代码证书：'>
           {companyInfo && companyInfo.certificatePhoto ? (

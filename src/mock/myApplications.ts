@@ -138,7 +138,7 @@ export type TGetApplyListParams = {
  * 获取申请列表
  */
 const getApplyList = (params: TGetApplyListParams): Promise<TResponse> => {
-  return request.post(`${baseUrl}/getApplyList`, params)
+  return request.post(`${baseUrl}/user/getApplyList`, params)
 }
 
 export { getdictionary, getApplyCount, getApplyList }

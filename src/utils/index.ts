@@ -1,4 +1,5 @@
 import type { RcFile } from 'antd/es/upload/interface'
+import { useEffect, useRef } from 'react'
 /**
  * 获取当前环境
  */
@@ -51,13 +52,25 @@ const getBase64 = (img: RcFile, callback: (url: string) => void) => {
 
 /**
  * 反转数组
- * @param {TAreaItem[]} 初始数组
+ * @param {TAreaItem[]} array 初始数组
  * @returns {TAreaItem[] | []} 返回一个反转后的接入地区数组
  */
 const reverseArray = (array: TAreaItem[]) => {
   return array.reduce((prev: TAreaItem[] | [], next) => {
     return [next, ...prev]
   }, [])
+}
+
+/**
+ * 自定义hook使useEffect在更新时才执行
+ * @param {Function} callback useEffect里执行的方法
+ * @param {string[]} params 依赖项
+ */
+const useUpdateEffect = (callback: Function, params: any[]) => {
+  const didMountRef = useRef(false)
+  useEffect(() => {
+    didMountRef.current ? callback && callback() : (didMountRef.current = true)
+  }, params)
 }
 
 export {
@@ -67,5 +80,6 @@ export {
   emailPattern,
   handleCopy,
   getBase64,
-  reverseArray
+  reverseArray,
+  useUpdateEffect
 }

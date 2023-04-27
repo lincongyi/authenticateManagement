@@ -52,13 +52,6 @@ const Login = () => {
   const navigate = useNavigate()
   const { search } = useLocation()
 
-  const content = (
-    <>
-      <p>如已忘记密码，请您通过扫码登录方式进入平台，</p>
-      <p>在“账号信息” - “修改密码”重置登录密码</p>
-    </>
-  )
-
   /**
    * 账号注册申请
    */
@@ -167,7 +160,12 @@ const Login = () => {
                     <Popover
                       placement='bottomRight'
                       title='温馨提示'
-                      content={content}
+                      content={
+                        <>
+                          <p>如已忘记密码，请您通过扫码登录方式进入平台，</p>
+                          <p>在“账号信息” - “修改密码”重置登录密码</p>
+                        </>
+                      }
                       trigger='click'
                     >
                       <p>

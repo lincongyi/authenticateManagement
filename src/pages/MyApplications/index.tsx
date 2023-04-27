@@ -14,7 +14,8 @@ import {
   Space,
   Table,
   Tag,
-  Timeline
+  Timeline,
+  message
 } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import type { Dayjs } from 'dayjs'
@@ -32,9 +33,11 @@ import type {
 import {
   getdictionary,
   getApplyCount,
-  getApplyList
-} from '@mock/myApplications'
-import type { TGetApplyListParams } from '@mock/myApplications'
+  getApplyList,
+  handleUrging
+} from '@api/myApplications'
+import type { TGetApplyListParams } from '@api/myApplications'
+import { useUpdateEffect } from '@utils/index'
 
 const { RangePicker } = DatePicker
 
@@ -115,6 +118,12 @@ const MyApplications = () => {
       })
       const { dictList } = data.processKeyList
       setProcessKeyList(formatData(dictList))
+
+      renderTable({
+        processState: -1,
+        pageNum: 1,
+        pageSize: 10
+      })
     })()
   }, [])
 
@@ -167,18 +176,14 @@ const MyApplications = () => {
   /**
    * 监听申请状态切换
    */
-  useEffect(() => {
+  useUpdateEffect(() => {
     form.resetFields()
     setPagination({ ...pagination, current: 1 })
-    const params: TGetApplyListParams = {
+    renderTable({
       processState: activeState - 1,
-      ...form.getFieldsValue(),
-      startTime: undefined,
-      endTime: undefined,
       pageNum: 1,
       pageSize: 10
-    }
-    renderTable(params)
+    } as TGetApplyListParams)
   }, [activeState])
 
   const [form] = Form.useForm()
@@ -234,7 +239,6 @@ const MyApplications = () => {
       pageSize: 10
     } as TGetApplyListParams
     renderTable(params)
-    console.log('params', params)
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -249,7 +253,15 @@ const MyApplications = () => {
   /**
    * 催办
    */
-  const onUrge = (value: TDataType) => {}
+  const onUrge = async (value: TDataType) => {
+    await handleUrging({
+      instanceId: value.processInstanceId
+    })
+    message.success({
+      content: '已成功对审批人发送催办提醒！',
+      duration: 2
+    })
+  }
 
   /**
    * 撤回
@@ -270,7 +282,7 @@ const MyApplications = () => {
     total: 0
   })
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     const dateRange = form.getFieldValue('dateRange')
     const [startTime, endTime] = dateRange || [undefined, undefined]
     const params: TGetApplyListParams = {
@@ -281,7 +293,6 @@ const MyApplications = () => {
       pageNum: pagination.current,
       pageSize: 10
     }
-    console.log('params', params)
     renderTable(params)
   }, [pagination.current])
 

@@ -78,7 +78,7 @@ const ScanQrcode = ({
    */
   const handleQrcode = async () => {
     const { data } = await getQrcode()
-    const { qrcodeContent, certToken } = data.data
+    const { qrcodeContent, certToken } = data
     setQrcode({
       qrcodeContent,
       certToken,

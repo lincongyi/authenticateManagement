@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { EditOutlined, ExceptionOutlined } from '@ant-design/icons'
 import CompanyDescriptions from './components/CompanyDescriptions'
 import { currentCompanyInfo } from '@api/myAccount'
-import { mockData } from '@mock/index'
 
 const { Panel } = Collapse
 
@@ -25,8 +24,6 @@ const CompanyInfo = () => {
    * 是否有审批中的单位信息单，禁用修改按钮
    */
   const [isApproving, setIsApproving] = useState(true)
-
-  const [records] = useState(mockData.applyRecord)
 
   /**
    * 初始化当前单位信息
@@ -76,31 +73,32 @@ const CompanyInfo = () => {
       <div className={`${style.title} font-primary-color`}>申请记录</div>
 
       <div className={style['record-wrap']}>
-        {records.map((item: TApplyRecord) => (
-          <React.Fragment key={item.id}>
-            {item.state !== 1 && (
-              <div className={style['approve-tips']}>
-                <ExceptionOutlined style={{ marginRight: 20 }} />
-                {item.completeTime} {descriptions[item.state]}
-              </div>
-            )}
+        {companyInfo &&
+          companyInfo.applyRecord?.map((item: TApplyRecord) => (
+            <React.Fragment key={item.id}>
+              {item.state !== 1 && (
+                <div className={style['approve-tips']}>
+                  <ExceptionOutlined style={{ marginRight: 20 }} />
+                  {item.completeTime} {descriptions[item.state]}
+                </div>
+              )}
 
-            <Collapse bordered={false} expandIconPosition='end' ghost={true}>
-              <Panel
-                style={{ borderBottom: '1px solid #E8E9EA' }}
-                header={
-                  <>
-                    <ExceptionOutlined style={{ marginRight: 20 }} />
-                    {item.addTime} 提交申请，申请表单如下
-                  </>
-                }
-                key={item.id}
-              >
-                <CompanyDescriptions companyInfo={item.info} />
-              </Panel>
-            </Collapse>
-          </React.Fragment>
-        ))}
+              <Collapse bordered={false} expandIconPosition='end' ghost={true}>
+                <Panel
+                  style={{ borderBottom: '1px solid #E8E9EA' }}
+                  header={
+                    <>
+                      <ExceptionOutlined style={{ marginRight: 20 }} />
+                      {item.addTime} 提交申请，申请表单如下
+                    </>
+                  }
+                  key={item.id}
+                >
+                  <CompanyDescriptions companyInfo={item.info} />
+                </Panel>
+              </Collapse>
+            </React.Fragment>
+          ))}
       </div>
     </>
   )
