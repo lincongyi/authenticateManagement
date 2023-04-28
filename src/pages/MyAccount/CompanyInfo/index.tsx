@@ -74,7 +74,7 @@ const CompanyInfo = () => {
 
       <div className={style['record-wrap']}>
         {companyInfo &&
-          companyInfo.applyRecord?.map((item: TApplyRecord) => (
+          companyInfo.applyRecord?.reverse().map((item: TApplyRecord) => (
             <React.Fragment key={item.id}>
               {item.state !== 1 && (
                 <div className={style['approve-tips']}>
