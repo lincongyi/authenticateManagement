@@ -1,24 +1,47 @@
+import { request } from '@utils/request'
 import Mock from 'mockjs'
+const baseUrl = 'https://mock.presstime.cn/mock/64424800fd89695a4d49ffa7'
 
 const mockData = Mock.mock({
-  'applyRecord|1-4': [
-    {
-      id: '@increment(10)',
-      addTime: '@datetime', // 创建时间
-      modTime: '@datetime', // 审批时间
-      completeTime: '@datetime', // 审批完成时间
-      'state|0-3': 0, // 申请状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
-      info: {
-        companyId: '@id',
-        companyName: '@csentence(10)',
-        adminName: '@cname',
-        certificateNum: '8888111188888',
-        companyShortName: '@csentence(5)',
-        areaCode: '@county(true)',
-        unifyName: '@csentence(5)',
-        certificatePhoto: ''
+  ret: true,
+  retCode: 0,
+  retMessage: '获取参数成功',
+  data: {
+    'news|5': [
+      {
+        id: '@increment( 10 )',
+        message: '@cparagraph(1, 3)'
       }
-    }
-  ]
+    ]
+  }
 })
-export { mockData }
+
+/**
+ * 获取消息推送内容
+ */
+const getNews = (): Promise<TResponse> => {
+  return request.post(`${baseUrl}/getNews`)
+}
+
+/**
+ * 获取我的应用
+ */
+const getMyAppInfo = (params: TDateRange): Promise<TResponse> => {
+  return request.post(`${baseUrl}/getMyAppInfo`, params)
+}
+
+/**
+ * 获取我的基础服务
+ */
+const getService = (params: TDateRange): Promise<TResponse> => {
+  return request.post(`${baseUrl}/getService`, params)
+}
+
+/**
+ * 获取调用数量统计
+ */
+const getStatistics = (params: TDateRange): Promise<TResponse> => {
+  return request.post(`${baseUrl}/getStatistics`, params)
+}
+
+export { mockData, getNews, getMyAppInfo, getService, getStatistics }

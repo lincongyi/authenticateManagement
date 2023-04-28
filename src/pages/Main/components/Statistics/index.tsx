@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, ConfigProvider, DatePicker } from 'antd'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
@@ -6,6 +6,7 @@ import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import LineChart from './LineChart'
 import { rangePresets, disabledDate, dateFormat } from '@utils/date'
+import { getStatistics } from '@mock/index'
 
 const { RangePicker } = DatePicker
 
@@ -30,6 +31,18 @@ const Statistics = () => {
   const onOpenChange = (open: boolean) => {
     if (!open) console.log('close')
   }
+
+  const [chartData, setChartData] = useState<TLineChart>()
+
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await getStatistics({
+        startTime: '',
+        endTime: ''
+      })
+      setChartData(data)
+    })()
+  }, [])
   return (
     <Card
       title='调用数量统计'
@@ -50,7 +63,7 @@ const Statistics = () => {
         </ConfigProvider>
       }
     >
-      <LineChart />
+      {chartData && <LineChart chartData={chartData} />}
     </Card>
   )
 }

@@ -10,6 +10,7 @@ import {
   Divider,
   Form,
   Input,
+  Popconfirm,
   Row,
   Space,
   Table,
@@ -33,8 +34,10 @@ import {
   getdictionary,
   getApplyCount,
   getApplyList,
-  handleUrging
+  handleUrging,
+  handleStopApply
 } from '@api/myApplications'
+// import { getApplyList } from '@mock/myApplications'
 import type { TGetApplyListParams } from '@api/myApplications'
 import { useUpdateEffect } from '@utils/index'
 
@@ -120,7 +123,7 @@ const MyApplications = () => {
 
       renderTable({
         processState: -1,
-        pageNum: 1,
+        pageNum: 0, // 后端接口接收pageNum是从0开始算的，所以前端传pageNum需要current - 1，赋值current需要pageNum + 1
         pageSize: 10
       })
     })()
@@ -169,7 +172,8 @@ const MyApplications = () => {
     })
     setDataSource(list)
     const { pageNum, pageSize, total } = data
-    setPagination({ ...pagination, current: pageNum, pageSize, total })
+
+    setPagination({ ...pagination, current: pageNum + 1, pageSize, total })
   }
 
   /**
@@ -180,7 +184,7 @@ const MyApplications = () => {
     setPagination({ ...pagination, current: 1 })
     renderTable({
       processState: activeState - 1,
-      pageNum: 1,
+      pageNum: 0,
       pageSize: 10
     } as TGetApplyListParams)
   }, [activeState])
@@ -214,10 +218,10 @@ const MyApplications = () => {
   }
 
   type TValues = {
-    instanceId: string | undefined
-    keys: [string[]] | undefined
-    unifyName: string | undefined
-    dateRange: string[]
+    instanceId?: string | undefined
+    keys?: [string[]] | undefined
+    unifyName?: string | undefined
+    dateRange?: string[]
   }
 
   /**
@@ -234,7 +238,7 @@ const MyApplications = () => {
       startTime,
       endTime,
       processState: activeState - 1,
-      pageNum: 1,
+      pageNum: 0,
       pageSize: 10
     } as TGetApplyListParams
     renderTable(params)
@@ -253,6 +257,12 @@ const MyApplications = () => {
    * 催办
    */
   const onUrge = async (value: TDataType) => {
+    if (value.urging) {
+      return message.warning({
+        content: '当前审批节点已发送催办，请勿重复操作',
+        duration: 2
+      })
+    }
     await handleUrging({
       instanceId: value.processInstanceId
     })
@@ -260,12 +270,26 @@ const MyApplications = () => {
       content: '已成功对审批人发送催办提醒！',
       duration: 2
     })
+    renderTable({
+      processState: activeState - 1,
+      pageNum: 0,
+      pageSize: 10
+    } as TGetApplyListParams)
   }
 
   /**
    * 撤回
    */
-  const onWithdraw = (value: TDataType) => {}
+  const onWithdraw = async (value: TDataType) => {
+    await handleStopApply({
+      instanceId: value.processInstanceId
+    })
+    renderTable({
+      processState: activeState - 1,
+      pageNum: 0,
+      pageSize: 10
+    } as TGetApplyListParams)
+  }
 
   /**
    * 重新申请
@@ -289,7 +313,7 @@ const MyApplications = () => {
       ...form.getFieldsValue(),
       startTime,
       endTime,
-      pageNum: pagination.current,
+      pageNum: pagination.current - 1,
       pageSize: 10
     }
     renderTable(params)
@@ -379,13 +403,17 @@ const MyApplications = () => {
                   )}
                   {item === 'withdraw' && (
                     <>
-                      <Button
-                        type='link'
-                        style={{ color: '#ff7875' }}
-                        onClick={() => onWithdraw(values)}
+                      <Popconfirm
+                        title='撤回申请单'
+                        description='申请单正在审批中，是否确认撤回当前申请单？'
+                        onConfirm={() => onWithdraw(values)}
+                        okText='确定'
+                        cancelText='取消'
                       >
-                        撤回
-                      </Button>
+                        <Button type='link' style={{ color: '#ff7875' }}>
+                          撤回
+                        </Button>
+                      </Popconfirm>
                     </>
                   )}
                   {item === 'reapply' && (

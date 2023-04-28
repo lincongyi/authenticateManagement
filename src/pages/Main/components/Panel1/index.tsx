@@ -2,12 +2,7 @@ import React from 'react'
 import style from './index.module.scss'
 import { Card } from 'antd'
 
-type TInfo = {
-  joined: number
-  totalCount: number
-  todayCount: number
-}
-const Panel1 = ({ title, info }: { title: string; info: TInfo }) => {
+const Panel1 = ({ title, info }: { title: string; info: TPannel1Data }) => {
   return (
     <>
       <Card title={title} headStyle={{ borderBottom: 0 }} bordered={false}>
@@ -15,7 +10,7 @@ const Panel1 = ({ title, info }: { title: string; info: TInfo }) => {
           <div className={style.colunm}>
             <div className={style.title}>已接入</div>
             <div className={`${style.content} ${style.icon01}`}>
-              {info.joined}
+              {info.join}
             </div>
           </div>
           <div className={style.colunm}>

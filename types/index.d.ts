@@ -91,7 +91,23 @@ type TResetParams = {
   confirmPassword: string // 确认密码
 }
 
+type TDateRange = {
+  startTime: string
+  endTime: string
+}
+
+type TPannel1Data = {
+  join: number
+  totalCount: number
+  todayCount: number
+}
+
 type TPannel2Info = {
   title: string
   count: number
+}
+
+type TLineChart = {
+  xAxis: (string | number)[]
+  yAxis: (string | number)[]
 }

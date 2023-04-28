@@ -45,8 +45,23 @@ const getApplyList = (params: TGetApplyListParams): Promise<TResponse> => {
 /**
  * 催办
  */
-const handleUrging = (params: object): Promise<TResponse> => {
+const handleUrging = (params: { instanceId: string }): Promise<TResponse> => {
   return request.post('/user/urging', params)
 }
 
-export { getdictionary, getApplyCount, getApplyList, handleUrging }
+/**
+ * 撤回
+ */
+const handleStopApply = (params: {
+  instanceId: string
+}): Promise<TResponse> => {
+  return request.post('/user/stopApply', params)
+}
+
+export {
+  getdictionary,
+  getApplyCount,
+  getApplyList,
+  handleUrging,
+  handleStopApply
+}

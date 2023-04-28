@@ -1,28 +1,20 @@
 import React, { useEffect } from 'react'
 import * as echarts from 'echarts'
 
-const LineChart = () => {
+const LineChart = ({ chartData }: { chartData: TLineChart }) => {
   type EChartsOption = echarts.EChartsOption
   let lineChart: echarts.EChartsType
   const option: EChartsOption = {
     xAxis: {
       type: 'category',
-      data: [
-        '2023-3-30',
-        '2023-3-31',
-        '2023-4-01',
-        '2023-4-02',
-        '2023-4-03',
-        '2023-4-04',
-        '2023-4-05'
-      ]
+      data: chartData.xAxis
     },
     yAxis: {
       type: 'value'
     },
     series: [
       {
-        data: [150, 230, 224, 218, 135, 147, 260],
+        data: chartData.yAxis,
         type: 'line'
       }
     ]

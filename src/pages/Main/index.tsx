@@ -8,6 +8,7 @@ import Panel1 from './components/Panel1'
 import Panel2 from './components/Panel2'
 import Statistics from './components/Statistics'
 import { getApplyCount } from '@api/myApplications'
+import { getNews, getMyAppInfo, getService } from '@mock/index'
 
 const Main = () => {
   const { themeStore } = useStore()
@@ -45,12 +46,42 @@ const Main = () => {
     setAccountNumber(userInfo.accountNumber)
 
     /**
+     * 初始化消息推送内容
+     */
+    ;(async () => {
+      const { data } = await getNews()
+      setNews(data.news)
+    })()
+
+    /**
+     * 初始化我的应用
+     */
+    ;(async () => {
+      const { data } = await getMyAppInfo({
+        startTime: '',
+        endTime: ''
+      })
+      setMyAppInfo(data)
+    })()
+
+    /**
+     * 初始化我的基础服务
+     */
+    ;(async () => {
+      const { data } = await getService({
+        startTime: '',
+        endTime: ''
+      })
+      setMyService(data)
+    })()
+
+    /**
      * 初始化我的申请数据
      */
     ;(async () => {
       const { data } = await getApplyCount({
-        endTime: '',
-        startTime: ''
+        startTime: '',
+        endTime: ''
       })
       // 审批中
       const item1 = { title: '审批中', count: data![2].count }
@@ -62,25 +93,15 @@ const Main = () => {
     })()
   }, [])
 
+  type TNews = {
+    id: string
+    message: string
+  }
+
   /**
    * 消息推送内容
    */
-  const [newsList] = useState([
-    {
-      id: 1,
-      message:
-        '3月应用中心全新上架三款企业级应用，当月申请可享不限流3月应用中心全新上架三款企业级应用，当月申请可享不限流'
-    },
-    {
-      id: 2,
-      message: '4月应用中心全新上架三款企业级应用'
-    },
-    {
-      id: 3,
-      message:
-        '5月应用中心全新上架三款企业级应用，当月申请可享不限流5月应用中心全新上架三款企业级应用，当月申请可享不限流'
-    }
-  ])
+  const [news, setNews] = useState<TNews[]>()
 
   /**
    * 跳转到消息通知
@@ -102,20 +123,12 @@ const Main = () => {
   /**
    * 我的应用
    */
-  const [myAppInfo] = useState({
-    joined: 100,
-    totalCount: 200,
-    todayCount: 50
-  })
+  const [myAppInfo, setMyAppInfo] = useState<TPannel1Data>()
 
   /**
    * 我的基础服务
    */
-  const [myService] = useState({
-    joined: 1000,
-    totalCount: 2000,
-    todayCount: 500
-  })
+  const [myService, setMyService] = useState<TPannel1Data>()
 
   /**
    * 我的申请
@@ -179,11 +192,12 @@ const Main = () => {
           <div className={style.notice}>
             <AlertOutlined style={{ float: 'left', marginTop: 3 }} />
             <Carousel dots={{ className: 'carousel-dot' }} autoplay>
-              {newsList.map(item => (
-                <div className={style.news} onClick={toNews} key={item.id}>
-                  {item.message}
-                </div>
-              ))}
+              {news &&
+                news.map(item => (
+                  <div className={style.news} onClick={toNews} key={item.id}>
+                    {item.message}
+                  </div>
+                ))}
             </Carousel>
           </div>
           <div className={style['update-time']}>数据更新时间：{updateTime}</div>
@@ -192,10 +206,10 @@ const Main = () => {
 
       <Row gutter={[20, 20]}>
         <Col span={12}>
-          <Panel1 title='我的应用' info={myAppInfo} />
+          {myAppInfo && <Panel1 title='我的应用' info={myAppInfo} />}
         </Col>
         <Col span={12}>
-          <Panel1 title='我的基础服务' info={myService} />
+          {myService && <Panel1 title='我的基础服务' info={myService} />}
         </Col>
         <Col span={12}>
           <Statistics />

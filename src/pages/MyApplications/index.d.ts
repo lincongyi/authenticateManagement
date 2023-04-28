@@ -41,6 +41,7 @@ export type TDataType = {
     color: string
     children: string
   }[]
+  urging: 0 | 1 // 0-未催办；1-已催办
 }
 
 export type IdentityTestDataType = {
