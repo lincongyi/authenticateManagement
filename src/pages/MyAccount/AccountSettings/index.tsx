@@ -22,7 +22,6 @@ const AccountSettings = () => {
    * @param {object} values 表单返回值
    */
   const onNext = (values?: object) => {
-    // console.log(values)
     if (values) setResetParams({ ...resetParams, ...values })
     setCurrent(current + 1)
   }

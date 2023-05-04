@@ -10,16 +10,16 @@ const Methods = ({ onNext }: { onNext: Function }) => {
    * 认证方式列表
    */
   const methodList = [
-    { icon: accountSettingMethod02, text: '手机验证' },
-    { icon: accountSettingMethod03, text: '邮箱验证' },
-    { icon: accountSettingMethod01, text: '人脸识别' }
+    { icon: accountSettingMethod01, text: '人脸识别', type: 2 },
+    { icon: accountSettingMethod02, text: '手机验证', type: 0 },
+    { icon: accountSettingMethod03, text: '邮箱验证', type: 1 }
   ]
 
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(2)
   /**
    * 选择认证方式
    */
-  const selectMethod = (index: number) => setSelectedIndex(index)
+  const selectMethod = (type: number) => setSelectedIndex(type)
 
   return (
     <>
@@ -27,13 +27,13 @@ const Methods = ({ onNext }: { onNext: Function }) => {
         您可以通过选择以下三种认证方式中的一种，进行身份认证
       </p>
       <div className={style['method-list']}>
-        {methodList.map((item, index) => (
+        {methodList.map(item => (
           <div
             className={`${style['method-item']} ${
-              selectedIndex === index && style.active
+              selectedIndex === item.type && style.active
             }`}
-            key={index}
-            onClick={() => selectMethod(index)}
+            key={item.type}
+            onClick={() => selectMethod(item.type)}
           >
             <i className={`${style.select}`}></i>
             <img src={item.icon} />
