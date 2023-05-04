@@ -23,13 +23,6 @@ import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import { rangePresets, disabledDate } from '@utils/date'
-import type {
-  TDictList,
-  TDictValue,
-  Option,
-  TState,
-  TDataType
-} from './index.d'
 import {
   getdictionary,
   getApplyCount,

@@ -1,5 +1,4 @@
 import { request } from '@utils/request'
-import type { TState } from '@pages/MyApplications/index.d'
 
 /**
  * 获取申请类型

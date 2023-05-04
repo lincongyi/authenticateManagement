@@ -1,6 +1,5 @@
 import Mock from 'mockjs'
 import { request } from '@utils/request'
-import type { TState } from '@pages/MyApplications/index.d'
 
 const baseUrl = 'https://mock.presstime.cn/mock/64424800fd89695a4d49ffa7'
 
