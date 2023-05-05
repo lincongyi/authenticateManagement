@@ -42,6 +42,15 @@ const getApplyList = (params: TGetApplyListParams): Promise<TResponse> => {
 }
 
 /**
+ * 根据id获取申请详情
+ */
+const getApplyDetail = (params: {
+  instanceId: string
+}): Promise<TResponse<TDataType>> => {
+  return request.post('/user/getApplyDetail', params)
+}
+
+/**
  * 催办
  */
 const handleUrging = (params: { instanceId: string }): Promise<TResponse> => {
@@ -61,6 +70,7 @@ export {
   getdictionary,
   getApplyCount,
   getApplyList,
+  getApplyDetail,
   handleUrging,
   handleStopApply
 }

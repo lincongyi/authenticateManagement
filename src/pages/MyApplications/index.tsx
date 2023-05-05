@@ -30,9 +30,9 @@ import {
   handleUrging,
   handleStopApply
 } from '@api/myApplications'
-// import { getApplyList } from '@mock/myApplications'
 import type { TGetApplyListParams } from '@api/myApplications'
 import { useUpdateEffect } from '@utils/index'
+import CheckModal from './components/CheckModal'
 
 const { RangePicker } = DatePicker
 
@@ -244,7 +244,23 @@ const MyApplications = () => {
   /**
    * 查看
    */
-  const onCheck = (value: TDataType) => {}
+  const [open, setOpen] = useState(false) // 查看Modal显示隐藏状态
+  const [instanceId, setInstanceId] = useState('') // 当前active审批单号
+
+  const [applicationInfo, setApplicationInfo] = useState<TDataType>()
+  // const onCheck = ({
+  //   processInstanceId
+  // }: {
+  //   processInstanceId: TDataType['processInstanceId']
+  // }) => {
+  //   setInstanceId(processInstanceId)
+  //   setOpen(true)
+  // }
+  const onCheck = (value: TDataType) => {
+    setInstanceId(value.processInstanceId)
+    setApplicationInfo(value)
+    setOpen(true)
+  }
 
   /**
    * 催办
@@ -537,6 +553,14 @@ const MyApplications = () => {
           </ConfigProvider>
         </Col>
       </Row>
+      {instanceId && (
+        <CheckModal
+          instanceId={instanceId}
+          info={applicationInfo}
+          open={open}
+          setOpen={setOpen}
+        />
+      )}
     </>
   )
 }

@@ -4,13 +4,15 @@ import { ExclamationCircleOutlined } from '@ant-design/icons'
 import { reverseArray } from '@utils/index'
 
 const CompanyDescriptions = ({
-  companyInfo
+  companyInfo,
+  column = 3
 }: {
   companyInfo: TCompanyInfo | TApplyRecord['info'] | undefined
+  column?: number
 }) => {
   return (
     <>
-      <Descriptions bordered className='tc'>
+      <Descriptions bordered className='tc' column={column}>
         <Descriptions.Item label='单位名称：'>
           {companyInfo?.companyName || '-'}
         </Descriptions.Item>

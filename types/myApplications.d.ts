@@ -21,8 +21,16 @@ type TDictList = {
   dictValue: TDictValue[]
 }
 
+type TSysUser = {
+  isPassUser: boolean // 是否作为当前节点通过的负责人
+  sysRole: {
+    id: number
+    name: string // 用户名
+  }
+}
+
 type TDataType = {
-  id: number
+  id: string
   processInstanceId: string // 审批单号
   key: string // 申请类型
   state: 0 | 1 | 2 | 3 // 申请状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
@@ -33,10 +41,12 @@ type TDataType = {
   completeTime: string // 审批完成时间
   starter: string // 申请人
   isNoticeUser: boolean // 是否被查看过
+  info: TCompanyInfo
   nodes: {
     name: string // 审批进度节点name
     userCount: number // 当前节点人数
     isPass: 0 | 1 | 2 | 3 // 当前节点状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+    sysUsers: TSysUser[]
   }[]
   timeline?: {
     color: string

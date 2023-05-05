@@ -72,3 +72,24 @@
 .carousel-dot {
   inset-inline-start: auto !important;
 }
+
+.modal-content {
+  padding: 10px 0;
+
+  .title {
+    display: flex;
+    align-items: center;
+    margin: 16px 0;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 1;
+
+    &::before {
+      width: 3px;
+      height: 16px;
+      margin-right: 10px;
+      background-color: #1e2636;
+      content: '';
+    }
+  }
+}
