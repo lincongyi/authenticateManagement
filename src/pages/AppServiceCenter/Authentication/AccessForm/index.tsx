@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import style from './index.module.scss'
-import { Button, Radio, Space, message } from 'antd'
+import { Affix, Button, Radio, Space, message } from 'antd'
 import type { RadioChangeEvent } from 'antd'
 import type { FormInstance } from 'antd/lib/form/hooks/useForm'
 import dayjs from 'dayjs'
@@ -150,23 +150,27 @@ const AccessForm = () => {
     setOpen(true)
   }
 
+  const [top] = useState(64)
+
   return (
     <>
-      <div className={style.header}>
-        <Radio.Group
-          options={options}
-          onChange={onChange}
-          value={value}
-          optionType='button'
-          buttonStyle='solid'
-        />
-        <Space>
-          <Button onClick={() => onSave()}>保存草稿</Button>
-          <Button type='primary' onClick={onSubmit}>
-            提交审核
-          </Button>
-        </Space>
-      </div>
+      <Affix offsetTop={top}>
+        <div className={style.header}>
+          <Radio.Group
+            options={options}
+            onChange={onChange}
+            value={value}
+            optionType='button'
+            buttonStyle='solid'
+          />
+          <Space>
+            <Button onClick={() => onSave()}>保存草稿</Button>
+            <Button type='primary' onClick={onSubmit}>
+              提交审核
+            </Button>
+          </Space>
+        </div>
+      </Affix>
       {renderForm(value)}
       {open && <ConfirmModal open={open} setOpen={setOpen} data={formData!} />}
     </>
