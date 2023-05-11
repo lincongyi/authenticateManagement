@@ -29,7 +29,7 @@ type TSysUser = {
   }
 }
 
-type TDataType = {
+type TApplyDetail = {
   id: string
   processInstanceId: string // 审批单号
   key: string // 申请类型
@@ -55,10 +55,11 @@ type TDataType = {
     color: string
     children: string
   }[]
+  processName: string // 审批单类型
   urging: 0 | 1 // 0-未催办；1-已催办
 }
 
-type IdentityTestDataType = {
+type IdentityTesTApplyDetail = {
   key: string
   applicationName: string
   method: string

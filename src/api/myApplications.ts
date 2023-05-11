@@ -46,7 +46,7 @@ const getApplyList = (params: TGetApplyListParams): Promise<TResponse> => {
  */
 const getApplyDetail = (params: {
   instanceId: string
-}): Promise<TResponse<TDataType>> => {
+}): Promise<TResponse<TApplyDetail>> => {
   return request.post('/user/getApplyDetail', params)
 }
 

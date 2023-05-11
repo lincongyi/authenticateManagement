@@ -78,7 +78,7 @@ const Reply = () => {
     isEffective: number
   }
 
-  const [checkModalOpen, setCheckModalOpen] = useState(false)
+  const [, setCheckModalOpen] = useState(false)
   /**
    * 详情
    */

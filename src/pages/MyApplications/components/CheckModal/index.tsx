@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import style from './index.module.scss'
 import { Modal, Button, Steps, Tag } from 'antd'
 import { getApplyDetail } from '@api/myApplications'
-import CompanyDescriptions from '@pages/MyAccount/CompanyInfo/components/CompanyDescriptions'
 import userAvatar from '@/assets/myApplications-default-avatar.png'
+import ApprovalFormInfo from './components/ApprovalFormInfo'
+import DetailInfo from './components/DetailInfo'
 
 /**
  * 节点title
@@ -61,7 +63,7 @@ const CheckModal = ({
   open: boolean
   setOpen: Function
 }) => {
-  const [info, setInfo] = useState<TCompanyInfo>()
+  const [info, setInfo] = useState<TApplyDetail>()
   const [current, setCurrent] = useState(0)
   const [items, setItems] = useState<
     {
@@ -77,7 +79,8 @@ const CheckModal = ({
     if (!instanceId) return
     ;(async () => {
       const { data } = await getApplyDetail({ instanceId })
-      setInfo(data?.info!.after)
+      console.log(data)
+      setInfo(data)
 
       const { nodes } = data!
 
@@ -111,7 +114,16 @@ const CheckModal = ({
     >
       <div className='modal-content'>
         <div className='title'>审批单信息</div>
-        {info && <CompanyDescriptions companyInfo={info} column={2} />}
+        {info && <ApprovalFormInfo info={info} />}
+
+        {info?.info?.after && info.info.before && (
+          <>
+            <div className='title'>变更详情</div>
+            <div className={style.detail}>
+              <DetailInfo info={info.info} />
+            </div>
+          </>
+        )}
 
         <div className='title'>审批进度</div>
         <Steps direction='vertical' current={current} items={items} />

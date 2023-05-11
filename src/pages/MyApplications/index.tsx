@@ -143,7 +143,7 @@ const MyApplications = () => {
    */
   const renderTable = async (params: TGetApplyListParams) => {
     const { data } = await getApplyList(params)
-    const list = data.list.map((item: TDataType) => {
+    const list = data.list.map((item: TApplyDetail) => {
       /**
        * 处理审批进度组件数据
        */
@@ -252,7 +252,7 @@ const MyApplications = () => {
   const onCheck = ({
     processInstanceId
   }: {
-    processInstanceId: TDataType['processInstanceId']
+    processInstanceId: TApplyDetail['processInstanceId']
   }) => {
     setInstanceId(processInstanceId)
     setOpen(true)
@@ -261,7 +261,7 @@ const MyApplications = () => {
   /**
    * 催办
    */
-  const onUrge = async (value: TDataType) => {
+  const onUrge = async (value: TApplyDetail) => {
     if (value.urging) {
       return message.warning({
         content: '当前审批节点已发送催办，请勿重复操作',
@@ -285,7 +285,7 @@ const MyApplications = () => {
   /**
    * 撤回
    */
-  const onWithdraw = async (value: TDataType) => {
+  const onWithdraw = async (value: TApplyDetail) => {
     await handleStopApply({
       instanceId: value.processInstanceId
     })
@@ -299,7 +299,7 @@ const MyApplications = () => {
   /**
    * 重新申请
    */
-  const onReapply = (value: TDataType) => {}
+  const onReapply = (value: TApplyDetail) => {}
 
   /**
    * 表格分页参数
@@ -331,13 +331,13 @@ const MyApplications = () => {
     setPagination({ ...pagination, ...tablePagination })
   }
 
-  const columns: ColumnsType<TDataType> = [
+  const columns: ColumnsType<TApplyDetail> = [
     {
       title: '序号',
       key: 'order',
       width: 60,
       align: 'center',
-      render: (values: TDataType, record, index) => `${index + 1}`
+      render: (values: TApplyDetail, record, index) => `${index + 1}`
     },
     {
       title: '审批单号',
@@ -347,7 +347,7 @@ const MyApplications = () => {
     {
       title: '申请类型',
       ellipsis: true,
-      render: (values: TDataType) => formatDictValue(values.key)
+      render: (values: TApplyDetail) => formatDictValue(values.key)
     },
     {
       title: '应用/服务名称',
@@ -357,7 +357,7 @@ const MyApplications = () => {
     {
       title: '审批状态',
       align: 'center',
-      render: (values: TDataType) => (
+      render: (values: TApplyDetail) => (
         <Tag
           color={['success', 'processing', 'error', 'default'][values.state]}
         >
@@ -368,7 +368,7 @@ const MyApplications = () => {
     {
       title: '审批进度',
       width: 150,
-      render: (values: TDataType) => (
+      render: (values: TApplyDetail) => (
         <>
           <Timeline items={values.timeline} />
         </>
@@ -386,7 +386,7 @@ const MyApplications = () => {
       title: '操作',
       key: 'action',
       width: 300,
-      render: (values: TDataType) => (
+      render: (values: TApplyDetail) => (
         <>
           {stateList?.length &&
             stateList[values.state + 1].options?.map((item, index) => {
@@ -444,7 +444,7 @@ const MyApplications = () => {
     }
   ]
 
-  const [dataSource, setDataSource] = useState<TDataType[]>([])
+  const [dataSource, setDataSource] = useState<TApplyDetail[]>([])
 
   return (
     <>
