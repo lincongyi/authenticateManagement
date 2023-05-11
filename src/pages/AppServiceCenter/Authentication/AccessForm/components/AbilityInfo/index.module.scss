@@ -1,0 +1,16 @@
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.order-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  color: #fff;
+  background-color: $primary-color;
+  border-radius: 50%;
+}

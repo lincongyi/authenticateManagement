@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Form, Input, Space, message } from 'antd'
 import { sendCaptcha } from '@api/index'
-import { FormInstance } from 'antd/lib/form/hooks/useForm'
+import type { FormInstance } from 'antd/lib/form/hooks/useForm'
 
 /**
  * 发送邮箱验证码组件

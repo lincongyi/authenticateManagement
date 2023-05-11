@@ -242,23 +242,19 @@ const MyApplications = () => {
   }
 
   /**
+   * 控制查看Modal显示隐藏状态
+   */
+  const [open, setOpen] = useState(false)
+  const [instanceId, setInstanceId] = useState('') // 当前active审批单号
+  /**
    * 查看
    */
-  const [open, setOpen] = useState(false) // 查看Modal显示隐藏状态
-  const [instanceId, setInstanceId] = useState('') // 当前active审批单号
-
-  const [applicationInfo, setApplicationInfo] = useState<TDataType>()
-  // const onCheck = ({
-  //   processInstanceId
-  // }: {
-  //   processInstanceId: TDataType['processInstanceId']
-  // }) => {
-  //   setInstanceId(processInstanceId)
-  //   setOpen(true)
-  // }
-  const onCheck = (value: TDataType) => {
-    setInstanceId(value.processInstanceId)
-    setApplicationInfo(value)
+  const onCheck = ({
+    processInstanceId
+  }: {
+    processInstanceId: TDataType['processInstanceId']
+  }) => {
+    setInstanceId(processInstanceId)
     setOpen(true)
   }
 
@@ -554,12 +550,7 @@ const MyApplications = () => {
         </Col>
       </Row>
       {instanceId && (
-        <CheckModal
-          instanceId={instanceId}
-          info={applicationInfo}
-          open={open}
-          setOpen={setOpen}
-        />
+        <CheckModal instanceId={instanceId} open={open} setOpen={setOpen} />
       )}
     </>
   )

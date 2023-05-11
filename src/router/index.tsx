@@ -101,30 +101,25 @@ const routes: TRoutes[] = [
         element: lazyLoad('AppServiceCenter')
       },
       {
+        path: 'appServiceCenter/authentication', // 身份认证能力应用服务
+        children: [
+          {
+            path: 'introduction', // 身份认证能力介绍
+            element: lazyLoad('AppServiceCenter/Authentication/Introduction')
+          },
+          {
+            path: 'accessForm', // 身份认证接入流程
+            element: lazyLoad('AppServiceCenter/Authentication/AccessForm')
+          }
+        ]
+      },
+      {
         path: 'myApps', // 我的应用
         element: lazyLoad('MyApps')
       },
       {
         path: 'myApplications', // 我的申请
-        element: lazyLoad('MyApplications'),
-        children: [
-          {
-            path: 'identity/test', // 测试应用接入申请
-            element: lazyLoad('MyApplications/Identity/Test')
-          },
-          {
-            path: 'identity/formal', // 正式应用接入申请
-            element: lazyLoad('MyApplications/Identity/Formal')
-          },
-          {
-            path: 'identity/update', // 正式应用参数修改申请
-            element: lazyLoad('MyApplications/Identity/Update')
-          },
-          {
-            path: 'others/update', // 单位注册信息修改申请
-            element: lazyLoad('MyApplications/Others/Update')
-          }
-        ]
+        element: lazyLoad('MyApplications')
       },
       {
         path: 'helps', // 问题帮助

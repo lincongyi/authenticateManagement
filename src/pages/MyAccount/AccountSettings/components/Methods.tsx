@@ -10,9 +10,9 @@ const Methods = ({ onNext }: { onNext: Function }) => {
    * 认证方式列表
    */
   const methodList = [
-    { icon: accountSettingMethod01, text: '人脸识别', type: 2 },
-    { icon: accountSettingMethod02, text: '手机验证', type: 0 },
-    { icon: accountSettingMethod03, text: '邮箱验证', type: 1 }
+    { icon: accountSettingMethod01, description: '人脸识别', type: 2 },
+    { icon: accountSettingMethod02, description: '手机验证', type: 0 },
+    { icon: accountSettingMethod03, description: '邮箱验证', type: 1 }
   ]
 
   const [selectedIndex, setSelectedIndex] = useState(2)
@@ -37,7 +37,7 @@ const Methods = ({ onNext }: { onNext: Function }) => {
           >
             <i className={`${style.select}`}></i>
             <img src={item.icon} />
-            <p className='font-primary-color'>{item.text}</p>
+            <p className='font-primary-color'>{item.description}</p>
           </div>
         ))}
       </div>

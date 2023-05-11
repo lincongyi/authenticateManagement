@@ -41,7 +41,10 @@ type TDataType = {
   completeTime: string // 审批完成时间
   starter: string // 申请人
   isNoticeUser: boolean // 是否被查看过
-  info: TCompanyInfo
+  info: {
+    before: TCompanyInfo
+    after: TCompanyInfo
+  } | null
   nodes: {
     name: string // 审批进度节点name
     userCount: number // 当前节点人数

@@ -27,7 +27,7 @@ const NodeTitle = ({
         }}
       >
         {['审批通过', '审批中', '审批不通过', '撤回'][item.isPass]}
-        {Boolean(item.isPass) && <Tag style={{ marginLeft: 8 }}>已结束</Tag>}
+        {Boolean(!item.isPass) && <Tag style={{ marginLeft: 8 }}>已结束</Tag>}
       </span>
     </div>
   )
@@ -54,53 +54,47 @@ const UserList = ({ list }: { list: TSysUser[] }) => {
 
 const CheckModal = ({
   instanceId,
-  info,
   open,
   setOpen
 }: {
   instanceId: string
-  info: TDataType | undefined
   open: boolean
   setOpen: Function
 }) => {
-  const { nodes } = info!
-  /**
-   * 格式化审批进度数据
-   */
-  const items = nodes.map((item, index) => ({
-    title: <NodeTitle item={item} />,
-    description: <UserList list={item.sysUsers} />
-  }))
+  const [info, setInfo] = useState<TCompanyInfo>()
+  const [current, setCurrent] = useState(0)
+  const [items, setItems] = useState<
+    {
+      title: JSX.Element
+      description: JSX.Element
+    }[]
+  >()
 
-  const current = nodes.findIndex(item => item.isPass)
-
-  // const [info, setInfo] = useState<TDataType>()
-  // const [current, setCurrent] = useState(0)
-  // const [items, setItems] = useState<
-  //   {
-  //     title: JSX.Element
-  //     description: JSX.Element
-  //   }[]
-  // >()
   /**
    * 监听传入的审批id变更
    */
-  // useEffect(() => {
-  //   if (!instanceId) return
-  //   ;(async () => {
-  //     const { data } = await getApplyDetail({ instanceId })
-  //     setInfo(data)
+  useEffect(() => {
+    if (!instanceId) return
+    ;(async () => {
+      const { data } = await getApplyDetail({ instanceId })
+      setInfo(data?.info!.after)
 
-  //     const index = nodes.findIndex(item => item.isPass)
-  //     setCurrent(index)
+      const { nodes } = data!
 
-  //     const items = nodes.map((item, index) => ({
-  //       title: <NodeTitle item={item} />,
-  //       description: <UserList list={item.sysUsers} />
-  //     }))
-  //     setItems(items)
-  //   })()
-  // }, [instanceId])
+      /**
+       * 格式化审批进度数据
+       */
+      const items = nodes.map((item, index) => ({
+        title: <NodeTitle item={item} />,
+        description: <UserList list={item.sysUsers} />
+      }))
+
+      const index = nodes.findIndex(item => item.isPass)
+      setCurrent(index)
+
+      setItems(items)
+    })()
+  }, [instanceId])
 
   return (
     <Modal
@@ -117,7 +111,7 @@ const CheckModal = ({
     >
       <div className='modal-content'>
         <div className='title'>审批单信息</div>
-        {info && <CompanyDescriptions companyInfo={info.info} column={2} />}
+        {info && <CompanyDescriptions companyInfo={info} column={2} />}
 
         <div className='title'>审批进度</div>
         <Steps direction='vertical' current={current} items={items} />

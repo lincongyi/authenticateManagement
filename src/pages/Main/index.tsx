@@ -21,16 +21,16 @@ const Main = () => {
    */
   const [timeline] = useState(() => {
     const range = [
-      { timeScope: [6, 9], text: '早上' },
-      { timeScope: [9, 12], text: '上午' },
-      { timeScope: [12, 14], text: '中午' },
-      { timeScope: [14, 19], text: '下午' }
+      { timeScope: [6, 9], description: '早上' },
+      { timeScope: [9, 12], description: '上午' },
+      { timeScope: [12, 14], description: '中午' },
+      { timeScope: [14, 19], description: '下午' }
     ]
     const hour = new Date().getHours()
     const result = range.find(
       item => hour >= item.timeScope[0] && hour < item.timeScope[1]
     )
-    return result ? result.text : '晚上'
+    return result ? result.description : '晚上'
   })
 
   /**
