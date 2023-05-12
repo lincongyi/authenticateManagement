@@ -21,7 +21,7 @@ import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import { rangePresets, disabledDate } from '@utils/date'
 import CheckModal from './components/CheckModal'
-import { getMyAppList } from '@mock/myApp'
+import { getAppCount, getMyAppList } from '@mock/myApp'
 import { TDictionary } from '@api/index'
 import { getdictionary } from '@mock/index'
 // import { getMyAppList } from '@api/myApp'
@@ -29,16 +29,21 @@ import { getdictionary } from '@mock/index'
 const { RangePicker } = DatePicker
 
 const MyApps = () => {
-  type TDataType = {
-    id: number
-    appName: string // 应用名称
-    environment: number // 接入环境：0-测试环境；1-正式环境
-    appAbility: 0 // 接入基础能力：0-身份认证
-    clientId: string // clientId
-    expiredTime: string // 有效时间
-    state: 0 | 1 | 2 | 3 | 4 // 状态：0-正常启用；1-即将过期；2-过期；3-停用；4-缺少授权文件
-    addTime: string // 创建时间
+  type TAppCount = {
+    total: number
+    production: number // 正式环境
+    test: number // 测试环境
   }
+  /**
+   * 我的应用数
+   */
+  const [appCount, setAppCount] = useState<TAppCount>()
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await getAppCount()
+      setAppCount(data)
+    })()
+  }, [])
 
   /**
    *  接入环境
@@ -68,6 +73,17 @@ const MyApps = () => {
       setAppState([{ dictValue: -1, dictName: '全部' }, ...appState.dictList])
     })()
   }, [])
+
+  type TDataType = {
+    id: number
+    appName: string // 应用名称
+    appEnv: 0 | 1 // 接入环境：0-测试环境；1-正式环境
+    appAbility: 0 // 接入基础能力：0-身份认证
+    clientId: string // clientId
+    expiredTime: string // 有效时间
+    state: 0 | 1 | 2 | 3 | 4 // 状态：0-正常启用；1-即将过期；2-过期；3-停用；4-缺少授权文件
+    addTime: string // 创建时间
+  }
 
   const [dataSource, setDataSource] = useState<TDataType[]>()
 
@@ -155,6 +171,20 @@ const MyApps = () => {
   }
 
   /**
+   *  申请参数更改 or 申请正式账号
+   */
+  const onReapply = (item: TDataType) => {
+    console.log(item)
+  }
+
+  /**
+   * 申请延期
+   */
+  const onDelay = (item: TDataType) => {
+    console.log(item)
+  }
+
+  /**
    * 注销
    */
   const onLogoff = (item: TDataType) => {
@@ -187,7 +217,7 @@ const MyApps = () => {
       title: '接入环境',
       ellipsis: true,
       render: (values: TDataType) => (
-        <>{appEnv && appEnv[values.environment + 1].dictName}</>
+        <>{appEnv && appEnv[values.appEnv + 1].dictName}</>
       )
     },
     {
@@ -218,7 +248,7 @@ const MyApps = () => {
                 ['success', 'warning', 'error'][values?.state] || 'default'
               }
             >
-              {appState[values.state].dictName}
+              {appState[values.state + 1].dictName}
             </Tag>
           )}
         </>
@@ -233,7 +263,7 @@ const MyApps = () => {
       title: '操作',
       key: 'action',
       width: 250,
-      render: values => (
+      render: (values: TDataType) => (
         <>
           <Button type='link' onClick={() => onCheck(values)}>
             查看
@@ -243,6 +273,19 @@ const MyApps = () => {
             认证数据
           </Button>
           <Divider type='vertical' style={{ margin: 0 }} />
+          <Button type='link' onClick={() => onReapply(values)}>
+            {values.appEnv ? '申请参数更改' : '申请正式账号'}
+          </Button>
+          <Divider type='vertical' style={{ margin: 0 }} />
+
+          {[1, 2].includes(values.state) && (
+            <>
+              <Button type='link' onClick={() => onDelay(values)}>
+                申请延期
+              </Button>
+              <Divider type='vertical' style={{ margin: 0 }} />
+            </>
+          )}
           <Button type='link' onClick={() => onLogoff(values)}>
             <Typography.Text type='danger'>注销</Typography.Text>
           </Button>
@@ -256,17 +299,17 @@ const MyApps = () => {
       <Row gutter={20} style={{ marginBottom: 20 }}>
         <Col span={8}>
           <div className={`${style.tag} ${style.icon01}`}>
-            我的应用数<span className={style.count}>3</span>
+            我的应用数<span className={style.count}>{appCount?.total}</span>
           </div>
         </Col>
         <Col span={8}>
           <div className={`${style.tag} ${style.icon02}`}>
-            正式应用<span className={style.count}>1</span>
+            正式应用<span className={style.count}>{appCount?.production}</span>
           </div>
         </Col>
         <Col span={8}>
           <div className={`${style.tag} ${style.icon03}`}>
-            测试应用<span className={style.count}>2</span>
+            测试应用<span className={style.count}>{appCount?.test}</span>
           </div>
         </Col>
       </Row>
@@ -287,7 +330,7 @@ const MyApps = () => {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='接入环境' name='environment'>
+                <Form.Item label='接入环境' name='appEnv'>
                   <Select
                     placeholder='请选择接入环境'
                     fieldNames={{ label: 'dictName', value: 'dictValue' }}
