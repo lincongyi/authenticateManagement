@@ -52,6 +52,23 @@ const getQrcode = (): Promise<TResponse> => {
   return request.get('/user/qrcode')
 }
 
+export type TDictionary = {
+  dictList: { dictValue: string | number; dictName: string }[]
+  typeName: string
+  typeValue: string
+}
+
+/**
+ * 获取数据字典
+ * @param {'typeValues': string[]} params: 获取某个数据字典的字段名
+ * @returns {key:TDictionary}
+ */
+const getdictionary = (params: {
+  typeValues: string[]
+}): Promise<TResponse> => {
+  return request.post('/getdictionary', params)
+}
+
 export {
   logout,
   getAreacodes,
@@ -59,5 +76,6 @@ export {
   imgCaptcha,
   verifyCaptcha,
   getProcessByKey,
-  getQrcode
+  getQrcode,
+  getdictionary
 }

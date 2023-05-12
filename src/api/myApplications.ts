@@ -1,14 +1,5 @@
 import { request } from '@utils/request'
 
-/**
- * 获取申请类型
- */
-const getdictionary = (params: {
-  typeValues: string[]
-}): Promise<TResponse> => {
-  return request.post('/getdictionary', params)
-}
-
 type TGetApplyCountParams = {
   startTime: string
   endTime: string
@@ -67,7 +58,6 @@ const handleStopApply = (params: {
 }
 
 export {
-  getdictionary,
   getApplyCount,
   getApplyList,
   getApplyDetail,

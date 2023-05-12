@@ -23,6 +23,8 @@ type TDictList = {
 
 type TSysUser = {
   isPassUser: boolean // 是否作为当前节点通过的负责人
+  completeTime: string // 完成时间
+  passState: 0 | 1 | 2 | 3 // 申请状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
   sysRole: {
     id: number
     name: string // 用户名
@@ -50,6 +52,7 @@ type TApplyDetail = {
     userCount: number // 当前节点人数
     isPass: 0 | 1 | 2 | 3 // 当前节点状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
     sysUsers: TSysUser[]
+    isMulti: 0 | 1 // 0-或签节点；1-会签节点
   }[]
   timeline?: {
     color: string

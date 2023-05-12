@@ -73,6 +73,30 @@ const useUpdateEffect = (callback: Function, params: any[]) => {
   }, params)
 }
 
+/**
+ * 格式化处理特殊数据字典返回格式
+ * @param {TDictList[] | TDictValue[]} array
+ * @returns {Option[]} list 符合Cascader组件使用的options
+ */
+const formatDictionary = (array: TDictList[] | TDictValue[]) => {
+  const list: Option[] = []
+  array.forEach(item => {
+    if ((item as TDictList).dictValue) {
+      list.push({
+        label: (item as TDictList).dictName,
+        value: (item as TDictList).dictName,
+        children: formatDictionary((item as TDictList).dictValue)
+      })
+    } else {
+      list.push({
+        label: (item as TDictValue).value,
+        value: (item as TDictValue).key
+      })
+    }
+  })
+  return list
+}
+
 export {
   loadEnv,
   phonePattern,
@@ -81,5 +105,6 @@ export {
   handleCopy,
   getBase64,
   reverseArray,
-  useUpdateEffect
+  useUpdateEffect,
+  formatDictionary
 }

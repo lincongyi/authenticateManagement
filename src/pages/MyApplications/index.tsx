@@ -24,51 +24,27 @@ import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import { rangePresets, disabledDate } from '@utils/date'
 import {
-  getdictionary,
   getApplyCount,
   getApplyList,
   handleUrging,
   handleStopApply
 } from '@api/myApplications'
+import { getdictionary } from '@api/index'
 import type { TGetApplyListParams } from '@api/myApplications'
-import { useUpdateEffect } from '@utils/index'
+import { useUpdateEffect, formatDictionary } from '@utils/index'
 import CheckModal from './components/CheckModal'
 
 const { RangePicker } = DatePicker
 
-/**
- * 格式化数据字典
- * @param {TDictList[] | TDictValue[]} array
- * @returns {Option[]} list 符合Cascader组件使用的options
- */
-const formatData = (array: TDictList[] | TDictValue[]) => {
-  const list: Option[] = []
-  array.forEach(item => {
-    if ((item as TDictList).dictValue) {
-      list.push({
-        label: (item as TDictList).dictName,
-        value: (item as TDictList).dictName,
-        children: formatData((item as TDictList).dictValue)
-      })
-    } else {
-      list.push({
-        label: (item as TDictValue).value,
-        value: (item as TDictValue).key
-      })
-    }
-  })
-  return list
-}
+const stateInfo = [
+  { title: '全部申请' },
+  { title: '审批通过', options: ['check'] },
+  { title: '审批中', options: ['check', 'urge', 'withdraw'] },
+  { title: '审批不通过', options: ['check'] },
+  { title: '撤回', options: ['check', 'reapply'] }
+]
 
 const MyApplications = () => {
-  const stateInfo = [
-    { title: '全部申请' },
-    { title: '审批通过', options: ['check'] },
-    { title: '审批中', options: ['check', 'urge', 'withdraw'] },
-    { title: '审批不通过', options: ['check'] },
-    { title: '撤回', options: ['check', 'reapply'] }
-  ]
-
   type TStateList = TState & { title: string; options?: string[] }
   const [stateList, setStateList] = useState<TStateList[]>()
   /**
@@ -112,7 +88,7 @@ const MyApplications = () => {
         typeValues: ['processKeyList']
       })
       const { dictList } = data.processKeyList
-      setProcessKeyList(formatData(dictList))
+      setProcessKeyList(formatDictionary(dictList))
 
       renderTable({
         processState: -1,
@@ -434,7 +410,7 @@ const MyApplications = () => {
                   )}
                   {index !==
                     stateList[values.state + 1].options!.length - 1 && (
-                    <Divider type='vertical' />
+                    <Divider type='vertical' style={{ margin: 0 }} />
                   )}
                 </React.Fragment>
               )

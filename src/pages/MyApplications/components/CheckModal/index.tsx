@@ -5,6 +5,8 @@ import { getApplyDetail } from '@api/myApplications'
 import userAvatar from '@/assets/myApplications-default-avatar.png'
 import ApprovalFormInfo from './components/ApprovalFormInfo'
 import DetailInfo from './components/DetailInfo'
+import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons'
+import { useStore } from '@stores/index'
 
 /**
  * 节点title
@@ -38,16 +40,34 @@ const NodeTitle = ({
 /**
  * 遍历负责审批用户列表
  */
-const UserList = ({ list }: { list: TSysUser[] }) => {
+const UserList = ({
+  list,
+  isPass
+}: {
+  list: TSysUser[]
+  isPass: 0 | 1 | 2 | 3
+}) => {
+  const { themeStore } = useStore()
+  const colorPrimary = themeStore.antdThemeColor
   return (
     <>
       {list.map(item => (
-        <div
-          style={{ display: 'flex', alignItems: 'center', margin: '10px 0' }}
-          key={item.sysRole.id}
-        >
-          <img src={userAvatar} style={{ marginRight: 10 }} />
-          {item.sysRole.name}
+        <div className={style['user-item']} key={item.sysRole.id}>
+          <p className={style.flex}>
+            <img src={userAvatar} style={{ marginRight: 10 }} />
+            {item.sysRole.name}
+            {item.isPassUser &&
+              (item.passState ? (
+                <CloseCircleFilled
+                  style={{ color: '#FF3B30', marginLeft: 4 }}
+                />
+              ) : (
+                <CheckCircleFilled
+                  style={{ color: colorPrimary, marginLeft: 4 }}
+                />
+              ))}
+          </p>
+          <p>{item.completeTime}</p>
         </div>
       ))}
     </>
@@ -79,7 +99,6 @@ const CheckModal = ({
     if (!instanceId) return
     ;(async () => {
       const { data } = await getApplyDetail({ instanceId })
-      console.log(data)
       setInfo(data)
 
       const { nodes } = data!
@@ -89,7 +108,7 @@ const CheckModal = ({
        */
       const items = nodes.map((item, index) => ({
         title: <NodeTitle item={item} />,
-        description: <UserList list={item.sysUsers} />
+        description: <UserList list={item.sysUsers} isPass={item.isPass} />
       }))
 
       const index = nodes.findIndex(item => item.isPass)
