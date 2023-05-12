@@ -45,15 +45,6 @@ export const mockProcessKeyList = Mock.mock({
 })
 
 /**
- * 获取申请类型
- */
-const getdictionary = (params: {
-  typeValues: string[]
-}): Promise<TResponse> => {
-  return request.post(`${baseUrl}/getdictionary`, params)
-}
-
-/**
  * 获取申请总数
  */
 export const mockApplyCount = Mock.mock({
@@ -140,4 +131,4 @@ const getApplyList = (params: TGetApplyListParams): Promise<TResponse> => {
   return request.post(`${baseUrl}/user/getApplyList`, params)
 }
 
-export { getdictionary, getApplyCount, getApplyList }
+export { getApplyCount, getApplyList }

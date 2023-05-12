@@ -44,4 +44,20 @@ const getStatistics = (params: TDateRange): Promise<TResponse> => {
   return request.post(`${baseUrl}/getStatistics`, params)
 }
 
-export { mockData, getNews, getMyAppInfo, getService, getStatistics }
+/**
+ * 获取申请类型
+ */
+const getdictionary = (params: {
+  typeValues: string[]
+}): Promise<TResponse> => {
+  return request.post(`${baseUrl}/getdictionary`, params)
+}
+
+export {
+  mockData,
+  getNews,
+  getMyAppInfo,
+  getService,
+  getStatistics,
+  getdictionary
+}

@@ -22,49 +22,50 @@ import locale from 'antd/locale/zh_CN'
 import { rangePresets, disabledDate } from '@utils/date'
 import CheckModal from './components/CheckModal'
 import { getMyAppList } from '@mock/myApp'
-import { TDictionary, getdictionary } from '@api/index'
+import { TDictionary } from '@api/index'
+import { getdictionary } from '@mock/index'
 // import { getMyAppList } from '@api/myApp'
 
 const { RangePicker } = DatePicker
-
-/**
- * 接入环境options
- */
-const environmentOptions = [
-  { label: '全部', value: -1 },
-  { label: '测试环境', value: 0 },
-  { label: '正式环境', value: 1 }
-]
-
-/**
- * 基础能力options
- */
-const abilityOptions = [
-  { label: '全部', value: -1 },
-  { label: '身份认证', value: 0 }
-]
 
 const MyApps = () => {
   type TDataType = {
     id: number
     appName: string // 应用名称
     environment: number // 接入环境：0-测试环境；1-正式环境
-    ability: string // 接入基础能力
+    appAbility: 0 // 接入基础能力：0-身份认证
     clientId: string // clientId
     expiredTime: string // 有效时间
     state: 0 | 1 | 2 | 3 | 4 // 状态：0-正常启用；1-即将过期；2-过期；3-停用；4-缺少授权文件
     addTime: string // 创建时间
   }
 
+  /**
+   *  接入环境
+   */
+  const [appEnv, setAppEnv] = useState<TDictionary['dictList']>()
+  /**
+   * 基础能力
+   */
+  const [appAbility, setAppAbility] = useState<TDictionary['dictList']>()
+  /**
+   * 状态
+   */
   const [appState, setAppState] = useState<TDictionary['dictList']>()
 
   useEffect(() => {
     ;(async () => {
       /**
-       * 获取状态
+       * 获取接入环境，基础能力，状态
        */
       const { data } = await getdictionary({ typeValues: ['appState'] })
-      setAppState(data.appState.dictList)
+      const { appEnv, appAbility, appState } = data
+      setAppEnv([{ dictValue: -1, dictName: '全部' }, ...appEnv.dictList])
+      setAppAbility([
+        { dictValue: -1, dictName: '全部' },
+        ...appAbility.dictList
+      ])
+      setAppState([{ dictValue: -1, dictName: '全部' }, ...appState.dictList])
     })()
   }, [])
 
@@ -186,13 +187,15 @@ const MyApps = () => {
       title: '接入环境',
       ellipsis: true,
       render: (values: TDataType) => (
-        <>{environmentOptions[values.environment + 1].label}</>
+        <>{appEnv && appEnv[values.environment + 1].dictName}</>
       )
     },
     {
       title: '接入基础能力',
-      dataIndex: 'ability',
-      ellipsis: true
+      ellipsis: true,
+      render: values => (
+        <>{appAbility && appAbility[values.appAbility + 1].dictName}</>
+      )
     },
     {
       title: 'clientId',
@@ -287,15 +290,17 @@ const MyApps = () => {
                 <Form.Item label='接入环境' name='environment'>
                   <Select
                     placeholder='请选择接入环境'
-                    options={environmentOptions}
+                    fieldNames={{ label: 'dictName', value: 'dictValue' }}
+                    options={appEnv}
                   />
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='基础能力' name='ability'>
+                <Form.Item label='基础能力' name='appAbility'>
                   <Select
                     placeholder='请选择基础能力'
-                    options={abilityOptions}
+                    fieldNames={{ label: 'dictName', value: 'dictValue' }}
+                    options={appAbility}
                   />
                 </Form.Item>
               </Col>
