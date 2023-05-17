@@ -25,6 +25,7 @@ import { TDictionary } from '@api/index'
 import { getdictionary } from '@mock/index'
 import { useNavigate } from 'react-router-dom'
 // import { getMyAppList } from '@api/myApp'
+import Extension from './components/Extension'
 
 const { RangePicker } = DatePicker
 
@@ -178,10 +179,20 @@ const MyApps = () => {
   }
 
   /**
+   * 当前申请延期的应用id
+   */
+  const [id, setId] = useState<number>()
+  /**
+   * 控制申请延期Modal显示隐藏
+   */
+  const [open, setOpen] = useState(true)
+
+  /**
    * 申请延期
    */
-  const onDelay = (item: TDataType) => {
-    console.log(item)
+  const onDelay = ({ id }: { id: TDataType['id'] }) => {
+    setId(id)
+    setOpen(true)
   }
 
   /**
@@ -405,6 +416,10 @@ const MyApps = () => {
           />
         </Col>
       </Row>
+
+      {open && id && (
+        <Extension open={open} setOpen={setOpen} instanceId={id} />
+      )}
     </>
   )
 }
