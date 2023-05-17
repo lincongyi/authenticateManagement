@@ -8,7 +8,7 @@ import UpdateEmailModal from './components/UpdateEmailModal'
 import Area from '@components/Area'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import type { RcFile } from 'antd/es/upload/interface'
-import { getBase64 } from '@utils/index'
+import { getBase64, imgBeforeUpload } from '@utils/index'
 import { getProcessByKey } from '@api/index'
 import {
   applyUpdateCompanyInfo,
@@ -87,17 +87,6 @@ const CompanySettings = () => {
    */
   const updateEmail = () => {
     setUpdateEmailModalOpen(true)
-  }
-
-  /**
-   * 上传前校验文件
-   */
-  const beforeUpload = (file: RcFile) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) message.error('上传图片只允许JPG/PNG格式')
-    const isLt2M = file.size / 1024 / 1024 < 2
-    if (!isLt2M) message.error('图片文件大小<2MB')
-    return isJpgOrPng && isLt2M
   }
 
   const [certificateFile, setCertificateFile] = useState('')
@@ -263,7 +252,7 @@ const CompanySettings = () => {
                 listType='picture-card'
                 maxCount={1}
                 showUploadList={false}
-                beforeUpload={beforeUpload}
+                beforeUpload={imgBeforeUpload}
                 customRequest={customRequest}
               >
                 {certificateFile ? (

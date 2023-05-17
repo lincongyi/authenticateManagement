@@ -205,26 +205,32 @@ const Main = () => {
       </div>
 
       <Row gutter={[20, 20]}>
-        <Col span={12}>
-          {myAppInfo && <Panel1 title='我的应用' info={myAppInfo} />}
-        </Col>
-        <Col span={12}>
-          {myService && <Panel1 title='我的基础服务' info={myService} />}
-        </Col>
+        {myAppInfo && (
+          <Col span={12}>
+            <Panel1 title='我的应用' info={myAppInfo} />
+          </Col>
+        )}
+
+        {myService && (
+          <Col span={12}>
+            <Panel1 title='我的基础服务' info={myService} />
+          </Col>
+        )}
+
         <Col span={12}>
           <Statistics />
         </Col>
         <Col span={12}>
           <Row gutter={[0, 20]}>
-            <Col span={24}>
-              {myApplications && (
+            {myApplications && (
+              <Col span={24}>
                 <Panel2
                   title='我的申请'
                   info={myApplications}
                   getData={getMyApplications}
                 />
-              )}
-            </Col>
+              </Col>
+            )}
             <Col span={24}>
               <Panel2
                 title='我的工单'
@@ -232,7 +238,6 @@ const Main = () => {
                 getData={getMyWorkOrder}
               />
             </Col>
-            <Col span={24}></Col>
           </Row>
         </Col>
       </Row>

@@ -19,6 +19,7 @@ const LineChart = ({ chartData }: { chartData: TLineChart }) => {
       }
     ]
   }
+
   useEffect(() => {
     if (!lineChart) {
       const line = document.getElementById('line')
@@ -31,7 +32,7 @@ const LineChart = ({ chartData }: { chartData: TLineChart }) => {
     return () => {
       window.onresize = () => {}
     }
-  }, [])
+  }, [option])
 
   return (
     <>
@@ -40,4 +41,4 @@ const LineChart = ({ chartData }: { chartData: TLineChart }) => {
   )
 }
 
-export default LineChart
+export default React.memo(LineChart)

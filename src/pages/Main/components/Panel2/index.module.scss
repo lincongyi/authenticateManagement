@@ -50,6 +50,6 @@
 
 @for $i from 1 through 3 {
   .icon0#{$i} {
-    background-image: url('@/assets/main-Panel2-icon0#{$i}.png');
+    background-image: url('@/assets/main-Panel2-icon-0#{$i}.png');
   }
 }

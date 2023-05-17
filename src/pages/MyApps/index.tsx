@@ -20,10 +20,10 @@ import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import { rangePresets, disabledDate } from '@utils/date'
-import CheckModal from './components/CheckModal'
 import { getAppCount, getMyAppList } from '@mock/myApp'
 import { TDictionary } from '@api/index'
 import { getdictionary } from '@mock/index'
+import { useNavigate } from 'react-router-dom'
 // import { getMyAppList } from '@api/myApp'
 
 const { RangePicker } = DatePicker
@@ -155,19 +155,19 @@ const MyApps = () => {
     console.log('Failed:', errorInfo)
   }
 
-  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
   /**
    * 查看
    */
-  const onCheck = (item: TDataType) => {
-    console.log(item)
+  const onCheck = ({ id }: { id: TDataType['id'] }) => {
+    navigate(`./accessForm?id=${id}&isCheck=1`)
   }
 
   /**
    * 认证数据
    */
-  const onViewData = (item: TDataType) => {
-    console.log(item)
+  const onViewData = ({ id }: { id: TDataType['id'] }) => {
+    navigate(`./authenticationData?id=${id}`)
   }
 
   /**
@@ -405,7 +405,6 @@ const MyApps = () => {
           />
         </Col>
       </Row>
-      <CheckModal open={open} setOpen={setOpen} />
     </>
   )
 }

@@ -1,4 +1,4 @@
-import React, { Ref } from 'react'
+import React from 'react'
 import style from './index.module.scss'
 import { useStore } from '@stores/index'
 import {
@@ -145,57 +145,69 @@ const popoverContent = (
   </Space>
 )
 
-const AbilityInfo = React.forwardRef(
-  (
-    { value }: { value: '0' | '1' | '2' | '3' },
-    ref: Ref<FormInstance> | undefined
-  ) => {
-    const { themeStore } = useStore()
-    const colorPrimary = themeStore.antdThemeColor
+const AbilityInfo = React.forwardRef<
+  FormInstance,
+  { params: { value: TValue; isCheck: 0 | 1 } }
+>(({ params }, ref) => {
+  const { themeStore } = useStore()
+  const colorPrimary = themeStore.antdThemeColor
 
-    return (
-      <Form
-        ref={ref}
-        name='abilityInfo'
-        {...formProps}
-        initialValues={{ accountType: 1 }}
-        style={{ display: value === '1' ? 'block' : 'none' }}
+  const { value, isCheck } = params
+
+  return (
+    <Form
+      ref={ref}
+      name='abilityInfo'
+      {...formProps}
+      initialValues={{ accountType: 1 }}
+      style={{ display: value === '1' ? 'block' : 'none' }}
+    >
+      <Form.Item
+        label='接入基础能力'
+        name='basicAccess'
+        rules={[{ required: true, message: '请选择接入基础能力' }]}
       >
-        <Form.Item
-          label='接入基础能力'
-          name='basicAccess'
-          rules={[{ required: true, message: '请选择接入基础能力' }]}
-        >
+        {isCheck ? (
+          ''
+        ) : (
           <Select
             placeholder='请选择接入基础能力'
             options={basicAccessOptions}
           />
-        </Form.Item>
+        )}
+      </Form.Item>
+      <Form.Item
+        label='接入账号类型'
+        name='accountType'
+        rules={[{ required: true, message: '请选择接入账号类型' }]}
+      >
+        {isCheck ? '' : <Radio.Group options={accountTypeOptions} />}
+      </Form.Item>
+      <ConfigProvider locale={locale}>
         <Form.Item
-          label='接入账号类型'
-          name='accountType'
-          rules={[{ required: true, message: '请选择接入账号类型' }]}
+          label='接入服务有效期'
+          name='period'
+          rules={[{ required: true, message: '请选择接入服务有效期' }]}
         >
-          <Radio.Group options={accountTypeOptions} />
-        </Form.Item>
-        <ConfigProvider locale={locale}>
-          <Form.Item
-            label='接入服务有效期'
-            name='period'
-            rules={[{ required: true, message: '请选择接入服务有效期' }]}
-          >
+          {isCheck ? (
+            ''
+          ) : (
             <DatePicker
               placeholder='请选择接入服务有效期'
               disabledDate={afterToday}
               style={{ width: '100%' }}
             />
-          </Form.Item>
-        </ConfigProvider>
-        <Form.Item
-          label='认证类型'
-          name='authType'
-          rules={[{ required: true, message: '请选择认证类型' }]}
-        >
+          )}
+        </Form.Item>
+      </ConfigProvider>
+      <Form.Item
+        label='认证类型'
+        name='authType'
+        rules={[{ required: true, message: '请选择认证类型' }]}
+      >
+        {isCheck ? (
+          ''
+        ) : (
           <CheckboxGroup>
             <Row gutter={[20, 20]}>
               {authTypeOptions.map(item => {
@@ -207,12 +219,16 @@ const AbilityInfo = React.forwardRef(
               })}
             </Row>
           </CheckboxGroup>
-        </Form.Item>
-        <Form.Item
-          label='认证模式'
-          name='authMode'
-          rules={[{ required: true, message: '请选择认证模式' }]}
-        >
+        )}
+      </Form.Item>
+      <Form.Item
+        label='认证模式'
+        name='authMode'
+        rules={[{ required: true, message: '请选择认证模式' }]}
+      >
+        {isCheck ? (
+          ''
+        ) : (
           <CheckboxGroup style={{ display: 'block' }}>
             <Row gutter={[20, 20]}>
               {authModeOptions.map(item => {
@@ -224,30 +240,34 @@ const AbilityInfo = React.forwardRef(
               })}
             </Row>
           </CheckboxGroup>
-        </Form.Item>
-        {/* 这块需要强调Checkbox分组，所以调整数组格式 start */}
-        <Form.Item
-          label={
-            <>
-              <Popover
-                placement='bottomLeft'
-                content={popoverContent}
-                title={popoverTitle}
-              >
-                <QuestionCircleOutlined
-                  style={{
-                    color: colorPrimary,
-                    marginRight: 4,
-                    cursor: 'pointer'
-                  }}
-                />
-              </Popover>
-              接入方式
-            </>
-          }
-          name='accessMethod'
-          rules={[{ required: true, message: '请选择接入方式' }]}
-        >
+        )}
+      </Form.Item>
+      {/* 这块需要强调Checkbox分组，所以调整数组格式 start */}
+      <Form.Item
+        label={
+          <>
+            <Popover
+              placement='bottomLeft'
+              content={popoverContent}
+              title={popoverTitle}
+            >
+              <QuestionCircleOutlined
+                style={{
+                  color: colorPrimary,
+                  marginRight: 4,
+                  cursor: 'pointer'
+                }}
+              />
+            </Popover>
+            接入方式
+          </>
+        }
+        name='accessMethod'
+        rules={[{ required: true, message: '请选择接入方式' }]}
+      >
+        {isCheck ? (
+          ''
+        ) : (
           <CheckboxGroup style={{ display: 'block' }}>
             {accessMethodOptions.map((item, index) => {
               return (
@@ -263,40 +283,56 @@ const AbilityInfo = React.forwardRef(
               )
             })}
           </CheckboxGroup>
-        </Form.Item>
-        {/* 这块需要强调Checkbox分组，所以调整数组格式 end */}
-        <Form.Item label='应用ID（Android）' name='androidId'>
+        )}
+      </Form.Item>
+      {/* 这块需要强调Checkbox分组，所以调整数组格式 end */}
+      <Form.Item label='应用ID（Android）' name='androidId'>
+        {isCheck ? (
+          ''
+        ) : (
           <Input
             placeholder='请输入应用ID'
             showCount
             maxLength={defaultMaxLength}
           />
-        </Form.Item>
-        <Form.Item label='Bundle ID（IOS）' name='bundleId'>
+        )}
+      </Form.Item>
+      <Form.Item label='Bundle ID（IOS）' name='bundleId'>
+        {isCheck ? (
+          ''
+        ) : (
           <Input
             placeholder='请输入Bundle ID'
             showCount
             maxLength={defaultMaxLength}
           />
-        </Form.Item>
-        <Form.Item label='小程序appid' name='appId'>
+        )}
+      </Form.Item>
+      <Form.Item label='小程序appid' name='appId'>
+        {isCheck ? (
+          ''
+        ) : (
           <Input
             placeholder='请输入小程序appid'
             showCount
             maxLength={defaultMaxLength}
           />
-        </Form.Item>
-        <Form.Item label='推送认证结果地址' name='authResultUrl'>
+        )}
+      </Form.Item>
+      <Form.Item label='推送认证结果地址' name='authResultUrl'>
+        {isCheck ? (
+          ''
+        ) : (
           <Input
             placeholder='请输入推送认证结果地址'
             showCount
             maxLength={50}
           />
-        </Form.Item>
-      </Form>
-    )
-  }
-)
+        )}
+      </Form.Item>
+    </Form>
+  )
+})
 
 AbilityInfo.displayName = 'AbilityInfo'
 

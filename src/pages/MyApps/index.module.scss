@@ -12,7 +12,7 @@
 
   @for $i from 1 through 3 {
     &.icon0#{$i} {
-      background-image: url('@/assets/myApp-icon0#{$i}.png');
+      background-image: url('@/assets/myApp-icon-0#{$i}.png');
     }
   }
 

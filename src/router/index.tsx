@@ -109,13 +109,21 @@ const routes: TRoutes[] = [
           },
           {
             path: 'accessForm', // 身份认证接入流程
-            element: lazyLoad('AppServiceCenter/Authentication/AccessForm')
+            element: lazyLoad('AccessForm')
           }
         ]
       },
       {
         path: 'myApps', // 我的应用
         element: lazyLoad('MyApps')
+      },
+      {
+        path: 'myApps/accessForm', // 我的应用/查看or数据变更
+        element: lazyLoad('AccessForm')
+      },
+      {
+        path: 'myApps/authenticationData', // 我的应用/认证数据
+        element: lazyLoad('MyApps/AuthenticationData')
       },
       {
         path: 'myApplications', // 我的申请

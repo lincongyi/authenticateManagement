@@ -11,7 +11,8 @@ import {
   phonePattern,
   passwordPattern,
   emailPattern,
-  getBase64
+  getBase64,
+  imgBeforeUpload
 } from '@utils/index'
 import { registerApply } from '@api/register'
 import MessageCaptcha from '@components/MessageCaptcha'
@@ -49,17 +50,6 @@ const Register = () => {
     required: '请输入${label}'
   }
   /* eslint-disable no-template-curly-in-string */
-
-  /**
-   * 上传前校验文件
-   */
-  const beforeUpload = (file: RcFile) => {
-    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-    if (!isJpgOrPng) message.error('上传图片只允许JPG/PNG格式')
-    const isLt2M = file.size / 1024 / 1024 < 2
-    if (!isLt2M) message.error('图片文件大小<2MB')
-    return isJpgOrPng && isLt2M
-  }
 
   const [certificateFile, setCertificateFile] = useState('')
 
@@ -282,7 +272,7 @@ const Register = () => {
                   listType='picture-card'
                   maxCount={1}
                   showUploadList={false}
-                  beforeUpload={beforeUpload}
+                  beforeUpload={imgBeforeUpload}
                   customRequest={customRequest}
                 >
                   {certificateFile ? (

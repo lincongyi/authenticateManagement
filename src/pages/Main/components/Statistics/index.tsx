@@ -29,20 +29,29 @@ const Statistics = () => {
    * 关闭日期选择器的回调
    */
   const onOpenChange = (open: boolean) => {
-    if (!open) console.log('close')
+    if (!open) renderChart()
   }
 
+  /**
+   * 图表数据
+   */
   const [chartData, setChartData] = useState<TLineChart>()
 
+  /**
+   * 渲染图表
+   */
+  const renderChart = async (startTime = '', endTime = '') => {
+    const { data } = await getStatistics({
+      startTime,
+      endTime
+    })
+    setChartData(data)
+  }
+
   useEffect(() => {
-    ;(async () => {
-      const { data } = await getStatistics({
-        startTime: '',
-        endTime: ''
-      })
-      setChartData(data)
-    })()
+    renderChart()
   }, [])
+
   return (
     <Card
       title='调用数量统计'

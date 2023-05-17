@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import style from './index.module.scss'
 import { Affix, Button, Radio, Space, message } from 'antd'
 import type { RadioChangeEvent } from 'antd'
@@ -8,8 +8,12 @@ import BasicInfo from './components/BasicInfo'
 import AbilityInfo from './components/AbilityInfo'
 import Concurrency from './components/Concurrency'
 import UploadForm from './components/UploadForm'
+import AccountInfo from './components/AccountInfo'
 import ConfirmModal from './components/ConfirmModal'
+import { useLocation } from 'react-router-dom'
 // import { dateFormat } from '@utils/date'
+
+const offsetTop = 64 // 固钉高度
 
 const AccessForm = () => {
   type TOptions = {
@@ -20,26 +24,56 @@ const AccessForm = () => {
     { label: '基本信息', value: '0' },
     { label: '基础能力信息', value: '1' },
     { label: '并发配置', value: '2' },
-    { label: '上传申请表', value: '3' }
+    { label: '上传申请表', value: '3' },
+    { label: '正式账号信息', value: '4' }
   ]
+
+  const { search } = useLocation()
+  const searchParams = new URLSearchParams(search.substring(1))
+
+  /**
+   * 当前是否为【查看】模式
+   */
+  const [isCheck, setIsCheck] = useState<0 | 1>(0)
+  /**
+   * 整合各个表单数据
+   */
+  const [formData, setFormData] = useState<TAccessForm>()
+
+  if ((searchParams as URLSearchParams & { size: number }).size) {
+    /**
+     * 如果是查看或者编辑模式，根据id获取详情显示
+     */
+    useEffect(() => {
+      const id = searchParams.get('id')
+      ;(async () => {
+        // const { data } = await handlerRequest({id})
+        // setFormData(data)
+      })()
+      const isCheck = searchParams.get('isCheck')
+      setIsCheck(Number(isCheck) as 0 | 1)
+    }, [])
+  }
 
   const basicInfoRef = useRef<FormInstance | null>(null) // 基本信息表单Ref
   const abilityInfoRef = useRef<FormInstance | null>(null) // 基础能力信息Ref
   const concurrencyRef = useRef<{
     testRef: React.MutableRefObject<FormInstance | null>
     productionRef: React.MutableRefObject<FormInstance | null>
-  }>() // 并发配置Ref
+  }>(null) // 并发配置Ref
   const uploadFormRef = useRef<FormInstance | null>(null) // 上传申请表Ref
+  const AccountInfoRef = useRef<FormInstance | null>(null) // 正式账号信息Ref
   /**
    * 表单渲染
    */
   const renderForm = (value: TOptions['value']) => {
     return (
       <>
-        <BasicInfo ref={basicInfoRef} value={value} />
-        <AbilityInfo ref={abilityInfoRef} value={value} />
-        <Concurrency ref={concurrencyRef} value={value} />
-        <UploadForm ref={uploadFormRef} value={value} />
+        <BasicInfo ref={basicInfoRef} params={{ value, isCheck }} />
+        <AbilityInfo ref={abilityInfoRef} params={{ value, isCheck }} />
+        <Concurrency ref={concurrencyRef} params={{ value, isCheck }} />
+        <UploadForm ref={uploadFormRef} params={{ value, isCheck }} />
+        <AccountInfo ref={AccountInfoRef} params={{ value, isCheck }} />
       </>
     )
   }
@@ -126,10 +160,6 @@ const AccessForm = () => {
    * 控制二次确认提交审核Modal显示隐藏
    */
   const [open, setOpen] = useState(false)
-  /**
-   * 整合各个表单数据
-   */
-  const [formData, setFormData] = useState<TAccessForm>()
 
   /**
    * 提交审核
@@ -150,11 +180,9 @@ const AccessForm = () => {
     setOpen(true)
   }
 
-  const [top] = useState(64)
-
   return (
     <>
-      <Affix offsetTop={top}>
+      <Affix offsetTop={offsetTop}>
         <div className={style.header}>
           <Radio.Group
             options={options}
@@ -163,12 +191,14 @@ const AccessForm = () => {
             optionType='button'
             buttonStyle='solid'
           />
-          <Space>
-            <Button onClick={() => onSave()}>保存草稿</Button>
-            <Button type='primary' onClick={onSubmit}>
-              提交审核
-            </Button>
-          </Space>
+          {!isCheck && (
+            <Space>
+              <Button type='primary' onClick={onSubmit}>
+                提交审核
+              </Button>
+              <Button onClick={() => onSave()}>保存草稿</Button>
+            </Space>
+          )}
         </div>
       </Affix>
       {renderForm(value)}

@@ -58,3 +58,5 @@ type TAccessForm = {
   concurrency: TConcurrency // 并发配置
   uploadForm: TUploadForm // 上传申请表
 }
+
+type TValue = '0' | '1' | '2' | '3' | '4'
