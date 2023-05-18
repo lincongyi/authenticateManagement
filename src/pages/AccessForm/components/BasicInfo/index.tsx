@@ -2,51 +2,23 @@ import React from 'react'
 import { Divider, Form, Input, Select, Typography } from 'antd'
 import type { FormInstance } from 'antd/lib/form/hooks/useForm'
 import { formProps } from '..'
+import { useStore } from '@stores/index'
+import { observer } from 'mobx-react-lite'
+import { fieldNames } from '@utils/index'
 
 const { Title } = Typography
 const { TextArea } = Input
 
 const defaultMaxLength = 20
 
-/**
- * 接入系统类型
- */
-const typeOptions = [
-  { value: 1, label: 'APP移动应用' },
-  { value: 2, label: 'Web网站应用' },
-  { value: 3, label: '微信小程序' },
-  { value: 4, label: '微信公众号' },
-  { value: 5, label: '支付宝小程序' },
-  { value: 6, label: '支付宝生活号' },
-  { value: 7, label: 'PC终端' },
-  { value: 8, label: '一体机' },
-  { value: 9, label: '其他' }
-]
-
-/**
- * 系统所属级别
- */
-const levelOptions = [
-  { value: 1, label: '省级' },
-  { value: 2, label: '地市级' },
-  { value: 3, label: '其他' }
-]
-
-/**
- * 系统对外服务范围
- */
-const serviceRangeOptions = [
-  { value: 1, label: '互联网' },
-  { value: 2, label: '政务外网' },
-  { value: 3, label: '公安网' },
-  { value: 4, label: '移动警务网' }
-]
-
 const BasicInfo = React.forwardRef<
   FormInstance,
-  { params: { value: '0' | '1' | '2' | '3'; isCheck: 0 | 1 } }
+  { params: { value: '0' | '1' | '2' | '3' | '4'; isCheck: 0 | 1 } }
 >(({ params }, ref) => {
   const { value, isCheck } = params
+
+  const { accessFormStore } = useStore()
+
   return (
     <Form
       ref={ref}
@@ -76,7 +48,11 @@ const BasicInfo = React.forwardRef<
         {isCheck ? (
           ''
         ) : (
-          <Select placeholder='请选择接入系统类型' options={typeOptions} />
+          <Select
+            placeholder='请选择接入系统类型'
+            fieldNames={fieldNames}
+            options={accessFormStore.getDictionaryItem('appType')}
+          />
         )}
       </Form.Item>
       <Form.Item
@@ -87,7 +63,11 @@ const BasicInfo = React.forwardRef<
         {isCheck ? (
           ''
         ) : (
-          <Select placeholder='请选择系统所属级别' options={levelOptions} />
+          <Select
+            placeholder='请选择系统所属级别'
+            fieldNames={fieldNames}
+            options={accessFormStore.getDictionaryItem('systemlevel')}
+          />
         )}
       </Form.Item>
       <Form.Item
@@ -100,7 +80,8 @@ const BasicInfo = React.forwardRef<
         ) : (
           <Select
             placeholder='请选择系统对外服务范围'
-            options={serviceRangeOptions}
+            fieldNames={fieldNames}
+            options={accessFormStore.getDictionaryItem('networkType')}
           />
         )}
       </Form.Item>
@@ -224,4 +205,4 @@ const BasicInfo = React.forwardRef<
 
 BasicInfo.displayName = 'BasicInfo'
 
-export default BasicInfo
+export default observer(BasicInfo)

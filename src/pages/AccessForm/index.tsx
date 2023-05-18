@@ -12,14 +12,32 @@ import AccountInfo from './components/AccountInfo'
 import ConfirmModal from './components/ConfirmModal'
 import { useLocation } from 'react-router-dom'
 // import { dateFormat } from '@utils/date'
+import { getdictionary } from '@api/index'
+import { useStore } from '@stores/index'
 
 const offsetTop = 64 // 固钉高度
 
 const AccessForm = () => {
+  /**
+   * mobx存储数据字典
+   */
+  const { accessFormStore } = useStore()
+  useEffect(() => {
+    if (!accessFormStore.dictionary) {
+      ;(async () => {
+        const { data } = await getdictionary({
+          showType: 'appAccess'
+        })
+        accessFormStore.setDictionary(data)
+      })()
+    }
+  }, [])
+
   type TOptions = {
     label: string
-    value: '0' | '1' | '2' | '3'
+    value: '0' | '1' | '2' | '3' | '4'
   }
+
   const options: TOptions[] = [
     { label: '基本信息', value: '0' },
     { label: '基础能力信息', value: '1' },

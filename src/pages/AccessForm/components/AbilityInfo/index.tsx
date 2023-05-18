@@ -1,6 +1,5 @@
 import React from 'react'
 import style from './index.module.scss'
-import { useStore } from '@stores/index'
 import {
   ConfigProvider,
   DatePicker,
@@ -23,10 +22,11 @@ import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import accessFormChooseMethod from '@/assets/accessForm-chooseMethod.png'
 import { formProps } from '..'
+import { useStore } from '@stores/index'
+import { observer } from 'mobx-react-lite'
+import { fieldNames } from '@utils/index'
 
 const CheckboxGroup = Checkbox.Group
-
-const basicAccessOptions = [{ label: '身份认证', value: 1 }]
 
 const defaultMaxLength = 20
 
@@ -36,27 +36,6 @@ const defaultMaxLength = 20
 const accountTypeOptions = [
   { label: '测试账号', value: 1 },
   { label: '正式账号', value: 2 }
-]
-
-/**
- * 认证类型options
- */
-const authTypeOptions = [
-  { label: '第二代居民身份证', value: 1 },
-  { label: '港澳居民居住证', value: 2 },
-  { label: '港澳居民来往内地通行证', value: 3 },
-  { label: '台湾居民来往内地居民证', value: 4 },
-  { label: '普通护照', value: 5 },
-  { label: '外国人永久居留身份证', value: 6 }
-]
-
-/**
- * 认证模式options
- */
-const authModeOptions = [
-  { label: '实名', value: 1 },
-  { label: '实名+实人', value: 2 },
-  { label: '实名+实人+实证', value: 3 }
 ]
 
 /**
@@ -154,6 +133,8 @@ const AbilityInfo = React.forwardRef<
 
   const { value, isCheck } = params
 
+  const { accessFormStore } = useStore()
+
   return (
     <Form
       ref={ref}
@@ -172,7 +153,8 @@ const AbilityInfo = React.forwardRef<
         ) : (
           <Select
             placeholder='请选择接入基础能力'
-            options={basicAccessOptions}
+            fieldNames={fieldNames}
+            options={accessFormStore.getDictionaryItem('accessSkill')}
           />
         )}
       </Form.Item>
@@ -210,13 +192,16 @@ const AbilityInfo = React.forwardRef<
         ) : (
           <CheckboxGroup>
             <Row gutter={[20, 20]}>
-              {authTypeOptions.map(item => {
-                return (
-                  <Col span={6} key={item.value}>
-                    <Checkbox value={item.value}>{item.label}</Checkbox>
-                  </Col>
-                )
-              })}
+              {accessFormStore.dictionary &&
+                accessFormStore.getDictionaryItem('authType')?.map(item => {
+                  return (
+                    <Col span={6} key={item.dictValue}>
+                      <Checkbox value={item.dictValue}>
+                        {item.dictName}
+                      </Checkbox>
+                    </Col>
+                  )
+                })}
             </Row>
           </CheckboxGroup>
         )}
@@ -231,13 +216,16 @@ const AbilityInfo = React.forwardRef<
         ) : (
           <CheckboxGroup style={{ display: 'block' }}>
             <Row gutter={[20, 20]}>
-              {authModeOptions.map(item => {
-                return (
-                  <Col span={6} key={item.value}>
-                    <Checkbox value={item.value}>{item.label}</Checkbox>
-                  </Col>
-                )
-              })}
+              {accessFormStore.dictionary &&
+                accessFormStore.getDictionaryItem('authMode')?.map(item => {
+                  return (
+                    <Col span={6} key={item.dictValue}>
+                      <Checkbox value={item.dictValue}>
+                        {item.dictName}
+                      </Checkbox>
+                    </Col>
+                  )
+                })}
             </Row>
           </CheckboxGroup>
         )}
@@ -336,4 +324,4 @@ const AbilityInfo = React.forwardRef<
 
 AbilityInfo.displayName = 'AbilityInfo'
 
-export default AbilityInfo
+export default observer(AbilityInfo)

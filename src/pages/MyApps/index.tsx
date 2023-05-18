@@ -21,11 +21,14 @@ import 'dayjs/locale/zh-cn'
 import locale from 'antd/locale/zh_CN'
 import { rangePresets, disabledDate } from '@utils/date'
 import { getAppCount, getMyAppList } from '@mock/myApp'
-import { TDictionary } from '@api/index'
-import { getdictionary } from '@mock/index'
+import { getdictionary } from '@api/index'
+
 import { useNavigate } from 'react-router-dom'
 // import { getMyAppList } from '@api/myApp'
 import Extension from './components/Extension'
+import { useStore } from '@stores/index'
+import { observer } from 'mobx-react-lite'
+import { fieldNames } from '@utils/index'
 
 const { RangePicker } = DatePicker
 
@@ -47,32 +50,18 @@ const MyApps = () => {
   }, [])
 
   /**
-   *  接入环境
+   * mobx存储数据字典
    */
-  const [appEnv, setAppEnv] = useState<TDictionary['dictList']>()
-  /**
-   * 基础能力
-   */
-  const [appAbility, setAppAbility] = useState<TDictionary['dictList']>()
-  /**
-   * 状态
-   */
-  const [appState, setAppState] = useState<TDictionary['dictList']>()
-
+  const { accessFormStore } = useStore()
   useEffect(() => {
-    ;(async () => {
-      /**
-       * 获取接入环境，基础能力，状态
-       */
-      const { data } = await getdictionary({ typeValues: ['appState'] })
-      const { appEnv, appAbility, appState } = data
-      setAppEnv([{ dictValue: -1, dictName: '全部' }, ...appEnv.dictList])
-      setAppAbility([
-        { dictValue: -1, dictName: '全部' },
-        ...appAbility.dictList
-      ])
-      setAppState([{ dictValue: -1, dictName: '全部' }, ...appState.dictList])
-    })()
+    if (!accessFormStore.dictionary) {
+      ;(async () => {
+        const { data } = await getdictionary({
+          showType: 'appAccess'
+        })
+        accessFormStore.setDictionary(data)
+      })()
+    }
   }, [])
 
   type TDataType = {
@@ -224,18 +213,24 @@ const MyApps = () => {
       dataIndex: 'appName',
       ellipsis: true
     },
-    {
-      title: '接入环境',
-      ellipsis: true,
-      render: (values: TDataType) => (
-        <>{appEnv && appEnv[values.appEnv + 1].dictName}</>
-      )
-    },
+    // {
+    //   title: '接入环境',
+    //   ellipsis: true,
+    //   render: (values: TDataType) => (
+    //     <>{appEnv && appEnv[values.appEnv + 1].dictName}</>
+    //   )
+    // },
     {
       title: '接入基础能力',
       ellipsis: true,
-      render: values => (
-        <>{appAbility && appAbility[values.appAbility + 1].dictName}</>
+      render: (values: TDataType) => (
+        <>
+          {accessFormStore.dictionary
+            ? accessFormStore.getDictionaryItem('accessSkill')![
+                values.appAbility
+              ].dictName
+            : '-'}
+        </>
       )
     },
     {
@@ -253,13 +248,16 @@ const MyApps = () => {
       ellipsis: true,
       render: (values: TDataType) => (
         <>
-          {appState && (
+          {accessFormStore.dictionary && (
             <Tag
               color={
                 ['success', 'warning', 'error'][values?.state] || 'default'
               }
             >
-              {appState[values.state + 1].dictName}
+              {accessFormStore.dictionary
+                ? accessFormStore.getDictionaryItem('appState')![values.state]
+                    .dictName
+                : '-'}
             </Tag>
           )}
         </>
@@ -340,21 +338,21 @@ const MyApps = () => {
                   <Input placeholder='请输入应用名称' maxLength={10} />
                 </Form.Item>
               </Col>
-              <Col span={6}>
+              {/* <Col span={6}>
                 <Form.Item label='接入环境' name='appEnv'>
                   <Select
                     placeholder='请选择接入环境'
-                    fieldNames={{ label: 'dictName', value: 'dictValue' }}
+                    fieldNames={fieldNames}
                     options={appEnv}
                   />
                 </Form.Item>
-              </Col>
+              </Col> */}
               <Col span={6}>
                 <Form.Item label='基础能力' name='appAbility'>
                   <Select
                     placeholder='请选择基础能力'
-                    fieldNames={{ label: 'dictName', value: 'dictValue' }}
-                    options={appAbility}
+                    fieldNames={fieldNames}
+                    options={accessFormStore.getDictionaryItem('accessSkill')}
                   />
                 </Form.Item>
               </Col>
@@ -363,7 +361,7 @@ const MyApps = () => {
                   <Select
                     placeholder='请选择状态'
                     fieldNames={{ label: 'dictName', value: 'dictValue' }}
-                    options={appState}
+                    options={accessFormStore.getDictionaryItem('appState')}
                   />
                 </Form.Item>
               </Col>
@@ -424,4 +422,4 @@ const MyApps = () => {
   )
 }
 
-export default MyApps
+export default observer(MyApps)

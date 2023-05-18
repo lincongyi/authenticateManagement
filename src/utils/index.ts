@@ -109,6 +109,8 @@ const imgBeforeUpload = (file: RcFile) => {
   return isJpgOrPng && isLt2M
 }
 
+export const fieldNames = { label: 'dictName', value: 'dictValue' }
+
 export {
   loadEnv,
   phonePattern,

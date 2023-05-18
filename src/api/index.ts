@@ -63,9 +63,15 @@ export type TDictionary = {
  * @param {'typeValues': string[]} params: 获取某个数据字典的字段名
  * @returns {key:TDictionary}
  */
-const getdictionary = (params: {
-  typeValues: string[]
-}): Promise<TResponse> => {
+const getdictionary = (
+  params:
+    | {
+        typeValues: string[]
+      }
+    | {
+        showType: 'appAccess'
+      }
+): Promise<TResponse> => {
   return request.post('/getdictionary', params)
 }
 
