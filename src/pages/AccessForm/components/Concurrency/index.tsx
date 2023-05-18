@@ -2,6 +2,7 @@ import React, { useImperativeHandle, useRef } from 'react'
 import { Alert, Divider, Form, Input, Typography } from 'antd'
 import type { FormInstance } from 'antd/lib/form/hooks/useForm'
 import { formProps } from '..'
+import { useStore } from '@stores/index'
 
 const { Title } = Typography
 
@@ -10,7 +11,7 @@ const Concurrency = React.forwardRef<
     testRef: React.MutableRefObject<FormInstance<any> | null>
     productionRef: React.MutableRefObject<FormInstance<any> | null>
   },
-  { params: { value: TValue; isCheck: 0 | 1 } }
+  { params: { value: TValue } }
 >(({ params }, ref) => {
   const testRef = useRef<FormInstance | null>(null)
   const productionRef = useRef<FormInstance | null>(null)
@@ -18,7 +19,11 @@ const Concurrency = React.forwardRef<
     testRef,
     productionRef
   }))
-  const { value, isCheck } = params
+  const { value } = params
+
+  const { accessFormStore } = useStore()
+
+  const isCheck = accessFormStore.current.state === 2
 
   /**
    * 并发配置默认值

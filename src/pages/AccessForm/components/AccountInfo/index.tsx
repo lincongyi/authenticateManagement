@@ -30,9 +30,13 @@ const { Text } = Typography
 
 const AccountInfo = React.forwardRef<
   FormInstance,
-  { params: { value: TValue; isCheck: 0 | 1 } }
+  { params: { value: TValue } }
 >(({ params }, ref) => {
-  const { value, isCheck } = params
+  const { value } = params
+
+  const { accessFormStore } = useStore()
+
+  const isCheck = accessFormStore.current.state === 2
 
   const [loading, setLoading] = useState(false)
 

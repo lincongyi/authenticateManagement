@@ -10,7 +10,7 @@ import Concurrency from './components/Concurrency'
 import UploadForm from './components/UploadForm'
 import AccountInfo from './components/AccountInfo'
 import ConfirmModal from './components/ConfirmModal'
-import { useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 // import { dateFormat } from '@utils/date'
 import { getdictionary } from '@api/index'
 import { useStore } from '@stores/index'
@@ -22,13 +22,37 @@ const AccessForm = () => {
    * mobx存储数据字典
    */
   const { accessFormStore } = useStore()
+
+  const navigate = useNavigate()
+
+  const [formState, setFormState] = useState(0)
+
+  /**
+   * 初始化表单
+   */
   useEffect(() => {
+    const { state, id } = accessFormStore.current
+    setFormState(state)
+    if (!state) navigate(-1)
+
+    /**
+     * 获取表单所需的数据字典
+     */
     if (!accessFormStore.dictionary) {
       ;(async () => {
         const { data } = await getdictionary({
           showType: 'appAccess'
         })
         accessFormStore.setDictionary(data)
+      })()
+    }
+    /**
+     * 获取表单数据
+     */
+    if (id) {
+      ;(async () => {
+        // const { data } = await handlerRequest({id})
+        // setFormData(data)
       })()
     }
   }, [])
@@ -46,32 +70,10 @@ const AccessForm = () => {
     { label: '正式账号信息', value: '4' }
   ]
 
-  const { search } = useLocation()
-  const searchParams = new URLSearchParams(search.substring(1))
-
-  /**
-   * 当前是否为【查看】模式
-   */
-  const [isCheck, setIsCheck] = useState<0 | 1>(0)
   /**
    * 整合各个表单数据
    */
   const [formData, setFormData] = useState<TAccessForm>()
-
-  if ((searchParams as URLSearchParams & { size: number }).size) {
-    /**
-     * 如果是查看或者编辑模式，根据id获取详情显示
-     */
-    useEffect(() => {
-      const id = searchParams.get('id')
-      ;(async () => {
-        // const { data } = await handlerRequest({id})
-        // setFormData(data)
-      })()
-      const isCheck = searchParams.get('isCheck')
-      setIsCheck(Number(isCheck) as 0 | 1)
-    }, [])
-  }
 
   const basicInfoRef = useRef<FormInstance | null>(null) // 基本信息表单Ref
   const abilityInfoRef = useRef<FormInstance | null>(null) // 基础能力信息Ref
@@ -87,11 +89,11 @@ const AccessForm = () => {
   const renderForm = (value: TOptions['value']) => {
     return (
       <>
-        <BasicInfo ref={basicInfoRef} params={{ value, isCheck }} />
-        <AbilityInfo ref={abilityInfoRef} params={{ value, isCheck }} />
-        <Concurrency ref={concurrencyRef} params={{ value, isCheck }} />
-        <UploadForm ref={uploadFormRef} params={{ value, isCheck }} />
-        <AccountInfo ref={AccountInfoRef} params={{ value, isCheck }} />
+        <BasicInfo ref={basicInfoRef} params={{ value }} />
+        <AbilityInfo ref={abilityInfoRef} params={{ value }} />
+        <Concurrency ref={concurrencyRef} params={{ value }} />
+        <UploadForm ref={uploadFormRef} params={{ value }} />
+        <AccountInfo ref={AccountInfoRef} params={{ value }} />
       </>
     )
   }
@@ -209,7 +211,7 @@ const AccessForm = () => {
             optionType='button'
             buttonStyle='solid'
           />
-          {!isCheck && (
+          {formState !== 2 && (
             <Space>
               <Button type='primary' onClick={onSubmit}>
                 提交审核

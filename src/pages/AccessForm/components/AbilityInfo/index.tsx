@@ -126,14 +126,16 @@ const popoverContent = (
 
 const AbilityInfo = React.forwardRef<
   FormInstance,
-  { params: { value: TValue; isCheck: 0 | 1 } }
+  { params: { value: TValue } }
 >(({ params }, ref) => {
   const { themeStore } = useStore()
   const colorPrimary = themeStore.antdThemeColor
 
-  const { value, isCheck } = params
+  const { value } = params
 
   const { accessFormStore } = useStore()
+
+  const isCheck = accessFormStore.current.state === 2
 
   return (
     <Form

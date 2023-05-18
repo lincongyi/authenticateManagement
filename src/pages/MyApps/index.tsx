@@ -150,7 +150,11 @@ const MyApps = () => {
    * 查看
    */
   const onCheck = ({ id }: { id: TDataType['id'] }) => {
-    navigate(`./accessForm?id=${id}&isCheck=1`)
+    accessFormStore.current = {
+      id,
+      state: 2
+    }
+    navigate('./accessForm')
   }
 
   /**

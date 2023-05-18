@@ -35,7 +35,7 @@ const processList = [
 
 const UploadForm = React.forwardRef<
   FormInstance,
-  { params: { value: TValue; isCheck: 0 | 1 } }
+  { params: { value: TValue } }
 >(({ params }, ref) => {
   /**
    * 下载申请表（函）links

@@ -18,6 +18,9 @@ type TAccessFormStore = {
 
 const AccessFormStore = () => {
   return makeAutoObservable({
+    /**
+     * 数据字典
+     */
     dictionary: undefined as TAccessFormStore | undefined,
 
     setDictionary (dictionary: TAccessFormStore) {
@@ -36,6 +39,11 @@ const AccessFormStore = () => {
       const options = toJS(this.getDictionaryItem(item))
       if (!options) return undefined
       return [{ dictValue: -1, dictName: '全部' }, ...options]
+    },
+
+    current: {
+      id: 0, // 应用id
+      state: 0 // 0:默认状态；1-新增；2-查看；3-修改
     }
   })
 }
