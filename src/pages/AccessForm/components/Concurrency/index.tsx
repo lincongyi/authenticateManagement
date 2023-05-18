@@ -8,16 +8,16 @@ const { Title } = Typography
 
 const Concurrency = React.forwardRef<
   {
-    testRef: React.MutableRefObject<FormInstance<any> | null>
-    productionRef: React.MutableRefObject<FormInstance<any> | null>
+    sitRef: React.MutableRefObject<FormInstance<any> | null>
+    prodRef: React.MutableRefObject<FormInstance<any> | null>
   },
   { params: { value: TValue } }
 >(({ params }, ref) => {
-  const testRef = useRef<FormInstance | null>(null)
-  const productionRef = useRef<FormInstance | null>(null)
+  const sitRef = useRef<FormInstance | null>(null)
+  const prodRef = useRef<FormInstance | null>(null)
   useImperativeHandle(ref, () => ({
-    testRef,
-    productionRef
+    sitRef,
+    prodRef
   }))
   const { value } = params
 
@@ -28,13 +28,21 @@ const Concurrency = React.forwardRef<
   /**
    * 并发配置默认值
    */
-  const initialValues = {
-    secondQuota: '50',
-    period: '1',
-    dayQuota: '100000',
-    monthQuota: '0',
-    yearQuota: '0',
-    totalQuota: '0'
+  const sitInitialValues = {
+    sitperSec: '50',
+    sitlimitTime: '1',
+    sitperDay: '100000',
+    sitperMonth: '0',
+    sitperAnnum: '0',
+    sittotal: '0'
+  }
+  const prodInitialValues = {
+    prodperSec: '50',
+    prodlimitTime: '1',
+    prodperDay: '100000',
+    prodperMonth: '0',
+    prodperAnnum: '0',
+    prodtotal: '0'
   }
   return (
     <>
@@ -48,17 +56,17 @@ const Concurrency = React.forwardRef<
         }}
       />
       <Form
-        ref={testRef}
-        name='concurrencyTest'
+        ref={sitRef}
+        name='concurrencySit'
         {...formProps}
-        initialValues={initialValues}
+        initialValues={sitInitialValues}
         style={{ display: value === '2' ? 'block' : 'none' }}
       >
         <Title level={5}>测试环境</Title>
         <Divider />
         <Form.Item
           label='每秒并发限制'
-          name='secondQuota'
+          name='sitperSec'
           extra='(0=不限额，建议区间1-100，单位：次)'
           rules={[{ required: true }]}
         >
@@ -66,7 +74,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='计算周期'
-          name='period'
+          name='sitlimitTime'
           extra='(计算周期必须>1，建议周期=1，单位：秒)'
           rules={[{ required: true }]}
         >
@@ -74,7 +82,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='每日限额'
-          name='dayQuota'
+          name='sitperDay'
           extra='(0=不限额，建议区间10W-100W，单位：次)'
           rules={[{ required: true }]}
         >
@@ -82,7 +90,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='每月限额'
-          name='monthQuota'
+          name='sitperMonth'
           extra='(0=不限额，建议限额=0，单位：次)'
           rules={[{ required: true }]}
         >
@@ -90,7 +98,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='每年限额'
-          name='yearQuota'
+          name='sitperAnnum'
           extra='(0=不限额，建议限额=0，单位：次)'
           rules={[{ required: true }]}
         >
@@ -98,7 +106,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='认证总次数限额'
-          name='totalQuota'
+          name='sittotal'
           extra='(0=不限额，建议限额=0，单位：次)'
           rules={[{ required: true }]}
         >
@@ -107,17 +115,17 @@ const Concurrency = React.forwardRef<
       </Form>
 
       <Form
-        ref={productionRef}
+        ref={prodRef}
         name='concurrencyProduction'
         {...formProps}
-        initialValues={initialValues}
+        initialValues={prodInitialValues}
         style={{ display: value === '2' ? 'block' : 'none' }}
       >
         <Title level={5}>正式环境</Title>
         <Divider />
         <Form.Item
           label='每秒并发限制'
-          name='secondQuota'
+          name='prodperSec'
           extra='(0=不限额，建议区间1-100，单位：次)'
           rules={[{ required: true }]}
         >
@@ -125,7 +133,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='计算周期'
-          name='period'
+          name='prodlimitTime'
           extra='(计算周期必须>1，建议周期=1，单位：秒)'
           rules={[{ required: true }]}
         >
@@ -133,7 +141,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='每日限额'
-          name='dayQuota'
+          name='prodperDay'
           extra='(0=不限额，建议区间10W-100W，单位：次)'
           rules={[{ required: true }]}
         >
@@ -141,7 +149,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='每月限额'
-          name='monthQuota'
+          name='prodperMonth'
           extra='(0=不限额，建议限额=0，单位：次)'
           rules={[{ required: true }]}
         >
@@ -149,7 +157,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='每年限额'
-          name='yearQuota'
+          name='prodperAnnum'
           extra='(0=不限额，建议限额=0，单位：次)'
           rules={[{ required: true }]}
         >
@@ -157,7 +165,7 @@ const Concurrency = React.forwardRef<
         </Form.Item>
         <Form.Item
           label='认证总次数限额'
-          name='totalQuota'
+          name='prodtotal'
           extra='(0=不限额，建议限额=0，单位：次)'
           rules={[{ required: true }]}
         >

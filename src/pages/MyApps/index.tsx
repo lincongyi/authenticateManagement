@@ -35,8 +35,8 @@ const { RangePicker } = DatePicker
 const MyApps = () => {
   type TAppCount = {
     total: number
-    production: number // 正式环境
-    test: number // 测试环境
+    prod: number // 正式环境
+    sit: number // 测试环境
   }
   /**
    * 我的应用数
@@ -317,12 +317,12 @@ const MyApps = () => {
         </Col>
         <Col span={8}>
           <div className={`${style.tag} ${style.icon02}`}>
-            正式应用<span className={style.count}>{appCount?.production}</span>
+            正式应用<span className={style.count}>{appCount?.prod}</span>
           </div>
         </Col>
         <Col span={8}>
           <div className={`${style.tag} ${style.icon03}`}>
-            测试应用<span className={style.count}>{appCount?.test}</span>
+            测试应用<span className={style.count}>{appCount?.sit}</span>
           </div>
         </Col>
       </Row>

@@ -114,9 +114,9 @@ const UploadForm = React.forwardRef<
           </Typography.Link>
         </Form.Item>
         <Form.Item
-          name='applicationForm1'
+          name='fileUrl'
           label='（附印章）基础能力接入申请表：'
-          valuePropName='applicationForm1'
+          valuePropName='fileUrl'
           extra='支持文件格式：doc/docx/pdf/jpg'
           rules={[{ required: true, message: '请上传申请表' }]}
         >
@@ -129,9 +129,9 @@ const UploadForm = React.forwardRef<
           </Upload>
         </Form.Item>
         <Form.Item
-          name='applicationForm2'
+          name='fileUrl2'
           label='（附印章）基础能力接入申请函：'
-          valuePropName='applicationForm2'
+          valuePropName='fileUrl2'
           extra='支持文件格式：doc/docx/pdf/jpg'
           rules={[{ required: true, message: '请上传申请函' }]}
         >

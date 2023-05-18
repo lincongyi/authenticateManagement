@@ -42,7 +42,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
         </Form.Item>
         <Form.Item
           label='接入系统类型'
-          name='type'
+          name='systemtype'
           rules={[{ required: true, message: '请选择接入系统类型' }]}
         >
           {isCheck ? (
@@ -57,7 +57,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
         </Form.Item>
         <Form.Item
           label='系统所属级别'
-          name='level'
+          name='systemlevel'
           rules={[{ required: true, message: '请选择系统所属级别' }]}
         >
           {isCheck ? (
@@ -72,7 +72,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
         </Form.Item>
         <Form.Item
           label='系统对外服务范围'
-          name='serviceRange'
+          name='systemRange'
           rules={[{ required: true, message: '请选择系统对外服务范围' }]}
         >
           {isCheck ? (
@@ -104,7 +104,11 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
 
         <Title level={5}>申请单位信息</Title>
         <Divider />
-        <Form.Item label='申请单位' name='company' rules={[{ required: true }]}>
+        <Form.Item
+          label='申请单位'
+          name='applyCompany'
+          rules={[{ required: true }]}
+        >
           {isCheck ? (
             ''
           ) : (
@@ -115,7 +119,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
             />
           )}
         </Form.Item>
-        <Form.Item label='单位经办人' name='companyOperator'>
+        <Form.Item label='单位经办人' name='applyCompanyHandleMan'>
           {isCheck ? (
             ''
           ) : (
@@ -126,7 +130,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
             />
           )}
         </Form.Item>
-        <Form.Item label='经办人联系电话' name='companyPhone'>
+        <Form.Item label='经办人联系电话' name='applyCompanyHandleManPhone'>
           {isCheck ? (
             ''
           ) : (
@@ -137,7 +141,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
             />
           )}
         </Form.Item>
-        <Form.Item label='经办人联系邮箱' name='companyEmail'>
+        <Form.Item label='经办人联系邮箱' name='applyCompanyHandleManEmail'>
           {isCheck ? (
             ''
           ) : (
@@ -153,7 +157,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
         <Divider />
         <Form.Item
           label='承建单位'
-          name='construction'
+          name='undertakeCompany'
           rules={[{ required: true }]}
         >
           {isCheck ? (
@@ -166,7 +170,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
             />
           )}
         </Form.Item>
-        <Form.Item label='项目负责人' name='constructionOperator'>
+        <Form.Item label='项目负责人' name='undertakeCompanyHandleMan'>
           {isCheck ? (
             ''
           ) : (
@@ -177,7 +181,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
             />
           )}
         </Form.Item>
-        <Form.Item label='负责人联系电话' name='constructionPhone'>
+        <Form.Item label='负责人联系电话' name='undertakeCompanyHandleManPhone'>
           {isCheck ? (
             ''
           ) : (
@@ -188,7 +192,7 @@ const BasicInfo = React.forwardRef<FormInstance, { params: { value: TValue } }>(
             />
           )}
         </Form.Item>
-        <Form.Item label='负责人联系邮箱' name='constructionEmail'>
+        <Form.Item label='负责人联系邮箱' name='undertakeCompanyHandleManEmail'>
           {isCheck ? (
             ''
           ) : (

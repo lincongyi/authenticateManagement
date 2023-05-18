@@ -78,8 +78,8 @@ const AccessForm = () => {
   const basicInfoRef = useRef<FormInstance | null>(null) // 基本信息表单Ref
   const abilityInfoRef = useRef<FormInstance | null>(null) // 基础能力信息Ref
   const concurrencyRef = useRef<{
-    testRef: React.MutableRefObject<FormInstance | null>
-    productionRef: React.MutableRefObject<FormInstance | null>
+    sitRef: React.MutableRefObject<FormInstance | null>
+    prodRef: React.MutableRefObject<FormInstance | null>
   }>(null) // 并发配置Ref
   const uploadFormRef = useRef<FormInstance | null>(null) // 上传申请表Ref
   const AccountInfoRef = useRef<FormInstance | null>(null) // 正式账号信息Ref
@@ -144,14 +144,14 @@ const AccessForm = () => {
       return false
     }
     const isConcurrencyTestPermitted = await validateForm(
-      concurrencyRef.current!.testRef
+      concurrencyRef.current!.sitRef
     )
     if (!isConcurrencyTestPermitted) {
       message.warning('请补充【并发配置】测试环境中的必填项')
       return false
     }
     const isConcurrencyProductionPermitted = await validateForm(
-      concurrencyRef.current!.testRef
+      concurrencyRef.current!.sitRef
     )
     if (!isConcurrencyProductionPermitted) {
       message.warning('请补充【并发配置】正式环境中的必填项')
@@ -169,11 +169,14 @@ const AccessForm = () => {
    * 保存草稿
    */
   const onSave = async () => {
-    if (!validateAllForms()) return false
-
-    // console.log(abilityInfoRef.current?.getFieldsValue())
-    // const { abilityPeriod } = abilityInfoRef.current?.getFieldsValue()
-    // console.log('abilityPeriod', dayjs(abilityPeriod).format(dateFormat))
+    const params = {
+      ...basicInfoRef.current?.getFieldsValue(),
+      ...abilityInfoRef.current?.getFieldsValue(),
+      ...concurrencyRef.current?.sitRef.current?.getFieldsValue(),
+      ...concurrencyRef.current?.prodRef.current?.getFieldsValue()
+    }
+    console.log(params)
+    // })
   }
 
   /**
@@ -185,15 +188,24 @@ const AccessForm = () => {
    * 提交审核
    */
   const onSubmit = () => {
-    // if (!validateAllForms()) return false
+    if (!validateAllForms()) return false
+
+    console.log({
+      basicInfo: basicInfoRef.current?.getFieldsValue(),
+      abilityInfo: abilityInfoRef.current?.getFieldsValue(),
+      concurrency: {
+        sit: concurrencyRef.current?.sitRef.current?.getFieldsValue(),
+        prod: concurrencyRef.current?.prodRef.current?.getFieldsValue()
+      },
+      uploadForm: uploadFormRef.current?.getFieldsValue()
+    })
 
     setFormData({
       basicInfo: basicInfoRef.current?.getFieldsValue(),
       abilityInfo: abilityInfoRef.current?.getFieldsValue(),
       concurrency: {
-        test: concurrencyRef.current?.testRef.current?.getFieldsValue(),
-        production:
-          concurrencyRef.current?.productionRef.current?.getFieldsValue()
+        sit: concurrencyRef.current?.sitRef.current?.getFieldsValue(),
+        prod: concurrencyRef.current?.prodRef.current?.getFieldsValue()
       },
       uploadForm: uploadFormRef.current?.getFieldsValue()
     })

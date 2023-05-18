@@ -41,7 +41,7 @@ const accountTypeOptions = [
 /**
  * 接入方式options
  */
-const accessMethodOptions = [
+const accessModeOptions = [
   [
     { label: 'SDK认证', value: 1 },
     { label: '出入境SDK认证', value: 2 },
@@ -147,7 +147,7 @@ const AbilityInfo = React.forwardRef<
     >
       <Form.Item
         label='接入基础能力'
-        name='basicAccess'
+        name='basepower'
         rules={[{ required: true, message: '请选择接入基础能力' }]}
       >
         {isCheck ? (
@@ -170,7 +170,7 @@ const AbilityInfo = React.forwardRef<
       <ConfigProvider locale={locale}>
         <Form.Item
           label='接入服务有效期'
-          name='period'
+          name='serviceVaildEnd'
           rules={[{ required: true, message: '请选择接入服务有效期' }]}
         >
           {isCheck ? (
@@ -252,14 +252,14 @@ const AbilityInfo = React.forwardRef<
             接入方式
           </>
         }
-        name='accessMethod'
+        name='accessMode'
         rules={[{ required: true, message: '请选择接入方式' }]}
       >
         {isCheck ? (
           ''
         ) : (
           <CheckboxGroup style={{ display: 'block' }}>
-            {accessMethodOptions.map((item, index) => {
+            {accessModeOptions.map((item, index) => {
               return (
                 <Row gutter={[20, 20]} key={index} style={{ marginBottom: 20 }}>
                   {item.map((__item, __index) => {
@@ -276,7 +276,7 @@ const AbilityInfo = React.forwardRef<
         )}
       </Form.Item>
       {/* 这块需要强调Checkbox分组，所以调整数组格式 end */}
-      <Form.Item label='应用ID（Android）' name='androidId'>
+      <Form.Item label='应用ID（Android）' name='androidAppId'>
         {isCheck ? (
           ''
         ) : (
@@ -309,7 +309,7 @@ const AbilityInfo = React.forwardRef<
           />
         )}
       </Form.Item>
-      <Form.Item label='推送认证结果地址' name='authResultUrl'>
+      <Form.Item label='推送认证结果地址' name='authResultAddress'>
         {isCheck ? (
           ''
         ) : (

@@ -15,7 +15,7 @@ const ConfirmModal = ({
   data: TAccessForm
 }) => {
   const { basicInfo, abilityInfo, concurrency } = data
-  const { test, production } = concurrency
+  const { sit, prod } = concurrency
 
   /**
    * 提交申请
@@ -39,13 +39,13 @@ const ConfirmModal = ({
             {basicInfo.appName || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='接入系统类型'>
-            {basicInfo.type || '-'}
+            {basicInfo.systemtype || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='系统所属级别'>
-            {basicInfo.level || '-'}
+            {basicInfo.systemlevel || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='系统对外服务范围'>
-            {basicInfo.serviceRange || '-'}
+            {basicInfo.systemRange || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='使用场景描述'>
             {basicInfo.description || '-'}
@@ -53,30 +53,30 @@ const ConfirmModal = ({
         </Descriptions>
         <Descriptions title='申请单位信息' column={3}>
           <Descriptions.Item label='申请单位'>
-            {basicInfo.company || '-'}
+            {basicInfo.applyCompany || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='单位经办人'>
-            {basicInfo.companyOperator || '-'}
+            {basicInfo.applyCompanyHandleMan || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='经办人联系电话'>
-            {basicInfo.companyPhone || '-'}
+            {basicInfo.applyCompanyHandleManPhone || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='经办人联系邮箱'>
-            {basicInfo.companyEmail || '-'}
+            {basicInfo.applyCompanyHandleManEmail || '-'}
           </Descriptions.Item>
         </Descriptions>
         <Descriptions title='承建单位信息' column={3}>
           <Descriptions.Item label='承建单位'>
-            {basicInfo.construction || '-'}
+            {basicInfo.undertakeCompany || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='项目负责人'>
-            {basicInfo.constructionOperator || '-'}
+            {basicInfo.undertakeCompanyHandleMan || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='负责人联系电话'>
-            {basicInfo.constructionPhone || '-'}
+            {basicInfo.undertakeCompanyHandleManPhone || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='负责人联系邮箱'>
-            {basicInfo.constructionEmail || '-'}
+            {basicInfo.undertakeCompanyHandleManEmail || '-'}
           </Descriptions.Item>
         </Descriptions>
       </>
@@ -86,13 +86,13 @@ const ConfirmModal = ({
         <Title level={4}>基础能力信息</Title>
         <Descriptions column={3}>
           <Descriptions.Item label='接入基础能力'>
-            {abilityInfo.basicAccess || '-'}
+            {abilityInfo.basepower || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='接入账号类型'>
             {abilityInfo.accountType || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='接入服务有效期'>
-            {dayjs(abilityInfo.period).format(dateFormat) || '-'}
+            {dayjs(abilityInfo.serviceVaildEnd).format(dateFormat) || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='认证类型'>
             {abilityInfo.authType || '-'}
@@ -101,10 +101,10 @@ const ConfirmModal = ({
             {abilityInfo.authMode || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='接入方式'>
-            {abilityInfo.accessMethod || '-'}
+            {abilityInfo.accessMode || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='应用ID（Android）'>
-            {abilityInfo.androidId || '-'}
+            {abilityInfo.androidAppId || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='Bundle ID（IOS）'>
             {abilityInfo.bundleId || '-'}
@@ -113,7 +113,7 @@ const ConfirmModal = ({
             {abilityInfo.appId || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='推送认证结果地址'>
-            {abilityInfo.authResultUrl || '-'}
+            {abilityInfo.authResultAddress || '-'}
           </Descriptions.Item>
         </Descriptions>
       </>
@@ -123,42 +123,42 @@ const ConfirmModal = ({
         <Title level={4}>并发配置</Title>
         <Descriptions title='测试环境' column={3}>
           <Descriptions.Item label='每秒并发限制'>
-            {test.secondQuota || '-'}
+            {sit.sitperSec || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='计算周期'>
-            {test.period || '-'}
+            {sit.sitlimitTime || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='每日限额'>
-            {test.dayQuota || '-'}
+            {sit.sitperDay || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='每月限额'>
-            {test.monthQuota || '-'}
+            {sit.sitperMonth || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='每年限额'>
-            {test.yearQuota || '-'}
+            {sit.sitperAnnum || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='认证总次数限额'>
-            {test.totalQuota || '-'}
+            {sit.sittotal || '-'}
           </Descriptions.Item>
         </Descriptions>
         <Descriptions title='正式环境' column={3}>
           <Descriptions.Item label='每秒并发限制'>
-            {production.secondQuota || '-'}
+            {prod.prodperSec || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='计算周期'>
-            {production.period || '-'}
+            {prod.prodlimitTime || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='每日限额'>
-            {production.dayQuota || '-'}
+            {prod.prodperDay || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='每月限额'>
-            {production.monthQuota || '-'}
+            {prod.prodperMonth || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='每年限额'>
-            {production.yearQuota || '-'}
+            {prod.prodperAnnum || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='认证总次数限额'>
-            {production.totalQuota || '-'}
+            {prod.prodtotal || '-'}
           </Descriptions.Item>
         </Descriptions>
       </>
@@ -168,10 +168,10 @@ const ConfirmModal = ({
         <Title level={4}>上传申请表</Title>
         <Descriptions column={3}>
           <Descriptions.Item label='基础能力接入申请表'>
-            {test.secondQuota || '-'}
+            {sit.sitperSec || '-'}
           </Descriptions.Item>
           <Descriptions.Item label='基础能力接入申请函'>
-            {test.secondQuota || '-'}
+            {sit.sitperSec || '-'}
           </Descriptions.Item>
         </Descriptions>
       </>
