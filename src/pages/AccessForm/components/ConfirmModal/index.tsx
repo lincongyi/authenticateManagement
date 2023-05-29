@@ -2,6 +2,7 @@ import React from 'react'
 import { Descriptions, Divider, Modal, Typography } from 'antd'
 import dayjs from 'dayjs'
 import { dateFormat } from '@utils/date'
+import { TAccessForm } from '../../index.d'
 
 const { Title } = Typography
 

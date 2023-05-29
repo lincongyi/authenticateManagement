@@ -3,6 +3,7 @@ import { Alert, Divider, Form, Input, Typography } from 'antd'
 import type { FormInstance } from 'antd/lib/form/hooks/useForm'
 import { formProps } from '..'
 import { useStore } from '@stores/index'
+import { TValue } from '../../index.d'
 
 const { Title } = Typography
 

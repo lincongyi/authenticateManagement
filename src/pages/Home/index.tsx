@@ -15,11 +15,24 @@ import { useNavigate } from 'react-router-dom'
 const Home = () => {
   // 头部导航栏标签
   const navList = [
-    { name: '首页', href: '#' },
-    { name: '应用场景', href: '#application' },
-    { name: '特色优势', href: '#advantage' },
-    { name: '新手指南', href: '#process' }
+    { name: '首页', id: '#' },
+    { name: '应用场景', id: 'application' },
+    { name: '特色优势', id: 'advantage' },
+    { name: '新手指南', id: 'process' }
   ]
+
+  /**
+   * 跳转到对应的锚点
+   */
+  const scrollToAnchor = (anchor: string) => {
+    if (anchor) {
+      const anchorElement = document.getElementById(anchor)
+      if (anchorElement) {
+        anchorElement.scrollIntoView({ block: 'start', behavior: 'smooth' })
+      }
+    }
+  }
+
   /**
    * 应用场景内容
    */
@@ -80,6 +93,7 @@ const Home = () => {
   const toApply = () => {
     navigate('/register/tour')
   }
+
   return (
     <>
       <div className={style.header}>
@@ -92,8 +106,12 @@ const Home = () => {
         <div className={style['right-side']}>
           <ul className={style['nav-list']}>
             {navList.map((item, index) => (
-              <li className={style['list-item']} key={index}>
-                <a href={item.href}>{item.name}</a>
+              <li
+                className={style['list-item']}
+                key={index}
+                onClick={() => scrollToAnchor(item.id)}
+              >
+                {item.name}
               </li>
             ))}
           </ul>

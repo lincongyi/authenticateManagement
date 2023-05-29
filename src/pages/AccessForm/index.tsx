@@ -11,9 +11,17 @@ import UploadForm from './components/UploadForm'
 import AccountInfo from './components/AccountInfo'
 import ConfirmModal from './components/ConfirmModal'
 import { useNavigate } from 'react-router-dom'
-// import { dateFormat } from '@utils/date'
+import { dateFormat } from '@utils/date'
 import { getdictionary } from '@api/index'
 import { useStore } from '@stores/index'
+import {
+  TAccessForm,
+  TBasicInfo,
+  TAbilityInfo,
+  TConcurrency,
+  TUploadForm
+} from './index.d'
+// import { saveTAppInfo } from '@api/accessForm'
 
 const offsetTop = 64 // 固钉高度
 
@@ -169,14 +177,17 @@ const AccessForm = () => {
    * 保存草稿
    */
   const onSave = async () => {
-    const params = {
+    const params: TBasicInfo & TAbilityInfo & TConcurrency & TUploadForm = {
       ...basicInfoRef.current?.getFieldsValue(),
       ...abilityInfoRef.current?.getFieldsValue(),
       ...concurrencyRef.current?.sitRef.current?.getFieldsValue(),
-      ...concurrencyRef.current?.prodRef.current?.getFieldsValue()
+      ...concurrencyRef.current?.prodRef.current?.getFieldsValue(),
+      ...uploadFormRef.current?.getFieldsValue()
     }
+    params.serviceVaildEnd = dayjs(params.serviceVaildEnd).format(dateFormat)
     console.log(params)
-    // })
+    // const { data } = await saveTAppInfo(params)
+    // console.log(data)
   }
 
   /**

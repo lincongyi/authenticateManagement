@@ -25,6 +25,7 @@ import { formProps } from '..'
 import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
 import { fieldNames } from '@utils/index'
+import { TValue } from '../../index.d'
 
 const CheckboxGroup = Checkbox.Group
 
@@ -142,7 +143,7 @@ const AbilityInfo = React.forwardRef<
       ref={ref}
       name='abilityInfo'
       {...formProps}
-      initialValues={{ accountType: 1 }}
+      initialValues={{}}
       style={{ display: value === '1' ? 'block' : 'none' }}
     >
       <Form.Item
@@ -165,7 +166,15 @@ const AbilityInfo = React.forwardRef<
         name='accountType'
         rules={[{ required: true, message: '请选择接入账号类型' }]}
       >
-        {isCheck ? '' : <Radio.Group options={accountTypeOptions} />}
+        {isCheck ? (
+          ''
+        ) : (
+          <Select
+            placeholder='请选择接入账号类型'
+            fieldNames={fieldNames}
+            options={accessFormStore.getDictionaryItem('accountType')}
+          />
+        )}
       </Form.Item>
       <ConfigProvider locale={locale}>
         <Form.Item

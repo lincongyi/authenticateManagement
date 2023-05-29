@@ -15,6 +15,7 @@ import accessFormFillIn from '@/assets/accessForm-fillIn.png'
 import accessFormStamp from '@/assets/accessForm-stamp.png'
 import accessFormUpload from '@/assets/accessForm-upload.png'
 import { formProps } from '..'
+import { TValue } from '../../index.d'
 
 /**
  * 操作指引

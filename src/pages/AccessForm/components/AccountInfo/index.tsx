@@ -24,6 +24,7 @@ import { formProps } from '..'
 import { UploadFile } from 'antd/lib/upload/interface'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import { imgBeforeUpload } from '@utils/index'
+import { TValue } from '../../index.d'
 
 const { TextArea } = Input
 const { Text } = Typography
@@ -59,8 +60,10 @@ const AccountInfo = React.forwardRef<
 
   const [radioValue, setRadioValue] = useState(1)
 
+  /**
+   * 切换方式
+   */
   const onChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value)
     setRadioValue(e.target.value)
   }
 

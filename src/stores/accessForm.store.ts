@@ -5,6 +5,7 @@ import type { TDictionary } from '@api/index'
 type TAccessFormStore = {
   accessMode: TDictionary | undefined // 接入方式
   accessSkill: TDictionary | undefined // 接入基础能力
+  accountType: TDictionary | undefined // 接入账号类型
   appState: TDictionary | undefined // 应用状态
   appType: TDictionary | undefined // 接入系统类型
   authMode: TDictionary | undefined // 认证模式

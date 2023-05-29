@@ -1,5 +1,5 @@
-/* eslint-disable no-unused-vars */
-type TBasicInfo = {
+import type { Dayjs } from 'dayjs'
+export type TBasicInfo = {
   appName: string // 应用名称
   systemtype: string // 接入系统类型
   systemlevel: string // 系统所属级别
@@ -15,10 +15,10 @@ type TBasicInfo = {
   undertakeCompanyHandleManEmail: string // 负责人联系邮箱
 }
 
-type TAbilityInfo = {
+export type TAbilityInfo = {
   basepower: string // 接入基础能力
   accountType: string // 接入账号类型
-  serviceVaildEnd: string // 接入服务有效期
+  serviceVaildEnd: Dayjs | string // 接入服务有效期
   authType: string // 认证类型
   authMode: string // 认证模式
   accessMode: string // 接入方式
@@ -28,7 +28,7 @@ type TAbilityInfo = {
   authResultAddress: string // 推送认证结果地址
 }
 
-type TConcurrency = {
+export type TConcurrency = {
   sit: {
     sitperSec: string // 每秒并发限制
     sitlimitTime: string // 计算周期
@@ -47,16 +47,16 @@ type TConcurrency = {
   }
 }
 
-type TUploadForm = {
+export type TUploadForm = {
   fileUrl: string // 申请表
   fileUrl2: string // 申请函
 }
 
-type TAccessForm = {
+export type TAccessForm = {
   basicInfo: TBasicInfo // 基础信息
   abilityInfo: TAbilityInfo // 基础能力信息
   concurrency: TConcurrency // 并发配置
   uploadForm: TUploadForm // 上传申请表
 }
 
-type TValue = '0' | '1' | '2' | '3' | '4'
+export type TValue = '0' | '1' | '2' | '3' | '4'

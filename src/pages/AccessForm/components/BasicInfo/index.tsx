@@ -5,6 +5,7 @@ import { formProps } from '..'
 import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
 import { fieldNames } from '@utils/index'
+import { TValue } from '../../index.d'
 
 const { Title } = Typography
 const { TextArea } = Input
