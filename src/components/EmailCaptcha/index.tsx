@@ -50,18 +50,8 @@ const EmailCaptcha = ({
       <Form.Item
         name='emailCaptcha'
         rules={[
-          { required: true },
-          {
-            validator (_, value) {
-              if (!value) {
-                return Promise.reject(new Error('请输入邮箱验证码'))
-              } else if (value.length < 6) {
-                return Promise.reject(new Error('请输入6位验证码'))
-              } else {
-                return Promise.resolve()
-              }
-            }
-          }
+          { required: true, message: '请输入邮箱验证码' },
+          { min: 6, message: '请输入6位验证码' }
         ]}
         noStyle
       >

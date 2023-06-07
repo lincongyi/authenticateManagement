@@ -137,19 +137,11 @@ const Register = () => {
                 name='accountNumber'
                 label='账户登录名'
                 rules={[
-                  { required: true },
+                  { required: true, message: '请输入账户登录名' },
                   {
-                    validator (_, value) {
-                      if (!value) {
-                        return Promise.reject(new Error('请输入账户登录名'))
-                      } else if (value.length < 5 || value.length > 50) {
-                        return Promise.reject(
-                          new Error('账户登录名的长度需要在5-50个字之间')
-                        )
-                      } else {
-                        return Promise.resolve()
-                      }
-                    }
+                    min: 5,
+                    max: 50,
+                    message: '账户登录名的长度需要在5-50个字之间'
                   }
                 ]}
               >
