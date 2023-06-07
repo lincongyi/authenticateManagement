@@ -50,7 +50,20 @@ const MessageCaptcha = ({
     <Space>
       <Form.Item
         name='messageCaptcha'
-        rules={[{ required: true, message: '请输入短信验证码' }]}
+        rules={[
+          { required: true, message: '请输入短信验证码' },
+          {
+            validator (_, value) {
+              if (!value) {
+                return Promise.reject(new Error('请输入短信验证码'))
+              } else if (value.length < 6) {
+                return Promise.reject(new Error('请输入6位验证码'))
+              } else {
+                return Promise.resolve()
+              }
+            }
+          }
+        ]}
         noStyle
       >
         <Input

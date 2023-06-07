@@ -15,6 +15,11 @@ const phonePattern =
   /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[0,5-9])|(18[0,5-9]))\d{8}$/
 
 /**
+ * 证件号码正则匹配
+ */
+const idCardPattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+
+/**
  * 密码正则匹配
  */
 const passwordPattern =
@@ -114,6 +119,7 @@ export const fieldNames = { label: 'dictName', value: 'dictValue' }
 export {
   loadEnv,
   phonePattern,
+  idCardPattern,
   passwordPattern,
   emailPattern,
   handleCopy,

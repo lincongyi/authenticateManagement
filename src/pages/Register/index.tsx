@@ -12,7 +12,8 @@ import {
   passwordPattern,
   emailPattern,
   getBase64,
-  imgBeforeUpload
+  imgBeforeUpload,
+  idCardPattern
 } from '@utils/index'
 import { registerApply } from '@api/register'
 import MessageCaptcha from '@components/MessageCaptcha'
@@ -79,7 +80,6 @@ const Register = () => {
    * 提交
    */
   const onFinish = async (values: any) => {
-    console.log(values)
     const { retMessage } = await registerApply(values)
     message.success({
       content: retMessage,
@@ -136,14 +136,42 @@ const Register = () => {
               <Form.Item
                 name='accountNumber'
                 label='账户登录名'
-                rules={[{ required: true }]}
+                rules={[
+                  { required: true },
+                  {
+                    validator (_, value) {
+                      if (!value) {
+                        return Promise.reject(new Error('请输入账户登录名'))
+                      } else if (value.length < 5 || value.length > 50) {
+                        return Promise.reject(
+                          new Error('账户登录名的长度需要在5-50个字之间')
+                        )
+                      } else {
+                        return Promise.resolve()
+                      }
+                    }
+                  }
+                ]}
               >
-                <Input showCount maxLength={20} />
+                <Input showCount maxLength={50} />
               </Form.Item>
               <Form.Item
                 name='adminIdNum'
                 label='管理员身份证号'
-                rules={[{ required: true }]}
+                rules={[
+                  { required: true },
+                  {
+                    validator (_, value) {
+                      if (idCardPattern.test(value)) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(
+                        new Error('证件号码格式有误，请重新确认')
+                      )
+                    },
+                    validateTrigger: 'onBlur'
+                  }
+                ]}
               >
                 <Input showCount maxLength={20} />
               </Form.Item>
@@ -154,7 +182,7 @@ const Register = () => {
                   { required: true },
                   {
                     validator (_, value) {
-                      if (!value || phonePattern.test(value)) {
+                      if (phonePattern.test(value)) {
                         return Promise.resolve()
                       }
                       return Promise.reject(
@@ -185,7 +213,7 @@ const Register = () => {
                   {
                     validator (_, value) {
                       const pattern = passwordPattern
-                      if (!value || pattern.test(value)) {
+                      if (pattern.test(value)) {
                         return Promise.resolve()
                       }
                       return Promise.reject(
@@ -205,7 +233,7 @@ const Register = () => {
                   { required: true },
                   ({ getFieldValue }) => ({
                     validator (_, value) {
-                      if (!value || getFieldValue('password') === value) {
+                      if (getFieldValue('password') === value) {
                         return Promise.resolve()
                       }
                       return Promise.reject(
@@ -226,7 +254,7 @@ const Register = () => {
                   {
                     validator (_, value) {
                       const pattern = emailPattern
-                      if (!value || pattern.test(value)) {
+                      if (pattern.test(value)) {
                         return Promise.resolve()
                       }
                       return Promise.reject(

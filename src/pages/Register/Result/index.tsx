@@ -45,15 +45,15 @@ const RegisterResult = () => {
     },
     { title: '审核不通过', subTitle: '' }
   ]
-  if (registerStatus === 3) {
+  if (registerStatus === 2) {
     const { comment } = registerStore.registerInfo
     tipsList.at(-1)!.subTitle = comment // 驳回原因
   }
-  const tips = registerStatus === 3 ? tipsList.at(-1) : tipsList[registerStatus]
+  const tips = registerStatus === 2 ? tipsList.at(-1) : tipsList[registerStatus]
 
   const statusList = ['success', 'info', 'error']
   const status =
-    registerStatus === 3 ? statusList.at(-1) : statusList[registerStatus]
+    registerStatus === 2 ? statusList.at(-1) : statusList[registerStatus]
 
   /**
    * 去登录
@@ -64,8 +64,8 @@ const RegisterResult = () => {
    * 催办
    */
   const toUrge = async () => {
-    const { taskId } = registerStore.registerInfo
-    await hastenProcess({ taskId })
+    const { processInstanceId } = registerStore.registerInfo
+    await hastenProcess({ instanceId: processInstanceId })
     message.warning({
       content: '催办信息已发送！5秒后自动关闭',
       duration: 5,
@@ -96,7 +96,7 @@ const RegisterResult = () => {
     []
   ]
   const extra =
-    registerStatus === 3 ? extraList.at(-1) : extraList[registerStatus]
+    registerStatus === 2 ? extraList.at(-1) : extraList[registerStatus]
 
   const [certificateFile, setCertificateFile] = useState('')
 
@@ -181,7 +181,7 @@ const RegisterResult = () => {
                   extra={extra}
                 />
               </div>
-              {registerStatus === 3 && (
+              {registerStatus === 2 && (
                 <div className={style['register-box']}>
                   <Form
                     form={form}
