@@ -1,19 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import style from './index.module.scss'
 import { Button, Form, Input, Space, Image, message } from 'antd'
 import { phonePattern, emailPattern } from '@utils/index'
 import { imgCaptcha, sendCaptcha } from '@api/index'
 import { retrievePassword } from '@api/myAccount'
+import { settingContext } from '@pages/MyAccount/AccountSettings'
 
-const Captcha = ({
-  onNext,
-  onPrev,
-  type
-}: {
-  onNext: Function
-  onPrev: Function
-  type: 0 | 1
-}) => {
+const Captcha = ({ type }: { type: 0 | 1 }) => {
+  const context = useContext(settingContext)
+
   const [form] = Form.useForm()
 
   /* eslint-disable no-template-curly-in-string */
@@ -97,7 +92,7 @@ const Captcha = ({
    * 提交数据（数字验证码）
    */
   const onCaptchaFinish = (values: any) => {
-    onNext({ ...imgCaptchaParams, ...values })
+    context?.onNext({ ...imgCaptchaParams, ...values })
   }
 
   const onCaptchaFinishFailed = (errorInfo: any) => {
@@ -183,7 +178,7 @@ const Captcha = ({
             </Form.Item>
             <Form.Item>
               <Space>
-                <Button onClick={() => onPrev()}>上一步</Button>
+                <Button onClick={() => context?.onPrev()}>上一步</Button>
                 <Button type='primary' htmlType='submit'>
                   下一步
                 </Button>
@@ -219,7 +214,7 @@ const Captcha = ({
             </Form.Item>
             <Form.Item>
               <Space>
-                <Button onClick={() => onPrev()}>上一步</Button>
+                <Button onClick={() => context?.onPrev()}>上一步</Button>
                 <Button type='primary' htmlType='submit'>
                   下一步
                 </Button>

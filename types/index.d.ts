@@ -66,6 +66,7 @@ type TApplyRecord = {
 }
 
 type TCompanyInfo = {
+  userId: string
   companyId?: string
   companyName: string // 单位名称
   accountNumber: string // 管理员账号
@@ -84,11 +85,12 @@ type TCompanyInfo = {
 
 type TResetParams = {
   type: 0 | 1 | 2 // 预留方式：0-手机；1-邮箱；2-扫码
-  key: string // 手机号 or 邮箱
-  imgCaptcha: string // 图片验证码
-  captcha: string // 邮箱或短信验证码
-  password: string // 密码
-  confirmPassword: string // 确认密码
+  key: string | undefined // 手机号 or 邮箱
+  imgCaptcha: string | undefined // 图片验证码
+  captcha: string | undefined // 邮箱或短信验证码
+  password: string | undefined // 密码
+  confirmPassword: string | undefined // 确认密码
+  certToken?: string // 扫码认证成功获得的certToken
 }
 
 type TDateRange = {

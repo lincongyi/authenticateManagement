@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import style from './index.module.scss'
 import accountSettingMethod01 from '@/assets/accountSetting-method-01.png'
 import accountSettingMethod02 from '@/assets/accountSetting-method-02.png'
 import accountSettingMethod03 from '@/assets/accountSetting-method-03.png'
 import { Button } from 'antd'
+import { settingContext } from '..'
 
-const Methods = ({ onNext }: { onNext: Function }) => {
+const Methods = () => {
+  const context = useContext(settingContext)
+
   /**
    * 认证方式列表
    */
@@ -42,7 +45,10 @@ const Methods = ({ onNext }: { onNext: Function }) => {
         ))}
       </div>
       <div className='tc'>
-        <Button type='primary' onClick={() => onNext({ type: selectedIndex })}>
+        <Button
+          type='primary'
+          onClick={() => context && context.onNext({ type: selectedIndex })}
+        >
           下一步
         </Button>
       </div>

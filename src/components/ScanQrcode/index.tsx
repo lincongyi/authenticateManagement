@@ -53,7 +53,8 @@ const ScanQrcode = ({
           content: '认证已通过！',
           duration: 2,
           onClose: () => {
-            callback(qrcode.certToken)
+            // eslint-disable-next-line n/no-callback-literal
+            callback({ certToken: qrcode.certToken })
           }
         })
       } else {

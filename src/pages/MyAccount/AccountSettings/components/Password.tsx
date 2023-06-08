@@ -1,17 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button, Form, Input, Space, message } from 'antd'
 import { passwordPattern } from '@utils/index'
 import { currentResetPassword } from '@api/myAccount'
+import { settingContext } from '..'
 
-const Password = ({
-  onNext,
-  onPrev,
-  resetParams
-}: {
-  onNext: Function
-  onPrev: Function
-  resetParams: TResetParams
-}) => {
+const Password = () => {
+  const context = useContext(settingContext)
+
   /* eslint-disable no-template-curly-in-string */
   const validateMessages = {
     required: '请输入${label}'
@@ -22,19 +17,20 @@ const Password = ({
    * 提交数据
    */
   const onFinish = async (values: any) => {
-    const { type, ...rest } = resetParams
-    const { retMessage } = await currentResetPassword({ ...rest, ...values })
+    const { retMessage } = await currentResetPassword({
+      ...context?.resetParams,
+      ...values
+    })
     message.success({
       content: retMessage,
       duration: 2,
       onClose () {
-        onNext({ ...resetParams, ...values })
+        context?.onNext({ ...context?.resetParams, ...values })
       }
     })
   }
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('resetParams', resetParams)
     console.log('Failed:', errorInfo)
   }
 
@@ -85,7 +81,7 @@ const Password = ({
       </Form.Item>
       <Form.Item>
         <Space>
-          <Button onClick={() => onPrev()}>上一步</Button>
+          <Button onClick={() => context?.onPrev()}>上一步</Button>
           <Button type='primary' htmlType='submit'>
             下一步
           </Button>

@@ -97,7 +97,7 @@ const Login = () => {
 
   const initialValues = {
     accountNumber: 'cy0318',
-    password: 'Aa112233'
+    password: 'Cy123123'
   }
 
   return (

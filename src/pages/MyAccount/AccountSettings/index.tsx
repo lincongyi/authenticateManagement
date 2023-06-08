@@ -6,15 +6,26 @@ import Authentication from './components/Authentication'
 import Password from './components/Password'
 import { useNavigate } from 'react-router-dom'
 
+const settingContext = React.createContext<
+  | {
+      // eslint-disable-next-line func-call-spacing
+      onNext: (values?: object) => void
+      onPrev: () => void
+      resetParams: TResetParams
+    }
+  | undefined
+>(undefined)
+
 const AccountSettings = () => {
   const [current, setCurrent] = useState(0)
   const [resetParams, setResetParams] = useState<TResetParams>({
     type: 0,
-    key: '',
-    imgCaptcha: '',
-    captcha: '',
-    password: '',
-    confirmPassword: ''
+    key: undefined,
+    imgCaptcha: undefined,
+    captcha: undefined,
+    password: undefined,
+    confirmPassword: undefined,
+    certToken: undefined
   })
 
   /**
@@ -42,23 +53,15 @@ const AccountSettings = () => {
   const steps = [
     {
       title: '选择认证方式',
-      content: <Methods onNext={onNext} />
+      content: <Methods />
     },
     {
       title: '进入认证',
-      content: (
-        <Authentication
-          onNext={onNext}
-          onPrev={onPrev}
-          resetParams={resetParams}
-        />
-      )
+      content: <Authentication />
     },
     {
       title: '设置新密码',
-      content: (
-        <Password onNext={onNext} onPrev={onPrev} resetParams={resetParams} />
-      )
+      content: <Password />
     },
     {
       title: '完成',
@@ -78,19 +81,23 @@ const AccountSettings = () => {
 
   const items = steps.map((item, index) => ({ key: index, title: item.title }))
   return (
-    <Row justify='center'>
-      <Col span={20}>
-        <Steps current={current} items={items} className={style.steps} />
-        <Row justify='center'>
-          <Col span={20}>
-            <div className={style['steps-content']}>
-              {steps[current].content}
-            </div>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <settingContext.Provider value={{ onNext, onPrev, resetParams }}>
+      <Row justify='center'>
+        <Col span={20}>
+          <Steps current={current} items={items} className={style.steps} />
+          <Row justify='center'>
+            <Col span={20}>
+              <div className={style['steps-content']}>
+                {steps[current].content}
+              </div>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </settingContext.Provider>
   )
 }
 
 export default AccountSettings
+
+export { settingContext }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import style from './index.module.scss'
 import { Divider, Space, Button } from 'antd'
 import { useStore } from '@stores/index'
@@ -7,8 +7,11 @@ import accountSettingScanStep02 from '@/assets/accountSetting-scan-step-02.png'
 import accountSettingScanStep03 from '@/assets/accountSetting-scan-step-03.png'
 import accountSettingScanArrow from '@/assets/accountSetting-scan-arrow.png'
 import ScanQrcode from '@components/ScanQrcode'
+import { settingContext } from '@pages/MyAccount/AccountSettings'
 
-const Scan = ({ onNext, onPrev }: { onNext: Function; onPrev: Function }) => {
+const Scan = () => {
+  const context = useContext(settingContext)
+
   const { themeStore } = useStore()
   /**
    * 流程步骤
@@ -26,7 +29,7 @@ const Scan = ({ onNext, onPrev }: { onNext: Function; onPrev: Function }) => {
     <>
       <div className={style['scan-content']}>
         <div className={`${style.title} font-primary-color`}>请扫描二维码</div>
-        <ScanQrcode callback={onNext} />
+        <ScanQrcode callback={context?.onNext as Function} />
         <Divider dashed />
         <div className={`${style.subtitle} font-primary-color`}>
           人脸认证方式如下所示：
@@ -61,7 +64,7 @@ const Scan = ({ onNext, onPrev }: { onNext: Function; onPrev: Function }) => {
       </div>
       <div className='tc'>
         <Space>
-          <Button onClick={() => onPrev()}>上一步</Button>
+          <Button onClick={() => context?.onPrev()}>上一步</Button>
         </Space>
       </div>
     </>
