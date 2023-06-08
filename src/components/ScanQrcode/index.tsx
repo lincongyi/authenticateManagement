@@ -4,7 +4,7 @@ import { useStore } from '@stores/index'
 import locale from 'antd/locale/zh_CN'
 import { getQrcode } from '@api/index'
 import { v4 as uuidv4 } from 'uuid'
-import { loadEnv } from '@utils/index'
+import { loadEnv, useUpdateEffect } from '@utils/index'
 
 const { VITE_WEBSOCKET_URL } = loadEnv()
 
@@ -73,6 +73,7 @@ const ScanQrcode = ({
     certToken: '',
     status: 'loading'
   })
+
   /**
    * 获取二维码
    */
@@ -84,8 +85,11 @@ const ScanQrcode = ({
       certToken,
       status: 'active'
     })
-    connWebSocket()
   }
+
+  useUpdateEffect(() => {
+    connWebSocket()
+  }, [qrcode])
 
   useEffect(() => {
     handleQrcode()
