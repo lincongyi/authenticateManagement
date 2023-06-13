@@ -33,6 +33,7 @@ import { getdictionary } from '@api/index'
 import type { TGetApplyListParams } from '@api/myApplications'
 import { useUpdateEffect, formatDictionary } from '@utils/index'
 import CheckModal from './components/CheckModal'
+import { useNavigate } from 'react-router-dom'
 
 const { RangePicker } = DatePicker
 
@@ -272,10 +273,18 @@ const MyApplications = () => {
     } as TGetApplyListParams)
   }
 
+  const navigate = useNavigate()
+
   /**
    * 重新申请
    */
-  const onReapply = (value: TApplyDetail) => {}
+  const onReapply = ({ key }: TApplyDetail) => {
+    if (key === 'UPDATE_COMPANY_INFO') {
+      navigate('/app/myAccount/companySettings')
+    } else if (key === 'ACCESS_APPLICATION') {
+      navigate('/app/appServiceCenter')
+    }
+  }
 
   /**
    * 表格分页参数

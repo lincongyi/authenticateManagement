@@ -22,7 +22,7 @@ type TUserInfo = {
 
 type TProcess = {
   taskId?: string // 任务id
-  state: -1 | 0 | 1 | 2 // -1.未知状态，重定向页面；0.审核通过；1.审核中；2.驳回；
+  state: -1 | 0 | 1 | 2 | 3 // -1.未知状态，重定向页面；0.审核通过；1.审核中；2.驳回；3.撤回
   processInstanceId: string // 流程id
   starter: string // 申请人
   comment: string // 提示信息
