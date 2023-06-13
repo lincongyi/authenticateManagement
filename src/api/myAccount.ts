@@ -36,13 +36,6 @@ const applyUpdateCompanyInfo = (params: object): Promise<TResponse> => {
 }
 
 /**
- * 重新提交公司更新信息
- */
-const resubmitCompany = (params: object): Promise<TResponse> => {
-  return request.post('/account/resubmitCompany', params)
-}
-
-/**
  * 校验预留手机号or邮箱的图形验证码是否正确
  */
 const retrievePassword = (params: object): Promise<TResponse> => {
@@ -62,7 +55,6 @@ export {
   updateAdminPhoneNum,
   updateAdminEmail,
   applyUpdateCompanyInfo,
-  resubmitCompany,
   retrievePassword,
   currentResetPassword
 }

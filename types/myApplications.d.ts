@@ -31,10 +31,16 @@ type TSysUser = {
   }
 }
 
+// 申请类型
+type applicationType =
+  | 'ACCESS_REGISTER' // 接入账号申请
+  | 'UPDATE_COMPANY_INFO' // 单位信息修改
+  | 'ACCESS_APPLICATION' // 接入应用申请
+
 type TApplyDetail = {
   id: string
   processInstanceId: string // 审批单号
-  key: string // 申请类型
+  key: applicationType
   state: 0 | 1 | 2 | 3 // 申请状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
   count: number
   unifyName: string // 应用/服务名称

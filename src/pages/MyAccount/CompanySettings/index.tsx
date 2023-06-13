@@ -10,11 +10,7 @@ import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import type { RcFile } from 'antd/es/upload/interface'
 import { getBase64, imgBeforeUpload } from '@utils/index'
 import { getProcessByKey } from '@api/index'
-import {
-  applyUpdateCompanyInfo,
-  resubmitCompany,
-  currentCompanyInfo
-} from '@api/myAccount'
+import { applyUpdateCompanyInfo, currentCompanyInfo } from '@api/myAccount'
 
 const CompanySettings = () => {
   const [form] = Form.useForm()
@@ -117,46 +113,26 @@ const CompanySettings = () => {
    * 提交数据
    */
   const onFinish = async (values: TCompanyInfo & { adminName: string }) => {
-    const { companyId, adminName, adminPhone, adminEmail } =
-      companyInfo as TCompanyInfo
+    if (!companyInfo) return
+    const { companyId, adminName, adminPhone, adminEmail } = companyInfo
     const { companyName, companyShortName, certificateNum, areaCode } = values
     const certificatePhoto = certificateFile.substring(
       certificateFile.indexOf('base64,') + 7
     )
 
-    let content = ''
-    if (process.state === 3) {
-      const { taskId, processInstanceId: instanceId, starter } = process
-      const { retMessage } = await resubmitCompany({
-        taskId,
-        instanceId,
-        starter,
-        companyName,
-        companyShortName,
-        certificateNum,
-        adminName,
-        adminPhone,
-        adminEmail,
-        certificatePhoto,
-        areaCode
-      })
-      content = retMessage
-    } else {
-      const { retMessage } = await applyUpdateCompanyInfo({
-        companyId,
-        companyName,
-        companyShortName,
-        adminName,
-        adminPhone,
-        adminEmail,
-        certificateNum,
-        certificatePhoto,
-        areaCode
-      })
-      content = retMessage
-    }
+    const { retMessage } = await applyUpdateCompanyInfo({
+      companyId,
+      companyName,
+      companyShortName,
+      adminName,
+      adminPhone,
+      adminEmail,
+      certificateNum,
+      certificatePhoto,
+      areaCode
+    })
     message.success({
-      content,
+      content: retMessage,
       duration: 2,
       onClose () {
         navigate(-1)
@@ -181,7 +157,7 @@ const CompanySettings = () => {
         />
       ) : (
         <>
-          {process!.state === 3 && (
+          {process!.state === 2 && (
             <Result
               title={`${process.comment}，请重新确认信息，再提交申请`}
               status='error'
