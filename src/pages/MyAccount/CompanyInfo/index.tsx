@@ -23,7 +23,7 @@ const CompanyInfo = () => {
   /**
    * 是否有审批中的单位信息单，禁用修改按钮
    */
-  const [isApproving, setIsApproving] = useState(true)
+  const [isApproving, setIsApproving] = useState(false)
 
   /**
    * 初始化当前单位信息
@@ -53,9 +53,11 @@ const CompanyInfo = () => {
   return (
     <>
       <div className={style['tool-bar']}>
-        <div className={style.warning}>
-          <i className={style['warning-icon']}></i>修改申请审批中
-        </div>
+        {isApproving && (
+          <div className={style.warning}>
+            <i className={style['warning-icon']}></i>修改申请审批中
+          </div>
+        )}
         <Button
           type='primary'
           icon={<EditOutlined />}
