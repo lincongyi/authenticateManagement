@@ -1,10 +1,8 @@
 import React from 'react'
 import style from './index.module.scss'
 import {
-  ConfigProvider,
   DatePicker,
   Form,
-  Radio,
   Select,
   Checkbox,
   Row,
@@ -19,7 +17,6 @@ import type { FormInstance } from 'antd/lib/form/hooks/useForm'
 import type { RangePickerProps } from 'antd/es/date-picker'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
-import locale from 'antd/locale/zh_CN'
 import accessFormChooseMethod from '@/assets/accessForm-chooseMethod.png'
 import { formProps } from '..'
 import { useStore } from '@stores/index'
@@ -30,14 +27,6 @@ import { TValue } from '../../index.d'
 const CheckboxGroup = Checkbox.Group
 
 const defaultMaxLength = 20
-
-/**
- * 接入账号类型options
- */
-const accountTypeOptions = [
-  { label: '测试账号', value: 1 },
-  { label: '正式账号', value: 2 }
-]
 
 /**
  * 接入方式options
@@ -176,23 +165,21 @@ const AbilityInfo = React.forwardRef<
           />
         )}
       </Form.Item>
-      <ConfigProvider locale={locale}>
-        <Form.Item
-          label='接入服务有效期'
-          name='serviceVaildEnd'
-          rules={[{ required: true, message: '请选择接入服务有效期' }]}
-        >
-          {isCheck ? (
-            ''
-          ) : (
-            <DatePicker
-              placeholder='请选择接入服务有效期'
-              disabledDate={afterToday}
-              style={{ width: '100%' }}
-            />
-          )}
-        </Form.Item>
-      </ConfigProvider>
+      <Form.Item
+        label='接入服务有效期'
+        name='serviceVaildEnd'
+        rules={[{ required: true, message: '请选择接入服务有效期' }]}
+      >
+        {isCheck ? (
+          ''
+        ) : (
+          <DatePicker
+            placeholder='请选择接入服务有效期'
+            disabledDate={afterToday}
+            style={{ width: '100%' }}
+          />
+        )}
+      </Form.Item>
       <Form.Item
         label='认证类型'
         name='authType'

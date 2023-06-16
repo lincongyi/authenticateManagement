@@ -13,6 +13,7 @@ const Area = ({
   callback: Function
   destinationList?: TAreaItem[]
 }) => {
+  // console.log('destinationList', destinationList)
   const [provinceList, setProvinceList] = useState<TAreaItem[]>([]) // 省份列表
   const [cityList, setCityList] = useState<TAreaItem[]>([]) // 城市列表
   const [areaList, setAreaList] = useState<TAreaItem[]>([]) // 地区列表
@@ -33,30 +34,32 @@ const Area = ({
   )
 
   useEffect(() => {
-    // 获取省份列表
+    // 初始化省份列表
     ;(async () => {
       const { data } = await getAreacodes({ areaLevel: 'l1' })
       setProvinceList(data as TAreaItem[])
+      if (currentList.length) {
+        ;(async () => {
+          for (let i = 0; i < currentList.length - 1; i++) {
+            if (i === 0) {
+              // 获取城市列表
+              const { data } = await getAreacodes({
+                areaLevel: 'l2',
+                areaParentCode: currentList[i].code
+              })
+              setCityList(data)
+            } else if (i === 1) {
+              // 获取地区列表
+              const { data } = await getAreacodes({
+                areaLevel: 'l3',
+                areaParentCode: currentList[i].code
+              })
+              setAreaList(data)
+            }
+          }
+        })()
+      }
     })()
-    if (currentList.length) {
-      currentList.forEach(async (item, index) => {
-        if (index === 0) {
-          // 获取城市列表
-          const { data } = await getAreacodes({
-            areaLevel: 'l2',
-            areaParentCode: item.code
-          })
-          setCityList(data)
-        } else if (index === 1) {
-          // 获取地区列表
-          const { data } = await getAreacodes({
-            areaLevel: 'l3',
-            areaParentCode: item.code
-          })
-          setAreaList(data)
-        }
-      })
-    }
   }, [])
 
   /**

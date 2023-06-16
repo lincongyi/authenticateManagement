@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Card, ConfigProvider, DatePicker } from 'antd'
+import { Card, DatePicker } from 'antd'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
-import locale from 'antd/locale/zh_CN'
 import LineChart from './LineChart'
 import { rangePresets, disabledDate, dateFormat } from '@utils/date'
 import { getStatistics } from '@mock/index'
@@ -58,18 +57,16 @@ const Statistics = () => {
       headStyle={{ borderBottom: 0 }}
       bordered={false}
       extra={
-        <ConfigProvider locale={locale}>
-          <RangePicker
-            defaultValue={[
-              dayjs(dateRange[0], dateFormat),
-              dayjs(dateRange[1], dateFormat)
-            ]}
-            presets={rangePresets}
-            disabledDate={disabledDate}
-            onChange={onRangeChange}
-            onOpenChange={onOpenChange}
-          />
-        </ConfigProvider>
+        <RangePicker
+          defaultValue={[
+            dayjs(dateRange[0], dateFormat),
+            dayjs(dateRange[1], dateFormat)
+          ]}
+          presets={rangePresets}
+          disabledDate={disabledDate}
+          onChange={onRangeChange}
+          onOpenChange={onOpenChange}
+        />
       }
     >
       {chartData && <LineChart chartData={chartData} />}

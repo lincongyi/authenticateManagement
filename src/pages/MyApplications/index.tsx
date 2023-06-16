@@ -5,7 +5,6 @@ import {
   Button,
   Cascader,
   Col,
-  ConfigProvider,
   DatePicker,
   Divider,
   Form,
@@ -19,10 +18,8 @@ import {
   message
 } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
-import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
-import locale from 'antd/locale/zh_CN'
-import { rangePresets, disabledDate } from '@utils/date'
+import { rangePresets, disabledDate, dateFormat } from '@utils/date'
 import {
   getApplyCount,
   getApplyList,
@@ -34,6 +31,7 @@ import type { TGetApplyListParams } from '@api/myApplications'
 import { useUpdateEffect, formatDictionary } from '@utils/index'
 import CheckModal from './components/CheckModal'
 import { useNavigate } from 'react-router-dom'
+import dayjs from 'dayjs'
 
 const { RangePicker } = DatePicker
 
@@ -161,25 +159,6 @@ const MyApplications = () => {
 
   const [form] = Form.useForm()
 
-  const [dateRange, setDateRange] = useState<string[]>([])
-
-  /**
-   * 日期范围发生变化的回调
-   */
-  const onRangeChange = (
-    dates: null | (Dayjs | null)[],
-    dateStrings: string[]
-  ) => {
-    setDateRange(dateStrings)
-  }
-
-  /**
-   * 关闭日期选择器的回调
-   */
-  const onOpenChange = (open: boolean) => {
-    if (!open) form.setFieldValue('dateRange', dateRange)
-  }
-
   /**
    * 重置
    */
@@ -200,7 +179,10 @@ const MyApplications = () => {
   const onFinish = (values: TValues) => {
     const keys = values.keys?.map((item: string[]) => item.at(-1))
     const [startTime, endTime] = values.dateRange
-      ? values.dateRange
+      ? [
+          dayjs(values.dateRange[0]).format(dateFormat),
+          dayjs(values.dateRange[1]).format(dateFormat)
+        ]
       : [undefined, undefined]
     const params = {
       ...values,
@@ -495,14 +477,10 @@ const MyApplications = () => {
               </Col>
               <Col span={12}>
                 <Form.Item label='申请日期：' name='dateRange'>
-                  <ConfigProvider locale={locale}>
-                    <RangePicker
-                      presets={rangePresets}
-                      disabledDate={disabledDate}
-                      onChange={onRangeChange}
-                      onOpenChange={onOpenChange}
-                    />
-                  </ConfigProvider>
+                  <RangePicker
+                    presets={rangePresets}
+                    disabledDate={disabledDate}
+                  />
                 </Form.Item>
               </Col>
               <Col span={24} className='tr'>
@@ -522,16 +500,14 @@ const MyApplications = () => {
 
       <Row>
         <Col span={24}>
-          <ConfigProvider locale={locale}>
-            <Table
-              rowKey='id'
-              className='myApplications-table'
-              columns={columns}
-              dataSource={dataSource}
-              pagination={pagination}
-              onChange={onTableChange}
-            />
-          </ConfigProvider>
+          <Table
+            rowKey='id'
+            className='myApplications-table'
+            columns={columns}
+            dataSource={dataSource}
+            pagination={pagination}
+            onChange={onTableChange}
+          />
         </Col>
       </Row>
       {instanceId && (

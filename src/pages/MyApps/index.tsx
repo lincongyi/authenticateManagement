@@ -3,7 +3,6 @@ import style from './index.module.scss'
 import {
   Button,
   Col,
-  ConfigProvider,
   DatePicker,
   Divider,
   Form,
@@ -16,10 +15,8 @@ import {
   Typography
 } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
-import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
-import locale from 'antd/locale/zh_CN'
-import { rangePresets, disabledDate } from '@utils/date'
+import { rangePresets, disabledDate, dateFormat } from '@utils/date'
 import { getAppCount, getMyAppList } from '@mock/myApp'
 import { getdictionary } from '@api/index'
 
@@ -29,6 +26,7 @@ import Extension from './components/Extension'
 import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
 import { fieldNames } from '@utils/index'
+import dayjs from 'dayjs'
 
 const { RangePicker } = DatePicker
 
@@ -89,44 +87,6 @@ const MyApps = () => {
 
   const [form] = Form.useForm()
 
-  const [expiredRange, setExpiredRange] = useState<string[]>([])
-
-  /**
-   * 有效期-日期范围发生变化的回调
-   */
-  const onExpiredRangeChange = (
-    dates: null | (Dayjs | null)[],
-    dateStrings: string[]
-  ) => {
-    setExpiredRange(dateStrings)
-  }
-
-  /**
-   * 有效期-关闭日期选择器的回调
-   */
-  const onExpiredOpenChange = (open: boolean) => {
-    if (!open) form.setFieldValue('expiredRange', expiredRange)
-  }
-
-  const [dateRange, setDateRange] = useState<string[]>([])
-
-  /**
-   * 创建时间-日期范围发生变化的回调
-   */
-  const onRangeChange = (
-    dates: null | (Dayjs | null)[],
-    dateStrings: string[]
-  ) => {
-    setDateRange(dateStrings)
-  }
-
-  /**
-   * 创建时间-关闭日期选择器的回调
-   */
-  const onOpenChange = (open: boolean) => {
-    if (!open) form.setFieldValue('dateRange', dateRange)
-  }
-
   /**
    * 重置
    */
@@ -139,6 +99,27 @@ const MyApps = () => {
    */
   const onFinish = (values: any) => {
     console.log('Success:', values)
+    const { expiredRange, dateRange } = values
+    // format日期格式
+    if (expiredRange || dateRange) {
+      const params: {
+        expiredRange?: [string, string]
+        dateRange?: [string, string]
+      } = {}
+      if (expiredRange) {
+        params.expiredRange = [
+          dayjs(expiredRange[0]).format(dateFormat),
+          dayjs(expiredRange[1]).format(dateFormat)
+        ]
+      }
+      if (dateRange) {
+        params.dateRange = [
+          dayjs(dateRange[0]).format(dateFormat),
+          dayjs(dateRange[1]).format(dateFormat)
+        ]
+      }
+      console.log(params)
+    }
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -342,15 +323,6 @@ const MyApps = () => {
                   <Input placeholder='请输入应用名称' maxLength={10} />
                 </Form.Item>
               </Col>
-              {/* <Col span={6}>
-                <Form.Item label='接入环境' name='appEnv'>
-                  <Select
-                    placeholder='请选择接入环境'
-                    fieldNames={fieldNames}
-                    options={appEnv}
-                  />
-                </Form.Item>
-              </Col> */}
               <Col span={6}>
                 <Form.Item label='基础能力' name='appAbility'>
                   <Select
@@ -371,25 +343,15 @@ const MyApps = () => {
               </Col>
               <Col span={12}>
                 <Form.Item label='有效期：' name='expiredRange'>
-                  <ConfigProvider locale={locale}>
-                    <RangePicker
-                      presets={rangePresets}
-                      onChange={onExpiredRangeChange}
-                      onOpenChange={onExpiredOpenChange}
-                    />
-                  </ConfigProvider>
+                  <RangePicker presets={rangePresets} />
                 </Form.Item>
               </Col>
               <Col span={12}>
                 <Form.Item label='创建时间：' name='dateRange'>
-                  <ConfigProvider locale={locale}>
-                    <RangePicker
-                      presets={rangePresets}
-                      disabledDate={disabledDate}
-                      onChange={onRangeChange}
-                      onOpenChange={onOpenChange}
-                    />
-                  </ConfigProvider>
+                  <RangePicker
+                    presets={rangePresets}
+                    disabledDate={disabledDate}
+                  />
                 </Form.Item>
               </Col>
               <Col span={24} className='tr'>

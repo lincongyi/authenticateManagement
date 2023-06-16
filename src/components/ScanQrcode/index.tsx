@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { QRCode, message, ConfigProvider } from 'antd'
+import { QRCode, message } from 'antd'
 import { useStore } from '@stores/index'
-import locale from 'antd/locale/zh_CN'
 import { getQrcode } from '@api/index'
 import { v4 as uuidv4 } from 'uuid'
 import { loadEnv, useUpdateEffect } from '@utils/index'
@@ -114,15 +113,13 @@ const ScanQrcode = ({
   return (
     <>
       {qrcode.qrcodeContent && (
-        <ConfigProvider locale={locale}>
-          <QRCode
-            value={qrcode.qrcodeContent}
-            status={qrcode.status}
-            color={qrcodeColor}
-            onRefresh={() => handleQrcode()}
-            size={size}
-          />
-        </ConfigProvider>
+        <QRCode
+          value={qrcode.qrcodeContent}
+          status={qrcode.status}
+          color={qrcodeColor}
+          onRefresh={() => handleQrcode()}
+          size={size}
+        />
       )}
     </>
   )

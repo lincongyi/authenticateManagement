@@ -5,7 +5,6 @@ import {
   Badge,
   Button,
   Col,
-  ConfigProvider,
   DatePicker,
   Divider,
   Form,
@@ -25,7 +24,6 @@ import {
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
-import locale from 'antd/locale/zh_CN'
 import UploadModal from './components/UploadModal'
 import AddModal from './components/AddModal'
 import CheckModal from './components/CheckModal'
@@ -37,25 +35,6 @@ const { RangePicker } = DatePicker
 
 const Daily = () => {
   const [form] = Form.useForm()
-
-  const [dateRange, setDateRange] = useState<string[]>([])
-
-  /**
-   * 日期范围发生变化的回调
-   */
-  const onRangeChange = (
-    dates: null | (Dayjs | null)[],
-    dateStrings: string[]
-  ) => {
-    setDateRange(dateStrings)
-  }
-
-  /**
-   * 关闭日期选择器的回调
-   */
-  const onOpenChange = (open: boolean) => {
-    if (!open) form.setFieldValue('dateRange', dateRange)
-  }
 
   /**
    * 查询
@@ -325,14 +304,10 @@ const Daily = () => {
               </Col>
               <Col span={12}>
                 <Form.Item label='创建时间' name='date'>
-                  <ConfigProvider locale={locale}>
-                    <RangePicker
-                      presets={rangePresets}
-                      disabledDate={disabledDate}
-                      onChange={onRangeChange}
-                      onOpenChange={onOpenChange}
-                    />
-                  </ConfigProvider>
+                  <RangePicker
+                    presets={rangePresets}
+                    disabledDate={disabledDate}
+                  />
                 </Form.Item>
               </Col>
             </Row>
@@ -364,15 +339,13 @@ const Daily = () => {
       </Row>
       <Row>
         <Col span={24}>
-          <ConfigProvider locale={locale}>
-            <Table
-              className='issue-table'
-              columns={columns}
-              dataSource={data}
-              pagination={pagination}
-              onChange={onTableChange}
-            />
-          </ConfigProvider>
+          <Table
+            className='issue-table'
+            columns={columns}
+            dataSource={data}
+            pagination={pagination}
+            onChange={onTableChange}
+          />
         </Col>
       </Row>
       <UploadModal open={uploadModalOpen} setOpen={setUploadModalOpen} />

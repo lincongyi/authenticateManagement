@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Col, Row, DatePicker, ConfigProvider, Card } from 'antd'
+import { Col, Row, DatePicker, Card } from 'antd'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
@@ -121,15 +121,13 @@ const AuthenticationData = () => {
   return (
     <Row gutter={[20, 20]}>
       <Col span={24}>
-        <ConfigProvider locale={locale}>
-          <RangePicker
-            defaultValue={[dayjs(dateRange[0]), dayjs(dateRange[1])]}
-            presets={rangePresets}
-            disabledDate={disabledDate}
-            onChange={onRangeChange}
-            onOpenChange={onOpenChange}
-          />
-        </ConfigProvider>
+        <RangePicker
+          defaultValue={[dayjs(dateRange[0]), dayjs(dateRange[1])]}
+          presets={rangePresets}
+          disabledDate={disabledDate}
+          onChange={onRangeChange}
+          onOpenChange={onOpenChange}
+        />
       </Col>
       {amount && (
         <Col span={12}>

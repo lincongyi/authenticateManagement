@@ -4,7 +4,6 @@ import {
   Badge,
   Button,
   Col,
-  ConfigProvider,
   DatePicker,
   Divider,
   Form,
@@ -18,11 +17,8 @@ import {
   message
 } from 'antd'
 import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
-import type { RangeValue } from 'rc-picker/lib/interface.d'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
-import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
-import locale from 'antd/locale/zh_CN'
 import AddModal from './components/AddModal'
 // import CheckModal from './components/CheckModal'
 import UpdateModal from './components/UpdateModal'
@@ -32,12 +28,6 @@ const { RangePicker } = DatePicker
 
 const Reply = () => {
   const [form] = Form.useForm()
-
-  /**
-   * 设置表单中日期的值
-   */
-  const onChange = (date: RangeValue<Dayjs>, dateString: [string, string]) =>
-    form.setFieldValue('date', dateString)
 
   /**
    * 重置
@@ -288,9 +278,7 @@ const Reply = () => {
               </Col>
               <Col span={12}>
                 <Form.Item label='创建时间' name='date'>
-                  <ConfigProvider locale={locale}>
-                    <RangePicker onChange={onChange} />
-                  </ConfigProvider>
+                  <RangePicker />
                 </Form.Item>
               </Col>
             </Row>
@@ -320,15 +308,13 @@ const Reply = () => {
       </Row>
       <Row>
         <Col span={24}>
-          <ConfigProvider locale={locale}>
-            <Table
-              className='issue-table'
-              columns={columns}
-              dataSource={data}
-              pagination={pagination}
-              onChange={onTableChange}
-            />
-          </ConfigProvider>
+          <Table
+            className='issue-table'
+            columns={columns}
+            dataSource={data}
+            pagination={pagination}
+            onChange={onTableChange}
+          />
         </Col>
       </Row>
       <AddModal open={addModalOpen} setOpen={setAddModalOpen} />

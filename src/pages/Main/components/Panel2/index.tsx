@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import style from './index.module.scss'
-import { Card, Col, Row, ConfigProvider, DatePicker } from 'antd'
+import { Card, Col, Row, DatePicker } from 'antd'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import 'dayjs/locale/zh-cn'
-import locale from 'antd/locale/zh_CN'
 import { rangePresets, disabledDate, dateFormat } from '@utils/date'
 
 const { RangePicker } = DatePicker
@@ -45,18 +44,16 @@ const Panel2 = ({
         headStyle={{ borderBottom: 0 }}
         bordered={false}
         extra={
-          <ConfigProvider locale={locale}>
-            <RangePicker
-              defaultValue={[
-                dayjs(dateRange[0], dateFormat),
-                dayjs(dateRange[1], dateFormat)
-              ]}
-              presets={rangePresets}
-              disabledDate={disabledDate}
-              onChange={onRangeChange}
-              onOpenChange={onOpenChange}
-            />
-          </ConfigProvider>
+          <RangePicker
+            defaultValue={[
+              dayjs(dateRange[0], dateFormat),
+              dayjs(dateRange[1], dateFormat)
+            ]}
+            presets={rangePresets}
+            disabledDate={disabledDate}
+            onChange={onRangeChange}
+            onOpenChange={onOpenChange}
+          />
         }
       >
         <Row gutter={20}>
