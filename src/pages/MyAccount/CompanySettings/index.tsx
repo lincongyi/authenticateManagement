@@ -44,16 +44,14 @@ const CompanySettings = () => {
         key: 'UPDATE_COMPANY_INFO'
       })
       // 如果当前任务返回空 or 驳回状态，即可走提交申请流程，否则当前申请审批在审核中，不可重复提交申请
-      if (!data || data.instanceInfo.state === 3) {
-        form.setFieldsValue(currentInfo)
-        if (currentInfo!.areaList) {
-          form.setFieldValue('areaCode', currentInfo!.areaList[0].code)
-        }
-        setCompanyInfo(currentInfo)
-        setCertificateFile(
-          `data:image/png;base64,${currentInfo!.certificatePhoto}`
-        )
+      form.setFieldsValue(currentInfo)
+      if (currentInfo!.areaList) {
+        form.setFieldValue('areaCode', currentInfo!.areaList[0].code)
       }
+      setCompanyInfo(currentInfo)
+      setCertificateFile(
+        `data:image/png;base64,${currentInfo!.certificatePhoto}`
+      )
       if (data) {
         const { state, processInstanceId, starter, comment } = data.instanceInfo
         setProcess({
