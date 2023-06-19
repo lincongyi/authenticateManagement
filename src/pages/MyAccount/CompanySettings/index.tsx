@@ -112,8 +112,14 @@ const CompanySettings = () => {
    */
   const onFinish = async (values: TCompanyInfo & { adminName: string }) => {
     if (!companyInfo) return
-    const { userId, adminName, adminPhone, adminEmail } = companyInfo
-    const { companyName, companyShortName, certificateNum, areaCode } = values
+    const { userId, adminPhone, adminEmail } = companyInfo
+    const {
+      adminName,
+      companyName,
+      companyShortName,
+      certificateNum,
+      areaCode
+    } = values
     const certificatePhoto = certificateFile.substring(
       certificateFile.indexOf('base64,') + 7
     )

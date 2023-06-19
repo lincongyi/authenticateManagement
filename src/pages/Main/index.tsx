@@ -9,6 +9,8 @@ import Panel2 from './components/Panel2'
 import Statistics from './components/Statistics'
 import { getApplyCount } from '@api/myApplications'
 import { getNews, getMyAppInfo, getService } from '@mock/index'
+import { getAccessIndex } from '@api/main'
+import type { TAccessIndex } from '@api/main'
 
 const Main = () => {
   const { themeStore } = useStore()
@@ -17,33 +19,18 @@ const Main = () => {
   const navigate = useNavigate()
 
   /**
-   * 初始化招呼语
+   * 首页面板消息内容
    */
-  const [timeline] = useState(() => {
-    const range = [
-      { timeScope: [6, 9], description: '早上' },
-      { timeScope: [9, 12], description: '上午' },
-      { timeScope: [12, 14], description: '中午' },
-      { timeScope: [14, 19], description: '下午' }
-    ]
-    const hour = new Date().getHours()
-    const result = range.find(
-      item => hour >= item.timeScope[0] && hour < item.timeScope[1]
-    )
-    return result ? result.description : '晚上'
-  })
+  const [panelInfo, setPanelInfo] = useState<TAccessIndex>()
 
-  /**
-   * 用户名
-   */
-  const [accountNumber, setAccountNumber] = useState('')
   useEffect(() => {
     /**
-     * 初始化用户名
+     * 获取是否录入完善单位信息
      */
-    if (!localStorage.getItem('userInfo')) return navigate('/login')
-    const userInfo: TUserInfo = JSON.parse(localStorage.getItem('userInfo')!)
-    setAccountNumber(userInfo.accountNumber)
+    ;(async () => {
+      const { data } = await getAccessIndex()
+      setPanelInfo(data)
+    })()
 
     /**
      * 初始化消息推送内容
@@ -111,16 +98,6 @@ const Main = () => {
   }
 
   /**
-   * 最后登录时间
-   */
-  const [prevLoginTime] = useState('2023-03-03 22:23:12')
-
-  /**
-   * 数据更新时间
-   */
-  const [updateTime] = useState('2023-03-10  12:00:00')
-
-  /**
    * 我的应用
    */
   const [myAppInfo, setMyAppInfo] = useState<TPannel1Data>()
@@ -159,33 +136,35 @@ const Main = () => {
 
   return (
     <>
-      <Alert
-        message={
-          <>
-            您的单位信息尚未完善，部分功能限制使用。
-            <Button
-              size='small'
-              type='text'
-              style={{ color: colorPrimary }}
-              onClick={() => navigate('/app/myAccount')}
-            >
-              点击前往
-            </Button>
-            完善单位信息
-          </>
-        }
-        type='warning'
-        style={{ marginBottom: 24 }}
-        showIcon
-        closable
-      ></Alert>
+      {!panelInfo?.isPerfect && (
+        <Alert
+          message={
+            <>
+              您的单位信息尚未完善，部分功能限制使用。
+              <Button
+                size='small'
+                type='text'
+                style={{ color: colorPrimary }}
+                onClick={() => navigate('/app/myAccount')}
+              >
+                点击前往
+              </Button>
+              完善单位信息
+            </>
+          }
+          type='warning'
+          style={{ marginBottom: 24 }}
+          showIcon
+          closable
+        ></Alert>
+      )}
 
       <div className={style.notification}>
         <div className={style['left-side']}>
-          <div className={style.greeting}>
-            {timeline}好！{accountNumber}
+          <div className={style.greeting}>{panelInfo?.greetings}</div>
+          <div className={style['prev-login']}>
+            最后登录：{panelInfo?.lastLoginTime}
           </div>
-          <div className={style['prev-login']}>最后登录：{prevLoginTime}</div>
         </div>
 
         <div className={style['right-side']}>
@@ -200,7 +179,9 @@ const Main = () => {
                 ))}
             </Carousel>
           </div>
-          <div className={style['update-time']}>数据更新时间：{updateTime}</div>
+          <div className={style['update-time']}>
+            数据更新时间：{panelInfo?.dataUpdateTime}
+          </div>
         </div>
       </div>
 

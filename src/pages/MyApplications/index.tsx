@@ -455,7 +455,7 @@ const MyApplications = () => {
             <Row gutter={20}>
               <Col span={6}>
                 <Form.Item label='审批单号' name='instanceId'>
-                  <Input placeholder='请输入审批单号' maxLength={20} />
+                  <Input placeholder='请输入审批单号' maxLength={40} />
                 </Form.Item>
               </Col>
               <Col span={6}>
