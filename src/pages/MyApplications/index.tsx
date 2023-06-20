@@ -60,21 +60,23 @@ const MyApplications = () => {
    */
   const [activeState, setActiveState] = useState<0 | 1 | 2 | 3 | 4>(0)
 
+  /**
+   * 获取申请总数
+   */
+  const initApplyCount = async () => {
+    const { data } = await getApplyCount({
+      endTime: '',
+      startTime: ''
+    })
+    const list = data?.map((item: TState, index: number) => ({
+      ...item,
+      ...stateInfo[index]
+    }))
+    setStateList(list)
+  }
+
   useEffect(() => {
-    ;(async () => {
-      /**
-       * 初始化审批状态
-       */
-      const { data: applyCount } = await getApplyCount({
-        endTime: '',
-        startTime: ''
-      })
-      const list = applyCount?.map((item: TState, index: number) => ({
-        ...item,
-        ...stateInfo[index]
-      }))
-      setStateList(list)
-    })()
+    initApplyCount()
   }, [])
 
   const [processKeyList, setProcessKeyList] = useState<Option[]>()
@@ -194,6 +196,8 @@ const MyApplications = () => {
       pageSize: 10
     } as TGetApplyListParams
     renderTable(params)
+
+    initApplyCount()
   }
 
   const onFinishFailed = (errorInfo: any) => {
