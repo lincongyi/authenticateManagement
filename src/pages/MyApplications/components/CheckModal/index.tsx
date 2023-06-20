@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Modal, Button, Steps, Tag } from 'antd'
+import { Modal, Button, Steps, Tag, Typography } from 'antd'
 import { getApplyDetail } from '@api/myApplications'
 import userAvatar from '@/assets/myApplications-default-avatar.png'
 import ApprovalFormInfo from './components/ApprovalFormInfo'
 import DetailInfo from './components/DetailInfo'
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons'
 import { useStore } from '@stores/index'
+
+const { Text } = Typography
 
 /**
  * 节点title
@@ -23,16 +25,18 @@ const NodeTitle = ({
   return (
     <div style={{ fontWeight: 'bold' }}>
       {item.name}（{item.userCount}）
-      <span
+      <Text
+        strong
         style={{
           fontSize: 14,
-          fontWeight: 'normal',
           color: ['blue', 'gray', 'red', 'orange'][item.isPass]
         }}
       >
-        {['审批通过', '审批中', '审批不通过', '撤回'][item.isPass]}
-        {Boolean(!item.isPass) && <Tag style={{ marginLeft: 8 }}>已结束</Tag>}
-      </span>
+        {['已通过', '审批中', '审批未通过', '撤回'][item.isPass]}
+      </Text>
+      {Boolean(!item.isPass) && (
+        <Tag style={{ marginLeft: 8, fontWeight: 'normal' }}>已结束</Tag>
+      )}
     </div>
   )
 }
@@ -124,7 +128,7 @@ const CheckModal = ({
       centered
       open={open}
       onCancel={() => setOpen(false)}
-      width={840}
+      width={640}
       footer={[
         <Button key='cancel' onClick={() => setOpen(false)}>
           关闭
