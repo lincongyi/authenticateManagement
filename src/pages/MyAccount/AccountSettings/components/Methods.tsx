@@ -25,7 +25,7 @@ const Methods = () => {
   const selectMethod = (type: number) => setSelectedIndex(type)
 
   return (
-    <>
+    <div className={style['steps-content']}>
       <p className={`${style['method-title']} font-primary-color`}>
         您可以通过选择以下三种认证方式中的一种，进行身份认证
       </p>
@@ -52,7 +52,7 @@ const Methods = () => {
           下一步
         </Button>
       </div>
-    </>
+    </div>
   )
 }
 

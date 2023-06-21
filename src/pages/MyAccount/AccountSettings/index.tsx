@@ -86,11 +86,7 @@ const AccountSettings = () => {
         <Col span={20}>
           <Steps current={current} items={items} className={style.steps} />
           <Row justify='center'>
-            <Col span={20}>
-              <div className={style['steps-content']}>
-                {steps[current].content}
-              </div>
-            </Col>
+            <Col span={20}>{steps[current].content}</Col>
           </Row>
         </Col>
       </Row>
