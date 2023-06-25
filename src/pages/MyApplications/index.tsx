@@ -32,6 +32,7 @@ import { useUpdateEffect, formatDictionary } from '@utils/index'
 import CheckModal from './components/CheckModal'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
+import { useStore } from '@stores/index'
 
 const { RangePicker } = DatePicker
 
@@ -60,11 +61,15 @@ const MyApplications = () => {
    */
   const [activeState, setActiveState] = useState<0 | 1 | 2 | 3 | 4>(0)
 
+  const { applyCountStore } = useStore()
+
   /**
    * 获取申请总数
    */
   const initApplyCount = async () => {
     const { data } = await getApplyCount()
+    applyCountStore.setApplyCount(data!)
+    console.log(applyCountStore.getTotal())
     const list = data?.map((item: TState, index: number) => ({
       ...item,
       ...stateInfo[index]

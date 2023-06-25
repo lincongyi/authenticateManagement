@@ -20,8 +20,36 @@ import { getApplyCount } from '@api/myApplications'
 const { Content, Sider } = Layout
 
 const AppLayout = () => {
-  // const items: MenuProps['items'] = getMenu()
+  const { applyCountStore } = useStore()
   const [menuItems, setMenuItems] = useState<MenuProps['items']>()
+  useEffect(() => {
+    // 渲染菜单栏并且获取我的申请数
+    ;(async () => {
+      if (!applyCountStore.applyCount.length) {
+        const { data } = await getApplyCount()
+        applyCountStore.setApplyCount(data!)
+      }
+      const items = getMenu()
+
+      setMenuItems(() =>
+        items.map(item => {
+          if (item.label === '我的申请') {
+            item.label = (
+              <>
+                我的申请
+                <Badge
+                  count={applyCountStore.getTotal()}
+                  style={{ marginLeft: 4, marginBottom: 4 }}
+                />
+              </>
+            )
+          }
+          return item
+        })
+      )
+    })()
+  }, [applyCountStore.getTotal()])
+
   /**
    * 菜单栏折叠
    */
@@ -37,6 +65,7 @@ const AppLayout = () => {
    * 面包屑导航
    */
   const [breadcrumbName, setBreadcrumbName] = useState('')
+
   useEffect(() => {
     // 生成面包屑导航
     let name = ''
@@ -49,30 +78,6 @@ const AppLayout = () => {
     }
     getName([...menu, ...dropdownList])
     name && setBreadcrumbName(name)
-
-    // 菜单栏获取我的申请数
-    ;(async () => {
-      const { data } = await getApplyCount()
-      const { count } = data![0]
-      const items = getMenu()
-
-      setMenuItems(() =>
-        items.map(item => {
-          if (item.label === '我的申请') {
-            item.label = (
-              <>
-                我的申请
-                <Badge
-                  count={count}
-                  style={{ marginLeft: 4, marginBottom: 4 }}
-                />
-              </>
-            )
-          }
-          return item
-        })
-      )
-    })()
   }, [pathname])
 
   // 匹配当前地址菜单高亮
