@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 type TMenuItem = {
-  label: string
+  label: string | JSX.Element
   key: string
   icon?: React.FunctionComponentElement<{}> | string
   // children?: Partial<Pick<TMenuItem, 'icon'>> & Omit<TMenuItem, 'icon'>[]
@@ -61,7 +61,7 @@ type TApplyRecord = {
     | {
         name: string // 审批进度节点name
         userCount: number // 当前节点人数
-        isPass: 0 | 1 | 2 | 3 // 当前节点状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+        isPass: TNodes['isPass'] // 当前节点状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
       }[]
 }
 

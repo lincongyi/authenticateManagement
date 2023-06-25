@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Modal, Button, Steps, Tag, Typography } from 'antd'
+import { Modal, Button, Steps, Tag, Typography, Space } from 'antd'
 import { getApplyDetail } from '@api/myApplications'
 import userAvatar from '@/assets/myApplications-default-avatar.png'
 import ApprovalFormInfo from './components/ApprovalFormInfo'
@@ -19,9 +19,12 @@ const NodeTitle = ({
   item: {
     name: string
     userCount: number
-    isPass: 0 | 1 | 2 | 3
+    isPass: TNodes['isPass']
+    isLastNode: boolean
   }
 }) => {
+  const isEnded: boolean =
+    ![0, 1].includes(item.isPass) || (!item.isPass && item.isLastNode)
   return (
     <div style={{ fontWeight: 'bold' }}>
       {item.name}（{item.userCount}）
@@ -34,7 +37,7 @@ const NodeTitle = ({
       >
         {['已通过', '审批中', '审批未通过', '撤回'][item.isPass]}
       </Text>
-      {Boolean(!item.isPass) && (
+      {isEnded && (
         <Tag style={{ marginLeft: 8, fontWeight: 'normal' }}>已结束</Tag>
       )}
     </div>
@@ -49,10 +52,11 @@ const UserList = ({
   isPass
 }: {
   list: TSysUser[]
-  isPass: 0 | 1 | 2 | 3
+  isPass: TNodes['isPass']
 }) => {
   const { themeStore } = useStore()
   const colorPrimary = themeStore.antdThemeColor
+
   return (
     <>
       {list.map(item => (
@@ -71,7 +75,14 @@ const UserList = ({
                 />
               ))}
           </p>
-          <p>{item.completeTime}</p>
+          <Space>
+            {item.completeTime && (
+              <Text type='secondary'>
+                {['审批通过', '审批中', '审批不通过', '撤回'][isPass]}
+              </Text>
+            )}
+            {item.completeTime}
+          </Space>
         </div>
       ))}
     </>
@@ -110,10 +121,13 @@ const CheckModal = ({
       /**
        * 格式化审批进度数据
        */
-      const items = nodes.map((item, index) => ({
-        title: <NodeTitle item={item} />,
-        description: <UserList list={item.sysUsers} isPass={item.isPass} />
-      }))
+      const items = nodes.map((item, index) => {
+        const isLastNode = index === nodes.length - 1
+        return {
+          title: <NodeTitle item={{ ...item, isLastNode }} />,
+          description: <UserList list={item.sysUsers} isPass={item.isPass} />
+        }
+      })
 
       const index = nodes.findIndex(item => item.isPass)
       setCurrent(index)

@@ -1,15 +1,13 @@
 import { request } from '@utils/request'
 
-type TGetApplyCountParams = {
-  startTime: string
-  endTime: string
-}
-
 /**
  * 获取申请总数
  */
 const getApplyCount = (
-  params: TGetApplyCountParams
+  params = {
+    startTime: '',
+    endTime: ''
+  }
 ): Promise<TResponse<TState[]>> => {
   return request.post('/user/getApplyCount', params)
 }

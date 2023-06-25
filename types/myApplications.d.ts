@@ -37,6 +37,14 @@ type applicationType =
   | 'UPDATE_COMPANY_INFO' // 单位信息修改
   | 'ACCESS_APPLICATION' // 接入应用申请
 
+type TNodes = {
+  name: string // 审批进度节点name
+  userCount: number // 当前节点人数
+  isPass: 0 | 1 | 2 | 3 // 当前节点状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+  sysUsers: TSysUser[]
+  isMulti: 0 | 1 // 0-或签节点；1-会签节点
+}
+
 type TApplyDetail = {
   id: string
   processInstanceId: string // 审批单号
@@ -53,13 +61,7 @@ type TApplyDetail = {
     before: TCompanyInfo
     after: TCompanyInfo
   } | null
-  nodes: {
-    name: string // 审批进度节点name
-    userCount: number // 当前节点人数
-    isPass: 0 | 1 | 2 | 3 // 当前节点状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
-    sysUsers: TSysUser[]
-    isMulti: 0 | 1 // 0-或签节点；1-会签节点
-  }[]
+  nodes: TNodes[]
   timeline?: {
     color: string
     children: string

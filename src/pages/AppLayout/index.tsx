@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@stores/index'
-import { Breadcrumb, Layout, Menu, Space, Switch, theme } from 'antd'
+import { Badge, Breadcrumb, Layout, Menu, Space, Switch, theme } from 'antd'
 import type { MenuProps } from 'antd'
 import {
   MenuFoldOutlined,
@@ -15,12 +15,16 @@ import { ColorChangeHandler, SketchPicker } from 'react-color'
 import Header, { dropdownList } from '@components/Header'
 import { getMenu } from './index.config'
 import { runInAction } from 'mobx'
+import { getApplyCount } from '@api/myApplications'
 
 const { Content, Sider } = Layout
 
-const items: MenuProps['items'] = getMenu()
-
 const AppLayout = () => {
+  // const items: MenuProps['items'] = getMenu()
+  const [menuItems, setMenuItems] = useState<MenuProps['items']>()
+  /**
+   * 菜单栏折叠
+   */
   const [collapsed, setCollapsed] = useState(false)
   const {
     token: { colorBgContainer }
@@ -29,19 +33,46 @@ const AppLayout = () => {
   const menu = getMenu()
   const { pathname } = useLocation()
 
-  // 面包屑导航标题
+  /**
+   * 面包屑导航
+   */
   const [breadcrumbName, setBreadcrumbName] = useState('')
   useEffect(() => {
+    // 生成面包屑导航
     let name = ''
     const getName = (menu: TMenuItem[]) => {
       menu.forEach(item => {
         if (!item.children) {
-          if (pathname.includes(item.key)) name = item.label
+          if (pathname.includes(item.key)) name = item.label as string
         } else getName(item.children)
       })
     }
     getName([...menu, ...dropdownList])
     name && setBreadcrumbName(name)
+
+    // 菜单栏获取我的申请数
+    ;(async () => {
+      const { data } = await getApplyCount()
+      const { count } = data![0]
+      const items = getMenu()
+
+      setMenuItems(() =>
+        items.map(item => {
+          if (item.label === '我的申请') {
+            item.label = (
+              <>
+                我的申请
+                <Badge
+                  count={count}
+                  style={{ marginLeft: 4, marginBottom: 4 }}
+                />
+              </>
+            )
+          }
+          return item
+        })
+      )
+    })()
   }, [pathname])
 
   // 匹配当前地址菜单高亮
@@ -120,7 +151,7 @@ const AppLayout = () => {
             mode='inline'
             selectedKeys={[path]}
             style={{ height: '100%', borderRight: 0 }}
-            items={items}
+            items={menuItems}
             defaultOpenKeys={['issues']}
             onClick={switchMenu}
           />

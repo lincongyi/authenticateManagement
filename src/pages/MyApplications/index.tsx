@@ -64,10 +64,7 @@ const MyApplications = () => {
    * 获取申请总数
    */
   const initApplyCount = async () => {
-    const { data } = await getApplyCount({
-      endTime: '',
-      startTime: ''
-    })
+    const { data } = await getApplyCount()
     const list = data?.map((item: TState, index: number) => ({
       ...item,
       ...stateInfo[index]
@@ -251,6 +248,10 @@ const MyApplications = () => {
   const onWithdraw = async (value: TApplyDetail) => {
     await handleStopApply({
       instanceId: value.processInstanceId
+    })
+    message.success({
+      content: '已成功撤回！',
+      duration: 2
     })
     renderTable({
       processState: activeState - 1,
