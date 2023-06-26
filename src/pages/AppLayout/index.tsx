@@ -23,7 +23,7 @@ const AppLayout = () => {
   const { applyCountStore } = useStore()
   const [menuItems, setMenuItems] = useState<MenuProps['items']>()
   useEffect(() => {
-    // 渲染菜单栏并且获取我的申请数
+    // 渲染导航菜单栏并且获取我的申请数
     ;(async () => {
       if (!applyCountStore.applyCount.length) {
         const { data } = await getApplyCount()
@@ -51,7 +51,7 @@ const AppLayout = () => {
   }, [applyCountStore.getTotal()])
 
   /**
-   * 菜单栏折叠
+   * 导航菜单栏折叠
    */
   const [collapsed, setCollapsed] = useState(false)
   const {
@@ -80,7 +80,7 @@ const AppLayout = () => {
     name && setBreadcrumbName(name)
   }, [pathname])
 
-  // 匹配当前地址菜单高亮
+  // 匹配当前地址导航菜单高亮
   const [path, setPath] = useState('')
   useEffect(() => {
     let hightLightPath = ''
@@ -97,7 +97,7 @@ const AppLayout = () => {
 
   const navigate = useNavigate()
   /**
-   * 菜单切换地址
+   * 导航菜单切换地址
    */
   const switchMenu: MenuProps['onClick'] = e => {
     setPath(e.key)

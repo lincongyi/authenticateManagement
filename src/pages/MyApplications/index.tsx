@@ -69,7 +69,6 @@ const MyApplications = () => {
   const initApplyCount = async () => {
     const { data } = await getApplyCount()
     applyCountStore.setApplyCount(data!)
-    console.log(applyCountStore.getTotal())
     const list = data?.map((item: TState, index: number) => ({
       ...item,
       ...stateInfo[index]
@@ -521,7 +520,12 @@ const MyApplications = () => {
         </Col>
       </Row>
       {instanceId && (
-        <CheckModal instanceId={instanceId} open={open} setOpen={setOpen} />
+        <CheckModal
+          instanceId={instanceId}
+          open={open}
+          setOpen={setOpen}
+          callback={initApplyCount}
+        />
       )}
     </>
   )

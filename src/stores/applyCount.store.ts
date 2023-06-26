@@ -15,7 +15,7 @@ const applyCountStore = () => {
      * 获取全部申请总数
      */
     getTotal () {
-      return this.applyCount.length ? this.applyCount[0].count : 0
+      return this.applyCount.length ? this.applyCount[0].badgeCount : 0
     },
 
     setApplyCount (info: TState[]) {

@@ -92,11 +92,13 @@ const UserList = ({
 const CheckModal = ({
   instanceId,
   open,
-  setOpen
+  setOpen,
+  callback
 }: {
   instanceId: string
   open: boolean
   setOpen: Function
+  callback: Function
 }) => {
   const [info, setInfo] = useState<TApplyDetail>()
   const [current, setCurrent] = useState(0)
@@ -136,15 +138,20 @@ const CheckModal = ({
     })()
   }, [instanceId])
 
+  const onClose = () => {
+    callback()
+    setOpen(false)
+  }
+
   return (
     <Modal
       title='查看审批详情'
       centered
       open={open}
-      onCancel={() => setOpen(false)}
+      onCancel={() => onClose()}
       width={640}
       footer={[
-        <Button key='cancel' onClick={() => setOpen(false)}>
+        <Button key='cancel' onClick={() => onClose()}>
           关闭
         </Button>
       ]}
