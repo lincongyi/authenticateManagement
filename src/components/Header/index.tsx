@@ -65,8 +65,10 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
           }
         })
         break
+      case 'myAccount':
+        navigate('/app/myAccount/companyInfo')
+        break
       default:
-        navigate(`/app/${key}`)
         break
     }
   }
@@ -86,7 +88,7 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
               <Button
                 type='text'
                 style={{ color: '#fff', fontSize: 18, lineHeight: 1 }}
-                onClick={() => navigate('/app/myAccount')}
+                onClick={() => navigate('/app/myAccount/companyInfo')}
               >
                 {companyName}
               </Button>

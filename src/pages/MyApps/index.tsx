@@ -118,7 +118,6 @@ const MyApps = () => {
           dayjs(dateRange[1]).format(dateFormat)
         ]
       }
-      console.log(params)
     }
   }
 

@@ -5,6 +5,12 @@ import Home from '@pages/Home'
 import Login from '@pages/Login'
 import AppLayout from '@pages/AppLayout'
 import Register from '@pages/Register'
+import {
+  HomeOutlined,
+  ProfileOutlined,
+  AppstoreOutlined,
+  SolutionOutlined
+} from '@ant-design/icons'
 
 // 从文件系统导入多个模块
 const modules = import.meta.glob([
@@ -35,6 +41,11 @@ type TRoutes = {
   path: string
   element?: JSX.Element
   children?: TRoutes[]
+  meta?: {
+    isMenuItem: boolean // 是否存在于导航菜单栏
+    icon?: JSX.Element
+    breadcrumb: string
+  }
 }
 
 const routes: TRoutes[] = [
@@ -71,51 +82,86 @@ const routes: TRoutes[] = [
         element: lazyLoad('MyAccount'),
         children: [
           {
-            path: '', // 单位信息
-            element: lazyLoad('MyAccount/CompanyInfo')
-          },
-          {
             path: 'companyInfo', // 单位信息
-            element: lazyLoad('MyAccount/CompanyInfo')
+            element: lazyLoad('MyAccount/CompanyInfo'),
+            meta: {
+              isMenuItem: false,
+              breadcrumb: '单位信息'
+            }
           },
           {
             path: 'companySettings', // 修改单位信息
-            element: lazyLoad('MyAccount/CompanySettings')
+            element: lazyLoad('MyAccount/CompanySettings'),
+            meta: {
+              isMenuItem: false,
+              breadcrumb: '修改单位信息'
+            }
           },
           {
             path: 'accountInfo', // 账号信息
-            element: lazyLoad('MyAccount/AccountInfo')
+            element: lazyLoad('MyAccount/AccountInfo'),
+            meta: {
+              isMenuItem: false,
+              breadcrumb: '账号信息'
+            }
           },
           {
             path: 'accountSettings', // 修改账号信息
-            element: lazyLoad('MyAccount/AccountSettings')
+            element: lazyLoad('MyAccount/AccountSettings'),
+            meta: {
+              isMenuItem: false,
+              breadcrumb: '修改账号信息'
+            }
           }
         ]
       },
       {
         path: 'main', // 首页
-        element: lazyLoad('Main')
+        element: lazyLoad('Main'),
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(HomeOutlined),
+          breadcrumb: '首页'
+        }
       },
       {
         path: 'appServiceCenter', // 应用服务中心
-        element: lazyLoad('AppServiceCenter')
+        element: lazyLoad('AppServiceCenter'),
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(ProfileOutlined),
+          breadcrumb: '应用服务中心'
+        }
       },
       {
         path: 'appServiceCenter/authentication', // 身份认证能力应用服务
         children: [
           {
             path: 'introduction', // 身份认证能力介绍
-            element: lazyLoad('AppServiceCenter/Authentication/Introduction')
+            element: lazyLoad('AppServiceCenter/Authentication/Introduction'),
+            meta: {
+              isMenuItem: false,
+              breadcrumb: '身份认证能力介绍'
+            }
           },
           {
             path: 'accessForm', // 身份认证接入流程
-            element: lazyLoad('AccessForm')
+            element: lazyLoad('AccessForm'),
+            meta: {
+              isMenuItem: false,
+              breadcrumb: '身份认证接入流程'
+            }
           }
         ]
       },
       {
         path: 'myApps', // 我的应用
-        element: lazyLoad('MyApps')
+        element: lazyLoad('MyApps'),
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(AppstoreOutlined),
+          breadcrumb: '我的应用'
+        }
       },
       {
         path: 'myApps/accessForm', // 我的应用/查看or数据变更
@@ -127,12 +173,22 @@ const routes: TRoutes[] = [
       },
       {
         path: 'myApplications', // 我的申请
-        element: lazyLoad('MyApplications')
+        element: lazyLoad('MyApplications'),
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(SolutionOutlined),
+          breadcrumb: '我的申请'
+        }
       },
-      {
-        path: 'helps', // 问题帮助
-        element: lazyLoad('Helps')
-      },
+      // {
+      //   path: 'helps', // 问题帮助
+      //   element: lazyLoad('Helps'),
+      //   meta: {
+      //     isMenuItem: true,
+      //     icon: React.createElement(FileExclamationOutlined),
+      //     breadcrumb: '问题帮助'
+      //   }
+      // },
       {
         path: 'issues', // 业务问题
         children: [
