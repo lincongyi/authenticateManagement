@@ -5,9 +5,9 @@ import { routes } from '../../router'
  * @returns {TMenuItem[]} 菜单列表
  */
 export const getMenu = (): TMenuItem[] => {
-  const appList = routes.find(item => item.path === '/app')
-  if (!appList) return []
-  const { children } = appList
+  const appRoutes = routes.find(item => item.path === '/app')
+  if (!appRoutes) return []
+  const { children } = appRoutes
   return (
     children?.reduce((prev: TMenuItem[], next) => {
       if (next.meta?.isMenuItem) {
@@ -22,4 +22,8 @@ export const getMenu = (): TMenuItem[] => {
       return prev
     }, []) || []
   )
+}
+
+export const getAppRoutes = () => {
+  return routes.find(item => item.path === '/app')
 }

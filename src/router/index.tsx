@@ -42,7 +42,7 @@ type TRoutes = {
   element?: JSX.Element
   children?: TRoutes[]
   meta?: {
-    isMenuItem: boolean // 是否存在于导航菜单栏
+    isMenuItem?: boolean // 是否存在于导航菜单栏
     icon?: JSX.Element
     breadcrumb: string
   }
@@ -82,10 +82,16 @@ const routes: TRoutes[] = [
         element: lazyLoad('MyAccount'),
         children: [
           {
+            path: '', // 单位信息
+            element: lazyLoad('MyAccount/CompanyInfo'),
+            meta: {
+              breadcrumb: '单位信息'
+            }
+          },
+          {
             path: 'companyInfo', // 单位信息
             element: lazyLoad('MyAccount/CompanyInfo'),
             meta: {
-              isMenuItem: false,
               breadcrumb: '单位信息'
             }
           },
@@ -93,7 +99,6 @@ const routes: TRoutes[] = [
             path: 'companySettings', // 修改单位信息
             element: lazyLoad('MyAccount/CompanySettings'),
             meta: {
-              isMenuItem: false,
               breadcrumb: '修改单位信息'
             }
           },
@@ -101,7 +106,6 @@ const routes: TRoutes[] = [
             path: 'accountInfo', // 账号信息
             element: lazyLoad('MyAccount/AccountInfo'),
             meta: {
-              isMenuItem: false,
               breadcrumb: '账号信息'
             }
           },
@@ -109,7 +113,6 @@ const routes: TRoutes[] = [
             path: 'accountSettings', // 修改账号信息
             element: lazyLoad('MyAccount/AccountSettings'),
             meta: {
-              isMenuItem: false,
               breadcrumb: '修改账号信息'
             }
           }
@@ -126,7 +129,34 @@ const routes: TRoutes[] = [
       },
       {
         path: 'appServiceCenter', // 应用服务中心
-        element: lazyLoad('AppServiceCenter'),
+        children: [
+          {
+            path: '',
+            element: lazyLoad('AppServiceCenter/Guide')
+          },
+          {
+            path: 'authentication',
+            element: lazyLoad('AppServiceCenter/Authentication'),
+            children: [
+              {
+                path: 'introduction',
+                element: lazyLoad(
+                  'AppServiceCenter/Authentication/Introduction'
+                ),
+                meta: {
+                  breadcrumb: '身份认证能力介绍'
+                }
+              },
+              {
+                path: 'access', // 身份认证接入流程
+                element: lazyLoad('AppServiceCenter/Authentication/Access'),
+                meta: {
+                  breadcrumb: '身份认证接入流程'
+                }
+              }
+            ]
+          }
+        ],
         meta: {
           isMenuItem: true,
           icon: React.createElement(ProfileOutlined),
@@ -134,42 +164,32 @@ const routes: TRoutes[] = [
         }
       },
       {
-        path: 'appServiceCenter/authentication', // 身份认证能力应用服务
+        path: 'myApps', // 我的应用
         children: [
           {
-            path: 'introduction', // 身份认证能力介绍
-            element: lazyLoad('AppServiceCenter/Authentication/Introduction'),
+            path: '',
+            element: lazyLoad('MyApps/Index')
+          },
+          {
+            path: 'authenticationData',
+            element: lazyLoad('MyApps/AuthenticationData'),
             meta: {
-              isMenuItem: false,
-              breadcrumb: '身份认证能力介绍'
+              breadcrumb: '认证数据'
             }
           },
           {
-            path: 'accessForm', // 身份认证接入流程
-            element: lazyLoad('AccessForm'),
+            path: 'access',
+            element: lazyLoad('MyApps/Access'),
             meta: {
-              isMenuItem: false,
-              breadcrumb: '身份认证接入流程'
+              breadcrumb: '查看or数据变更'
             }
           }
-        ]
-      },
-      {
-        path: 'myApps', // 我的应用
-        element: lazyLoad('MyApps'),
+        ],
         meta: {
           isMenuItem: true,
           icon: React.createElement(AppstoreOutlined),
           breadcrumb: '我的应用'
         }
-      },
-      {
-        path: 'myApps/accessForm', // 我的应用/查看or数据变更
-        element: lazyLoad('AccessForm')
-      },
-      {
-        path: 'myApps/authenticationData', // 我的应用/认证数据
-        element: lazyLoad('MyApps/AuthenticationData')
       },
       {
         path: 'myApplications', // 我的申请

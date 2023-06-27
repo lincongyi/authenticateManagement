@@ -1,5 +1,5 @@
 import React from 'react'
-import style from './index.module.scss'
+import style from '../index.module.scss'
 import { Card, Col, Row, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import appServiceCenterCard01 from '@/assets/appServiceCenter-card-01.png'

@@ -8,7 +8,7 @@ import Logo from '@/assets/logo.png'
 import { logout } from '@api/index'
 
 export const dropdownList: TMenuItem[] = [
-  { key: 'myAccount', label: '账号信息', icon: 'myAccount' },
+  { key: 'myAccount', label: '用户信息', icon: 'myAccount' },
   { key: 'logout', label: '退出', icon: 'logout' }
 ]
 

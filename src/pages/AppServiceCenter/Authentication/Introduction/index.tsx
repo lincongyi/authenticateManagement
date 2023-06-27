@@ -1,13 +1,11 @@
 import React from 'react'
-import style from './index.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { Button, Divider, Tabs, Typography } from 'antd'
+import style from './index.module.scss'
+import { Button, Divider, Tabs } from 'antd'
 import type { TabsProps } from 'antd'
 import Ability from './components/Ability'
 import Interface from './components/Interface'
 import { useStore } from '@stores/index'
-
-const { Title } = Typography
 
 const items: TabsProps['items'] = [
   {
@@ -35,16 +33,15 @@ const Introduction = () => {
       id: 0,
       state: 1
     }
-    navigate('../accessForm')
+    navigate('../access')
   }
 
   return (
     <>
-      <div className={style.header}>
-        <div className={style['left-side']}>
-          <Title level={2}>身份认证能力</Title>
+      <div className={style['sub-title']}>
+        <p>
           身份认证能力简介说明，比如“多认证源，多认证链路可配置，支持高并发，安全匿名标识等”
-        </div>
+        </p>
         <Button type='primary' onClick={onAccess}>
           添加接入
         </Button>

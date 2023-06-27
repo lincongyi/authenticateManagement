@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom'
 import { observer } from 'mobx-react-lite'
 import { useStore } from '@stores/index'
 import { Badge, Breadcrumb, Layout, Menu, Space, Switch, theme } from 'antd'
@@ -12,10 +12,11 @@ import {
   ChromeOutlined
 } from '@ant-design/icons'
 import { ColorChangeHandler, SketchPicker } from 'react-color'
-import Header, { dropdownList } from '@components/Header'
-import { getMenu } from './index.config'
+import Header from '@components/Header'
+import { getMenu, getAppRoutes } from './index.config'
 import { runInAction } from 'mobx'
 import { getApplyCount } from '@api/myApplications'
+import { ItemType } from 'antd/es/breadcrumb/Breadcrumb'
 
 const { Content, Sider } = Layout
 
@@ -64,20 +65,40 @@ const AppLayout = () => {
   /**
    * 面包屑导航
    */
-  const [breadcrumbName, setBreadcrumbName] = useState('')
+  const [breadcrumbName, setBreadcrumbName] = useState<ItemType[]>()
 
   useEffect(() => {
     // 生成面包屑导航
-    let name = ''
-    const getName = (menu: TMenuItem[]) => {
-      menu.forEach(item => {
-        if (!item.children) {
-          if (pathname.includes(item.key)) name = item.label as string
-        } else getName(item.children)
-      })
-    }
-    getName([...menu, ...dropdownList])
-    name && setBreadcrumbName(name)
+    const pathSnippets = pathname
+      .split('/')
+      .filter(i => i)
+      .slice(1)
+    let children = getAppRoutes()?.children // 缓存上一级路由
+    let url: string = '/app' // 面包屑跳转地址
+    const breadcrumb = pathSnippets.reduce(
+      (prev: ItemType[], next: string, currentIndex) => {
+        const route = children?.find(item => item.path === next)
+        children = route?.children
+        url += `/${route?.path}`
+        if (route?.meta?.breadcrumb) {
+          return [
+            ...prev,
+            {
+              key: route?.path,
+              title:
+                currentIndex === pathSnippets.length - 1 ? (
+                  route?.meta?.breadcrumb
+                ) : (
+                  <Link to={url}>{route?.meta?.breadcrumb}</Link>
+                )
+            }
+          ]
+        } else return prev
+      },
+      []
+    )
+
+    setBreadcrumbName(breadcrumb)
   }, [pathname])
 
   // 匹配当前地址导航菜单高亮
@@ -179,7 +200,7 @@ const AppLayout = () => {
             )}
             <Breadcrumb
               style={{ margin: '16px 0' }}
-              items={[{ title: breadcrumbName }]}
+              items={breadcrumbName}
             ></Breadcrumb>
           </Space>
           <Content

@@ -30,7 +30,7 @@ import dayjs from 'dayjs'
 
 const { RangePicker } = DatePicker
 
-const MyApps = () => {
+const Index = () => {
   type TAppCount = {
     total: number
     prod: number // 正式环境
@@ -134,7 +134,7 @@ const MyApps = () => {
       id,
       state: 2
     }
-    navigate('./accessForm')
+    navigate('./access')
   }
 
   /**
@@ -387,4 +387,4 @@ const MyApps = () => {
   )
 }
 
-export default observer(MyApps)
+export default observer(Index)
