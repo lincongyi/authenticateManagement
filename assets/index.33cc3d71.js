@@ -1,0 +1,2 @@
+import{h as t,t as r,j as e,aS as s}from"./index.a942f570.js";import{T as a}from"./index.557fd4e0.js";import"./EditOutlined.a069ccba.js";import"./styleChecker.009a5822.js";const o="_header_8nxup_1",i={header:o},{Title:n}=a,h=()=>t(r,{children:[e("div",{className:i["left-side"],children:e(n,{level:2,children:"\u8EAB\u4EFD\u8BA4\u8BC1\u80FD\u529B"})}),e(s,{})]});export{h as default};
+//# sourceMappingURL=index.33cc3d71.js.map
