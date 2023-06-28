@@ -4,7 +4,7 @@ import {
   TAbilityInfo,
   TConcurrency,
   TUploadForm
-} from '@pages/AccessForm/index.d'
+} from '@components/AccessForm/index.d'
 
 /**
  * 保存应用数据

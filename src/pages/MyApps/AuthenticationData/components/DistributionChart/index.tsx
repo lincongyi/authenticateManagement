@@ -22,7 +22,7 @@ const DistributionChart = ({ chartData }: { chartData: TLineChart }) => {
       axisLabel: {
         show: true,
         interval: 0,
-        formatter: function (params) {
+        formatter: function (params: string) {
           let newLabel = ''
           const paramsNameNumber = params.length
           const provideNumber = 5 // 一行显示几个字
