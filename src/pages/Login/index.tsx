@@ -53,6 +53,11 @@ const Login = () => {
   const { search } = useLocation()
 
   /**
+   * 控制密码显隐
+   */
+  const [passwordVisible, setPasswordVisible] = React.useState(false)
+
+  /**
    * 账号注册申请
    */
   const toApply = () => {
@@ -149,11 +154,14 @@ const Login = () => {
                   name='password'
                   rules={[{ required: true, message: '请输入密码!' }]}
                 >
-                  <Input
+                  <Input.Password
                     size='large'
                     prefix={<LockOutlined className='site-form-item-icon' />}
-                    type='password'
                     placeholder='请输入密码'
+                    visibilityToggle={{
+                      visible: passwordVisible,
+                      onVisibleChange: setPasswordVisible
+                    }}
                   />
                 </Form.Item>
 

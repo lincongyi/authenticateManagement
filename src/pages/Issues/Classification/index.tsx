@@ -38,7 +38,7 @@ const Classification = () => {
    */
   /**
    * 查询
-   * @param {any} values :
+   * @param {any} values
    * @returns {void}
    */
   const onFinish = (values: any) => {
@@ -71,10 +71,7 @@ const Classification = () => {
   const [checkModalOpen, setCheckModalOpen] = useState(false) // 控制查看功能弹窗Modal显示隐藏
   /**
    * 详情
-   */
-  /**
-   * 详情
-   * @param {TDataType} values :
+   * @param {TDataType} values
    * @returns {void}
    */
   const onCheck = (values: TDataType) => {
@@ -85,7 +82,7 @@ const Classification = () => {
 
   /**
    * 修改
-   * @param {TDataType} values :
+   * @param {TDataType} values
    * @returns {void}
    */
   const onUpdate = (values: TDataType) => {
@@ -94,7 +91,7 @@ const Classification = () => {
 
   /**
    * 删除
-   * @param {TDataType} values :
+   * @param {TDataType} values
    * @returns {void}
    */
   const onDelete = (values: TDataType) => {

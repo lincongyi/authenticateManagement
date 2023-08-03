@@ -145,7 +145,7 @@ const Main = () => {
                 size='small'
                 type='text'
                 style={{ color: colorPrimary }}
-                onClick={() => navigate('/app/myAccount')}
+                onClick={() => navigate('/app/myAccount/companyInfo')}
               >
                 点击前往
               </Button>

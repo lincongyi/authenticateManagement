@@ -86,7 +86,7 @@ const Helps = () => {
    */
   /**
    * 问题反馈
-   * @param {number} state : 有帮助-1；无帮助-0
+   * @param {number} state 有帮助-1；无帮助-0
    * @returns {void}
    */
   const toFeedback = (state: number) => {

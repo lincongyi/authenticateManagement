@@ -9,7 +9,8 @@ import {
   HomeOutlined,
   ProfileOutlined,
   AppstoreOutlined,
-  SolutionOutlined
+  SolutionOutlined,
+  FileExclamationOutlined
 } from '@ant-design/icons'
 
 // 从文件系统导入多个模块
@@ -37,7 +38,7 @@ const lazyLoad = (module: string) => {
   )
 }
 
-type TRoutes = {
+export type TRoutes = {
   path: string
   element?: JSX.Element
   children?: TRoutes[]
@@ -81,13 +82,6 @@ const routes: TRoutes[] = [
         path: 'myAccount', // 账号信息
         element: lazyLoad('MyAccount'),
         children: [
-          {
-            path: '', // 单位信息
-            element: lazyLoad('MyAccount/CompanyInfo'),
-            meta: {
-              breadcrumb: '单位信息'
-            }
-          },
           {
             path: 'companyInfo', // 单位信息
             element: lazyLoad('MyAccount/CompanyInfo'),
@@ -200,35 +194,56 @@ const routes: TRoutes[] = [
           breadcrumb: '我的申请'
         }
       },
-      // {
-      //   path: 'helps', // 问题帮助
-      //   element: lazyLoad('Helps'),
-      //   meta: {
-      //     isMenuItem: true,
-      //     icon: React.createElement(FileExclamationOutlined),
-      //     breadcrumb: '问题帮助'
-      //   }
-      // },
+      {
+        path: 'helps', // 问题帮助
+        element: lazyLoad('Helps'),
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(FileExclamationOutlined),
+          breadcrumb: '问题帮助'
+        }
+      },
       {
         path: 'issues', // 业务问题
         children: [
           {
             path: 'daily', // 日常问题
-            element: lazyLoad('Issues/Daily')
+            element: lazyLoad('Issues/Daily'),
+            meta: {
+              isMenuItem: true,
+              breadcrumb: '日常问题'
+            }
           },
           {
             path: 'recommend', // 问题推荐
-            element: lazyLoad('Issues/Recommend')
+            element: lazyLoad('Issues/Recommend'),
+            meta: {
+              isMenuItem: true,
+              breadcrumb: '问题推荐'
+            }
           },
           {
             path: 'classification', // 问题分类
-            element: lazyLoad('Issues/Classification')
+            element: lazyLoad('Issues/Classification'),
+            meta: {
+              isMenuItem: true,
+              breadcrumb: '问题分类'
+            }
           },
           {
             path: 'reply', // 自动回复
-            element: lazyLoad('Issues/Reply')
+            element: lazyLoad('Issues/Reply'),
+            meta: {
+              isMenuItem: true,
+              breadcrumb: '自动回复'
+            }
           }
-        ]
+        ],
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(FileExclamationOutlined),
+          breadcrumb: '业务问题'
+        }
       }
     ]
   }
@@ -236,7 +251,7 @@ const routes: TRoutes[] = [
 
 /**
  * 渲染路由
- * @param {TRoutes[]} 路由表
+ * @param {TRoutes[]} routes 路由表
  * @returns {(JSX.Element | undefined)[]} 渲染后的路由表
  */
 const renderRoute = (routes: TRoutes[]) => {

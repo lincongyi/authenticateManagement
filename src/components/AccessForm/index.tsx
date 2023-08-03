@@ -121,7 +121,7 @@ const AccessForm = () => {
    */
   /**
    * 校验表单
-   * @param {Ref} ref : 表单Ref
+   * @param {Ref} ref 表单Ref
    * @returns {boolean} 返回当前表单是否录入所有必填项
    */
   const validateForm = async (

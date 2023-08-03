@@ -27,7 +27,7 @@ const sendCaptcha = (params: object): Promise<TResponse> => {
 const imgCaptcha = (query: object): Promise<Blob> => {
   return request.get('/captcha/imgCaptcha', {
     responseType: 'blob',
-    params: query
+    params: query,
   })
 }
 
@@ -60,7 +60,7 @@ export type TDictionary = {
 
 /**
  * 获取数据字典
- * @param {'typeValues': string[]} params: 获取某个数据字典的字段名
+ * @param {'typeValues': string[]} params 获取某个数据字典的字段名
  * @returns {key:TDictionary}
  */
 const getdictionary = (
@@ -83,5 +83,5 @@ export {
   verifyCaptcha,
   getProcessByKey,
   getQrcode,
-  getdictionary
+  getdictionary,
 }

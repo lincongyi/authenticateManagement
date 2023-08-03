@@ -59,7 +59,6 @@ const AppLayout = () => {
     token: { colorBgContainer }
   } = theme.useToken()
 
-  const menu = getMenu()
   const { pathname } = useLocation()
 
   /**
@@ -101,24 +100,27 @@ const AppLayout = () => {
     setBreadcrumbName(breadcrumb)
   }, [pathname])
 
-  // 匹配当前地址导航菜单高亮
   const [path, setPath] = useState('')
+
+  /**
+   * 匹配当前地址导航菜单高亮
+   */
+  const highLightMenuItem = (menu: TMenuItem[]) => {
+    menu.forEach(item => {
+      if (!item.children) {
+        if (pathname.includes(item.key)) setPath(item.key)
+      } else highLightMenuItem(item.children)
+    })
+  }
+
   useEffect(() => {
-    let hightLightPath = ''
-    const getPath = (menu: TMenuItem[]) => {
-      menu.forEach(item => {
-        if (!item.children) {
-          if (pathname.includes(item.key)) hightLightPath = item.key
-        } else getPath(item.children)
-      })
-    }
-    getPath(menu)
-    setPath(hightLightPath)
+    const menu = getMenu()
+    highLightMenuItem(menu)
   }, [pathname])
 
   const navigate = useNavigate()
   /**
-   * 导航菜单切换地址
+   * 导航菜单切换
    */
   const switchMenu: MenuProps['onClick'] = e => {
     setPath(e.key)

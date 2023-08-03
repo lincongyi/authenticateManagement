@@ -22,8 +22,6 @@ import {
   ExclamationCircleOutlined
 } from '@ant-design/icons'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
-import type { Dayjs } from 'dayjs'
-import 'dayjs/locale/zh-cn'
 import UploadModal from './components/UploadModal'
 import AddModal from './components/AddModal'
 import CheckModal from './components/CheckModal'
