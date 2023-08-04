@@ -3,6 +3,7 @@ import 'reset-css'
 import './App.scss'
 import { HashRouter, Routes } from 'react-router-dom'
 import { ConfigProvider, theme } from 'antd'
+import locale from 'antd/locale/zh_CN'
 import { useStore } from './stores'
 import { observer } from 'mobx-react-lite'
 import { routes, renderRoute } from './router'
@@ -18,6 +19,7 @@ const App = () => {
 
   return (
     <ConfigProvider
+      locale={locale}
       theme={{
         token: { colorPrimary },
         algorithm: isLightTheme ? theme.defaultAlgorithm : theme.darkAlgorithm

@@ -1,29 +1,67 @@
 import { routes } from '../../router'
 import type { TRoutes } from '../../router'
 
+const getAppRoutes = () => {
+  const appRoutes = routes.find((item) => item.path === '/app')
+  return appRoutes?.children || []
+}
+
+type TMetaRequired = Required<Pick<TRoutes, 'meta'>>
+type TMenuRoutes = TRoutes & TMetaRequired
+
 /**
- * 生成菜单
- * @param {TRoutes[]} routes 需要生成菜单的路由数组
+ * 过滤出导航菜单所需的路由表
+ * @param {TRoutes[]} routes 管理后台页面路由模块
+ * @returns {TMetaRequired[]} 导航菜单所需的路由表
+ */
+const getMenuRoutes = (routes: TRoutes[]) => {
+  const menuRoute: TMenuRoutes[] = []
+  routes.forEach((item) => {
+    if (!item.meta) return
+
+    if (item.meta.isMenuItem) {
+      if (!item.children) {
+        menuRoute.push(item as TMenuRoutes)
+      } else {
+        const { children, ...rest } = item
+        const childrenRoute = getMenuRoutes(item.children)
+        if (!childrenRoute.length) {
+          menuRoute.push(rest as TMenuRoutes)
+        } else {
+          menuRoute.push({
+            ...rest,
+            children: childrenRoute,
+          } as TMenuRoutes)
+        }
+      }
+    }
+  })
+  return menuRoute
+}
+
+/**
+ * 生成导航菜单
+ * @param {TRoutes[]} routes 生成导航菜单所需的路由数组
  * @param {string} key 上一级菜单的key值
  * @returns {TMenuItem[] | undefined} 菜单列表
  */
-const generateMenuItem = (routes: TRoutes[], key?: string) => {
-  const menu = routes.reduce((prev: TMenuItem[] | undefined, next) => {
-    if (next.meta?.isMenuItem) {
-      if (!prev) prev = []
-      const item: TMenuItem = {
-        label: next.meta.breadcrumb,
-        key: `${key ? `${key}/${next.path}` : next.path}`, // 兼容子菜单的key值
-        icon: next.meta.icon,
-        children: next.children
-          ? generateMenuItem(next.children, next.path)
-          : undefined,
-      }
-      prev.push(item)
+const generateMenuItems = (routes: TMenuRoutes[], key?: string) => {
+  const menuItems = routes.map((item) => {
+    const menuItem: TMenuItem = {
+      label: item.meta.breadcrumb,
+      key: `${key ? `${key}/${item.path}` : item.path}`,
     }
-    return prev
-  }, undefined) // initialValue初始化为undefined，避免一级路由是导航菜单项，而二级路由不是的情况
-  return menu
+    if (item.meta.icon) menuItem.icon = item.meta.icon
+
+    if (item.children) {
+      menuItem.children = generateMenuItems(
+        item.children as TMenuRoutes[],
+        item.path
+      )
+    }
+    return menuItem
+  })
+  return menuItems
 }
 
 /**
@@ -31,14 +69,10 @@ const generateMenuItem = (routes: TRoutes[], key?: string) => {
  */
 const getMenu = (): TMenuItem[] => {
   const appRoutes = getAppRoutes()
-  if (!appRoutes) return []
-  const { children } = appRoutes
-  if (!children) return []
-  return generateMenuItem(children) || []
+  const menuRoutes = getMenuRoutes(appRoutes)
+  const menuItems = generateMenuItems(menuRoutes)
+
+  return menuItems
 }
 
-const getAppRoutes = () => {
-  return routes.find((item) => item.path === '/app')
-}
-
-export { getMenu, getAppRoutes }
+export { getAppRoutes, getMenu }

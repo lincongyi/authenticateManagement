@@ -17,6 +17,7 @@ import { getMenu, getAppRoutes } from './index.config'
 import { runInAction } from 'mobx'
 import { getApplyCount } from '@api/myApplications'
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb'
+import type { TRoutes } from '../../router'
 
 const { Content, Sider } = Layout
 
@@ -72,11 +73,12 @@ const AppLayout = () => {
       .split('/')
       .filter(i => i)
       .slice(1)
-    let children = getAppRoutes()?.children // 缓存上一级路由
+    let children: TRoutes[] | undefined = getAppRoutes() // 缓存上一级路由
     let url: string = '/app' // 面包屑跳转地址
     const breadcrumb = pathSnippets.reduce(
       (prev: ItemType[], next: string, currentIndex) => {
-        const route = children?.find(item => item.path === next)
+        if (!children) return prev
+        const route = children.find(item => item.path === next)
         children = route?.children
         url += `/${route?.path}`
         if (route?.meta?.breadcrumb) {
