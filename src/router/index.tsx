@@ -10,7 +10,8 @@ import {
   ProfileOutlined,
   AppstoreOutlined,
   SolutionOutlined,
-  FileExclamationOutlined
+  FileExclamationOutlined,
+  FileSearchOutlined
 } from '@ant-design/icons'
 
 // 从文件系统导入多个模块
@@ -153,6 +154,15 @@ const routes: TRoutes[] = [
           isMenuItem: true,
           icon: React.createElement(ProfileOutlined),
           breadcrumb: '基础服务中心'
+        }
+      },
+      {
+        path: 'devDocument', // 开发文档
+        element: lazyLoad('DevDocument'),
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(FileSearchOutlined),
+          breadcrumb: '开发文档'
         }
       },
       {
