@@ -122,7 +122,7 @@ const routes: TRoutes[] = [
         }
       },
       {
-        path: 'appServiceCenter', // 应用服务中心
+        path: 'appServiceCenter', // 基础服务中心
         children: [
           {
             path: '',
@@ -152,7 +152,7 @@ const routes: TRoutes[] = [
         meta: {
           isMenuItem: true,
           icon: React.createElement(ProfileOutlined),
-          breadcrumb: '应用服务中心'
+          breadcrumb: '基础服务中心'
         }
       },
       {

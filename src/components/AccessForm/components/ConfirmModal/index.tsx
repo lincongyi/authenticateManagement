@@ -21,14 +21,14 @@ const ConfirmModal = ({
   /**
    * 提交申请
    */
-  const onSubmit = () => {}
+  const onOk = () => {}
 
   return (
     <Modal
       title='提交审核'
       open={open}
       width={800}
-      onOk={() => onSubmit()}
+      onOk={onOk}
       onCancel={() => setOpen(false)}
     >
       <Divider />

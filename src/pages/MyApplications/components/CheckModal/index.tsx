@@ -138,7 +138,7 @@ const CheckModal = ({
     })()
   }, [instanceId])
 
-  const onClose = () => {
+  const onCancel = () => {
     callback()
     setOpen(false)
   }
@@ -148,10 +148,10 @@ const CheckModal = ({
       title='查看审批详情'
       centered
       open={open}
-      onCancel={() => onClose()}
+      onCancel={onCancel}
       width={640}
       footer={[
-        <Button key='cancel' onClick={() => onClose()}>
+        <Button key='cancel' onClick={() => onCancel()}>
           关闭
         </Button>
       ]}

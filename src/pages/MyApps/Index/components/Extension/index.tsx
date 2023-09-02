@@ -43,7 +43,7 @@ const Extension = ({
       onCancel={() => setOpen(false)}
       width={600}
       footer={[
-        <Button key='cancel' onClick={() => setOpen(false)}>
+        <Button key='cancel' onClick={setOpen(false)}>
           关闭
         </Button>,
         <Button key='confirm' type='primary' onClick={onConfirm}>

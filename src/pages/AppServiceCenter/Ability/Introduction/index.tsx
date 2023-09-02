@@ -1,11 +1,10 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useState } from 'react'
 import style from './index.module.scss'
 import { Button, Divider, Tabs } from 'antd'
 import type { TabsProps } from 'antd'
 import BasicAbility from './components/BasicAbility'
 import Interface from './components/Interface'
-import { useStore } from '@stores/index'
+import AppAccessModal from './components/AppAccessModal'
 
 const items: TabsProps['items'] = [
   {
@@ -21,19 +20,13 @@ const items: TabsProps['items'] = [
 ]
 
 const Introduction = () => {
-  const navigate = useNavigate()
-
-  const { accessFormStore } = useStore()
+  const [open, setOpen] = useState(false)
 
   /**
-   * 添加接入
+   * 申请接入
    */
   const onAccess = () => {
-    accessFormStore.current = {
-      id: 0,
-      state: 1
-    }
-    navigate('../access')
+    setOpen(true)
   }
 
   return (
@@ -43,11 +36,12 @@ const Introduction = () => {
           身份认证能力简介说明，比如“多认证源，多认证链路可配置，支持高并发，安全匿名标识等”
         </p>
         <Button type='primary' onClick={onAccess}>
-          添加接入
+          申请接入
         </Button>
       </div>
       <Divider />
       <Tabs defaultActiveKey='1' items={items} />
+      <AppAccessModal open={open} setOpen={setOpen} />
     </>
   )
 }
