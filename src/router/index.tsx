@@ -32,7 +32,7 @@ const lazyLoad = (module: string) => {
     }>
   )
   return (
-    <Suspense fallback={<Spin tip='Loading' size='large'></Spin>}>
+    <Suspense fallback={<Spin size='large'></Spin>}>
       <Component />
     </Suspense>
   )
