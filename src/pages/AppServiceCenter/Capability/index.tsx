@@ -5,7 +5,7 @@ import { Typography } from 'antd'
 
 const { Title } = Typography
 
-const Authentication = () => {
+const Capability = () => {
   return (
     <>
       <div className={style['left-side']}>
@@ -16,4 +16,4 @@ const Authentication = () => {
   )
 }
 
-export default Authentication
+export default Capability
