@@ -27,15 +27,11 @@ import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
 import { fieldNames } from '@utils/index'
 import dayjs from 'dayjs'
+import type { TAppCount, TDataType, TFormData } from './index.d'
 
 const { RangePicker } = DatePicker
 
 const Index = () => {
-  type TAppCount = {
-    total: number
-    prod: number // 正式环境
-    sit: number // 测试环境
-  }
   /**
    * 我的应用数
    */
@@ -62,17 +58,6 @@ const Index = () => {
     }
   }, [])
 
-  type TDataType = {
-    id: number
-    appName: string // 应用名称
-    appEnv: 0 | 1 // 接入环境：0-测试环境；1-正式环境
-    appAbility: 0 // 接入基础能力：0-身份认证
-    clientId: string // clientId
-    expiredTime: string // 有效时间
-    state: 0 | 1 | 2 | 3 | 4 // 状态：0-正常启用；1-即将过期；2-过期；3-停用；4-缺少授权文件
-    addTime: string // 创建时间
-  }
-
   const [dataSource, setDataSource] = useState<TDataType[]>()
 
   /**
@@ -95,9 +80,9 @@ const Index = () => {
   }
 
   /**
-   * 提交数据
+   * 查询
    */
-  const onFinish = (values: any) => {
+  const onFinish = (values: TFormData) => {
     console.log('Success:', values)
     const { expiredRange, dateRange } = values
     // format日期格式
