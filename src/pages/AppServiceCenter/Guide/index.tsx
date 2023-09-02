@@ -27,7 +27,7 @@ const AppServiceCenter = () => {
   const selectService = (index: number) => {
     switch (index) {
       case 0:
-        navigate('./capability/introduction')
+        navigate('./ability/introduction')
         break
 
       default:

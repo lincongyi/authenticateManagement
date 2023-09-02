@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import style from './index.module.scss'
 import { Button, Divider, Tabs } from 'antd'
 import type { TabsProps } from 'antd'
-import Ability from './components/Ability'
+import BasicAbility from './components/BasicAbility'
 import Interface from './components/Interface'
 import { useStore } from '@stores/index'
 
@@ -11,7 +11,7 @@ const items: TabsProps['items'] = [
   {
     key: '1',
     label: '能力介绍',
-    children: <Ability />
+    children: <BasicAbility />
   },
   {
     key: '2',
