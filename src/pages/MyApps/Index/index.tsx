@@ -325,12 +325,12 @@ const Index = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={6}>
                 <Form.Item label='有效期：' name='expiredRange'>
                   <RangePicker presets={rangePresets} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={6}>
                 <Form.Item label='创建时间：' name='dateRange'>
                   <RangePicker
                     presets={rangePresets}
@@ -338,7 +338,7 @@ const Index = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={24} className='tr'>
+              <Col span={18} className='tr'>
                 <Form.Item>
                   <Space>
                     <Button onClick={onReset}>重置</Button>

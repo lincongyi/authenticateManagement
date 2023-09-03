@@ -484,7 +484,7 @@ const MyApplications = () => {
                   <Input placeholder='请输入应用/服务名称' maxLength={10} />
                 </Form.Item>
               </Col>
-              <Col span={12}>
+              <Col span={6}>
                 <Form.Item label='申请日期：' name='dateRange'>
                   <RangePicker
                     presets={rangePresets}
