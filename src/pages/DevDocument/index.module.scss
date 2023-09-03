@@ -1,3 +1,11 @@
+.document-header {
+  display: flex;
+  justify-content: space-between;
+  color: #1e2636;
+  font-weight: bold;
+  font-size: 20px;
+}
+
 .container {
   border: 1px solid rgb(232 233 234 / 100%);
 }
@@ -7,19 +15,33 @@
   padding: 0 20px;
   font-size: 16px;
   line-height: 48px;
-  background: #f3f5f8;
   border-bottom: 1px solid rgb(232 233 234 / 100%);
 }
 
-.catalog {
+[data-theme='light'] .title {
+  background: #f3f5f8;
+}
+
+[data-theme='dark'] .title {
+  color: $dark-font-primary-color;
+  background: transparent;
+}
+
+.catalog-title {
   font-weight: bold;
   text-align: center;
+  border-right: 1px solid rgb(232 233 234 / 100%);
 }
 
 .content {
   padding: 20px;
 }
 
-.bdr {
+.catalog-content {
+  height: calc(100% - 48px);
   border-right: 1px solid rgb(232 233 234 / 100%);
+}
+
+.doc-content {
+  height: calc(100vh - 246px);
 }
