@@ -35,15 +35,22 @@ const DevDocument = () => {
   /**
    * 初始化or切换项目时重置选中的node
    */
-  const initNode = async (data: TGetDirectoryResponse[]) => {
-    const { directoryList } = data[0]
+  const initNode = async (data: TGetDirectoryResponse) => {
+    const { directoryList } = data
     const defaultNode = getDefaultNode(directoryList)
     if (defaultNode) {
-      const { data } = await queryDocument({
-        id: defaultNode.id
-      })
       setSelectedNode(defaultNode)
-      setAnnexUrl(data?.annexUrl)
+      try {
+        const { data } = await queryDocument({
+          id: defaultNode.id
+        })
+        if (!data) return
+        setAnnexUrl(data.annexUrl)
+        setDocContent(data.htmlContent)
+      } catch (error) {
+        setAnnexUrl(undefined)
+        setDocContent(undefined)
+      }
     }
   }
 
@@ -56,7 +63,7 @@ const DevDocument = () => {
       if (data) {
         setDirectoryList(data)
         setActiveDirectory(data && data[0])
-        initNode(data)
+        initNode(data[0])
       }
     })()
   }, [])
@@ -68,6 +75,7 @@ const DevDocument = () => {
     const item = directoryList?.find(item => item.projectId === Number(value))
     if (!item) return false
     setActiveDirectory(item)
+    initNode(item)
   }
 
   /**
@@ -79,7 +87,9 @@ const DevDocument = () => {
 
   const [selectedNode, setSelectedNode] = useState<TDirectory>() // 当前选中的子节点
 
-  const [annexUrl, setAnnexUrl] = useState<TAnnexUrl[]>()
+  const [docContent, setDocContent] = useState<string>() // 开发文档内容
+
+  const [annexUrl, setAnnexUrl] = useState<TAnnexUrl[]>() // 开发文档下载信息
   /**
    * 选择目录节点
    */
@@ -143,7 +153,13 @@ const DevDocument = () => {
             {!selectedNode?.leafDirectory?.length && selectedNode?.name}
           </div>
           <div className={style['doc-wrap']}>
-            <div className={style['doc-content']}></div>
+            {docContent && (
+              <div
+                className={`${style['doc-content']} markdown-body`}
+                dangerouslySetInnerHTML={{ __html: docContent }}
+              ></div>
+            )}
+
             {annexUrl && (
               <div className={style['download-content']}>
                 <p className={style['download-title']}>
