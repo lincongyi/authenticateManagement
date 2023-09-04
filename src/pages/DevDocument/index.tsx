@@ -1,78 +1,73 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Row, Col, Tree, Divider, Select, Input } from 'antd'
-import type { DataNode, TreeProps } from 'antd/es/tree'
-import pdf from '@/assets/devDocument.pdf'
+import { Row, Col, Tree, Divider, Select, Input, Typography } from 'antd'
+import type { EventDataNode, TreeProps } from 'antd/es/tree'
+import { getDirectory, queryDocument } from '@api/devDocument'
+import type {
+  TDirectory,
+  TGetDirectoryResponse,
+  TAnnexUrl
+} from '@api/devDocument'
+import {
+  CloudDownloadOutlined,
+  FileOutlined,
+  DownloadOutlined
+} from '@ant-design/icons'
+const { Link } = Typography
 
 const { Search } = Input
 
 const DevDocument = () => {
-  const treeData: DataNode[] = [
-    {
-      title: '小程序接入',
-      key: '0-0',
-      children: [
-        {
-          title: '基础介绍',
-          key: '0-0-0'
-        },
-        {
-          title: '接入准备',
-          key: '0-0-1'
-        },
-        {
-          title: '接入指南',
-          key: '0-0-2'
-        },
-        {
-          title: 'API列表',
-          key: '0-0-3',
-          children: [
-            {
-              title: '登录Userlogin',
-              key: '0-0-3-0',
-              disableCheckbox: true
-            },
-            {
-              title: '跳转认证',
-              key: '0-0-3-1'
-            },
-            {
-              title: '获取认证结果',
-              key: '0-0-3-2'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  const [directoryList, setDirectoryList] = useState<TGetDirectoryResponse[]>()
+  const [activeDirectory, setActiveDirectory] =
+    useState<TGetDirectoryResponse>() // 当前文档目录
 
-  const [selectedNode, setSelectedNode] = useState<string>()
   /**
-   * 选择目录节点
+   * 初始化时选中的第一个node
    */
-  const onSelect: TreeProps['onSelect'] = (selectedKeys, info) => {
-    if (info.node.title) {
-      const title = !info.node.children ? info.node.title : ''
-      setSelectedNode(title as string)
+  const getDefaultNode = (arr: TDirectory[]): TDirectory | undefined => {
+    if (!Array.isArray(arr)) return undefined
+    if (arr[0].leafDirectory?.length) {
+      return getDefaultNode(arr[0].leafDirectory)
+    } else return arr[0]
+  }
+
+  /**
+   * 初始化or切换项目时重置选中的node
+   */
+  const initNode = async (data: TGetDirectoryResponse[]) => {
+    const { directoryList } = data[0]
+    const defaultNode = getDefaultNode(directoryList)
+    if (defaultNode) {
+      const { data } = await queryDocument({
+        id: defaultNode.id
+      })
+      setSelectedNode(defaultNode)
+      setAnnexUrl(data?.annexUrl)
     }
   }
 
   /**
-   * 预览文档地址
+   * 获取所有项目目录
    */
-  // const [pdfUrl, setpdfUrl] = useState<string>()
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await getDirectory()
+      if (data) {
+        setDirectoryList(data)
+        setActiveDirectory(data && data[0])
+        initNode(data)
+      }
+    })()
+  }, [])
 
-  const options = [
-    { value: '1', label: '身份认证' },
-    { value: '2', label: '人脸识别' },
-    { value: '3', label: '活体检测' }
-  ]
   /**
    *  切换项目
    */
   const handleChange = (value: string) => {
-    console.log(`selected ${value}`)
+    const item = directoryList?.find(item => item.projectId === Number(value))
+    if (!item) return false
+    setActiveDirectory(item)
   }
 
   /**
@@ -82,17 +77,37 @@ const DevDocument = () => {
     console.log(`value ${value}`)
   }
 
+  const [selectedNode, setSelectedNode] = useState<TDirectory>() // 当前选中的子节点
+
+  const [annexUrl, setAnnexUrl] = useState<TAnnexUrl[]>()
+  /**
+   * 选择目录节点
+   */
+  const onSelect: TreeProps['onSelect'] = async (selectedKeys, info) => {
+    setSelectedNode(info.node as EventDataNode<TDirectory>)
+    // 判断当前子节点没有childNode才请求文档
+    if (!(info.node as EventDataNode<TDirectory>).leafDirectory?.length) {
+      const { data } = await queryDocument({ id: selectedKeys[0] as number })
+      setAnnexUrl(data?.annexUrl)
+    }
+  }
+
   return (
     <>
       <div className={style['document-header']}>
         <div className={style['left-side']}>
-          项目：
-          <Select
-            defaultValue='2'
-            style={{ width: 200 }}
-            onChange={handleChange}
-            options={options}
-          />
+          {activeDirectory?.projectId && (
+            <>
+              项目：
+              <Select
+                defaultValue={activeDirectory.projectId}
+                style={{ width: 200 }}
+                fieldNames={{ label: 'projectName', value: 'projectId' }}
+                onChange={handleChange}
+                options={directoryList}
+              />
+            </>
+          )}
         </div>
         <div className={style['right-side']}>
           <Search
@@ -107,18 +122,54 @@ const DevDocument = () => {
         <Col span={6}>
           <div className={`${style.title} ${style['catalog-title']}`}>目录</div>
           <div className={`${style.content} ${style['catalog-content']}`}>
-            <Tree
-              defaultExpandedKeys={['0-0', '0-0-3']}
-              defaultSelectedKeys={['0-0', '0-0-3']}
-              onSelect={onSelect}
-              treeData={treeData}
-            />
+            {activeDirectory?.directoryList.length && selectedNode && (
+              <Tree
+                fieldNames={{
+                  title: 'name',
+                  key: 'id',
+                  children: 'leafDirectory'
+                }}
+                defaultSelectedKeys={[selectedNode.id]}
+                showLine
+                defaultExpandAll={true}
+                onSelect={onSelect}
+                treeData={activeDirectory?.directoryList}
+              />
+            )}
           </div>
         </Col>
         <Col span={18}>
-          <div className={style.title}>{selectedNode}</div>
-          <div className={`${style.content} ${style['doc-content']}`}>
-            <iframe src={pdf} width='100%' height='100%'></iframe>
+          <div className={style.title}>
+            {!selectedNode?.leafDirectory?.length && selectedNode?.name}
+          </div>
+          <div className={style['doc-wrap']}>
+            <div className={style['doc-content']}></div>
+            {annexUrl && (
+              <div className={style['download-content']}>
+                <p className={style['download-title']}>
+                  <CloudDownloadOutlined />
+                  文件下载
+                </p>
+                <ul>
+                  {annexUrl.map(item => {
+                    return (
+                      <li className={style['download-item']} key={item.id}>
+                        <div className={style['left-side']}>
+                          <FileOutlined style={{ marginRight: 4 }} />
+                          {item.name}
+                        </div>
+                        <div className={style['right-side']}>
+                          <Link href={item.url} target='_blank'>
+                            <DownloadOutlined style={{ marginRight: 4 }} />
+                            点击下载
+                          </Link>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </div>
+            )}
           </div>
         </Col>
       </Row>

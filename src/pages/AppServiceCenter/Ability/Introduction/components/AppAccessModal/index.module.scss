@@ -33,16 +33,16 @@
   }
 
   &.active {
-    color: #1e55d2;
+    color: $primary-color;
     font-weight: bold;
     background: #f4f6fd;
     border-color: #1263e2;
 
     .icon {
-      border-color: #1e55d2;
+      border-color: $primary-color;
 
       &::after {
-        background-color: #1e55d2;
+        background-color: $primary-color;
       }
     }
   }

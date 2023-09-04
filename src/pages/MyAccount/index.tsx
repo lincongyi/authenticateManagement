@@ -32,7 +32,12 @@ const MyAccount = () => {
 
   return (
     <>
-      <Tabs activeKey={activeKey} onChange={onChange} items={items} />
+      <Tabs
+        style={{ paddingTop: 0 }}
+        activeKey={activeKey}
+        onChange={onChange}
+        items={items}
+      />
       <Outlet></Outlet>
     </>
   )
