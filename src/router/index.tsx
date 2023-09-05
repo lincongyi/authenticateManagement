@@ -123,7 +123,7 @@ const routes: TRoutes[] = [
         }
       },
       {
-        path: 'appServiceCenter', // 基础服务中心
+        path: 'appServiceCenter', // 基础能力中心
         children: [
           {
             path: '',
@@ -134,10 +134,10 @@ const routes: TRoutes[] = [
             element: lazyLoad('AppServiceCenter/Ability'),
             children: [
               {
-                path: 'introduction',
+                path: 'introduction/:id',
                 element: lazyLoad('AppServiceCenter/Ability/Introduction'),
                 meta: {
-                  breadcrumb: '身份认证能力介绍'
+                  breadcrumb: '查看基础能力介绍'
                 }
               },
               {
@@ -153,7 +153,7 @@ const routes: TRoutes[] = [
         meta: {
           isMenuItem: true,
           icon: React.createElement(ProfileOutlined),
-          breadcrumb: '基础服务中心'
+          breadcrumb: '基础能力中心'
         }
       },
       {

@@ -53,7 +53,7 @@ git cz
 
 - Main 首页
 
-- AppServiceCenter 基础服务中心
+- AppServiceCenter 基础能力中心
 
 - MyApps 我的应用
 

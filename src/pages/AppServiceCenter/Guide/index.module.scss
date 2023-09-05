@@ -1,10 +1,19 @@
 .container {
-  padding: 40px 80px;
+  max-width: 1000px;
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: center;
 
   .title {
+    display: inline-block;
+    height: 50px;
     margin-bottom: 40px;
+    padding: 0 58px;
     font-size: 22px;
+    line-height: 50px;
     text-align: center;
+    background-color: #eff5ff;
+    border-radius: 50px;
   }
 
   .card-content {
