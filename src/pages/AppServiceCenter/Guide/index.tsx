@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
 import { Card, Col, Row } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { getCapabilityList } from '@api/capability'
-import type { TGetCapabilityListResponse } from '@api/capability'
+import { getCapabilityList } from '@api/ability'
+import type { TGetCapabilityListResponse } from '@api/ability'
 
 const AppServiceCenter = () => {
   const [capabilityList, setCapabilityList] =
@@ -24,7 +24,7 @@ const AppServiceCenter = () => {
    * 申请服务应用
    */
   const selectService = (id: number) => {
-    navigate(`./ability/introduction/${id}`)
+    navigate(`./introduction?id=${id}`)
   }
 
   return (

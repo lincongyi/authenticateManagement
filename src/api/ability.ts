@@ -35,9 +35,24 @@ export type TGetCapabilityResponse = {
  * 获取能力详情
  */
 const getCapability = (params: {
-  id: string
+  id: string // 基础能力id
 }): Promise<TResponse<TGetCapabilityResponse>> => {
   return request.post('/access/getCapability', params)
 }
 
-export { getCapabilityList, getCapability }
+export type TgetAccessListResponse = {
+  clientId: string
+  appName: string
+  accessType: boolean // 应用是否已经接入基础能力
+}
+
+/**
+ * 获取应用列表
+ */
+const getAccessList = (params: {
+  id: string // 基础能力id
+}): Promise<TResponse<TgetAccessListResponse[]>> => {
+  return request.post('/access/getAccessList', params)
+}
+
+export { getCapabilityList, getCapability, getAccessList }

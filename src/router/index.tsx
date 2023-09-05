@@ -130,24 +130,18 @@ const routes: TRoutes[] = [
             element: lazyLoad('AppServiceCenter/Guide')
           },
           {
-            path: 'Ability',
-            element: lazyLoad('AppServiceCenter/Ability'),
-            children: [
-              {
-                path: 'introduction/:id',
-                element: lazyLoad('AppServiceCenter/Ability/Introduction'),
-                meta: {
-                  breadcrumb: '查看基础能力介绍'
-                }
-              },
-              {
-                path: 'access', // 身份认证接入流程
-                element: lazyLoad('AppServiceCenter/Ability/Access'),
-                meta: {
-                  breadcrumb: '身份认证接入流程'
-                }
-              }
-            ]
+            path: 'introduction',
+            element: lazyLoad('AppServiceCenter/Introduction'),
+            meta: {
+              breadcrumb: '查看基础能力介绍'
+            }
+          },
+          {
+            path: 'access', // 基础能力接入
+            element: lazyLoad('AppServiceCenter/Access'),
+            meta: {
+              breadcrumb: '基础能力接入'
+            }
           }
         ],
         meta: {

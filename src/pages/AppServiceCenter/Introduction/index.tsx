@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import style from './index.module.scss'
 import { Typography, Button, Divider, Modal, Radio } from 'antd'
 
 import type { RadioChangeEvent } from 'antd'
-import { useParams } from 'react-router'
 import AbilityContent from './components/AbilityContent'
 import AppAccessModal from './components/AppAccessModal'
-import { getCapability } from '@api/capability'
-import type { TGetCapabilityResponse } from '@api/capability'
+import { getAccessList, getCapability } from '@api/ability'
+import type {
+  TGetCapabilityResponse,
+  TgetAccessListResponse
+} from '@api/ability'
 
 const { Title } = Typography
 
@@ -17,33 +20,16 @@ const Introduction = () => {
   /**
    * 初始化基础能力介绍
    */
-  const { id } = useParams()
+  const [searchParams] = useSearchParams()
   useEffect(() => {
-    if (!id) return
+    const id = searchParams.get('id')
+    if (!id) return navigate(-1)
     ;(async () => {
       const { data } = await getCapability({ id })
       setCapability(data)
       setHtml(data?.ableRemarkHtml)
     })()
   }, [])
-
-  const [open, setOpen] = useState(false)
-
-  const [modal, contextHolder] = Modal.useModal()
-
-  /**
-   * 申请接入
-   */
-  const onAccess = () => {
-    Math.random() >= 0.5
-      ? setOpen(true)
-      : modal.warning({
-          title: '提示',
-          content:
-            '暂无可接入此基础能力的应用，去【我的应用】创建新应用后再添加此基础能力吧~',
-          okText: '确定'
-        })
-  }
 
   const options = [
     { label: '能力介绍', value: '1' },
@@ -57,6 +43,36 @@ const Introduction = () => {
     setHtml(
       [capability?.ableRemarkHtml, capability?.apiRemarkHtml][Number(value) - 1]
     )
+  }
+
+  const [open, setOpen] = useState(false)
+
+  const [modal, contextHolder] = Modal.useModal()
+
+  const navigate = useNavigate()
+
+  const [appList, setAppList] = useState<TgetAccessListResponse[]>()
+  /**
+   * 申请接入
+   */
+  const onAccess = async () => {
+    const id = searchParams.get('id')
+    if (!id) return false
+    const { data } = await getAccessList({ id })
+    if (!data || !data.length) {
+      modal.warning({
+        title: '提示',
+        content:
+          '暂无可接入此基础能力的应用，去【我的应用】创建新应用后再添加此基础能力吧~',
+        okText: '确定',
+        onOk: () => {
+          navigate('../access')
+        }
+      })
+    } else {
+      setAppList(data)
+      setOpen(true)
+    }
   }
 
   return (
@@ -81,7 +97,7 @@ const Introduction = () => {
       </div>
 
       <AbilityContent html={html} />
-      <AppAccessModal open={open} setOpen={setOpen} />
+      <AppAccessModal open={open} setOpen={setOpen} appList={appList} />
     </>
   )
 }
