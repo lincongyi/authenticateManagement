@@ -1,6 +1,8 @@
 import { message } from 'antd'
 import type { RcFile } from 'antd/es/upload/interface'
 import { useEffect, useRef } from 'react'
+import type { TAccessFormStore } from '@stores/accessForm.store'
+import AccessFormStore from '@stores/accessForm.store'
 /**
  * 获取当前环境
  */
@@ -105,6 +107,29 @@ const formatDictionary = (array: TDictList[] | TDictValue[]) => {
 }
 
 /**
+ * 返回目标字典item的dictName
+ * @param {object} store mobx实例
+ * @param {string} item 目标字典item
+ * @returns {string} dictName
+ */
+
+const getDictionaryValue = (
+  store: any,
+  item: keyof TAccessFormStore,
+  value: string
+) => {
+  if (!store.dictionary) return undefined
+  const dictionaryItem = store.getDictionaryItem(item)
+  const target =
+    dictionaryItem?.find(
+      (__item: { dictValue: string | number; dictName: string }) =>
+        __item.dictValue === value
+    ) || undefined
+  if (!target) return undefined
+  return target.dictName
+}
+
+/**
  * 上传前校验文件
  */
 const imgBeforeUpload = (file: RcFile) => {
@@ -128,5 +153,6 @@ export {
   reverseArray,
   useUpdateEffect,
   formatDictionary,
+  getDictionaryValue,
   imgBeforeUpload
 }

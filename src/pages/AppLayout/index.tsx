@@ -27,10 +27,11 @@ const AppLayout = () => {
   useEffect(() => {
     // 渲染导航菜单栏并且获取我的申请数
     ;(async () => {
-      if (!applyCountStore.applyCount.length) {
-        const { data } = await getApplyCount()
-        applyCountStore.setApplyCount(data!)
-      }
+      // 暂时屏蔽获取我的申请数
+      // if (!applyCountStore.applyCount.length) {
+      //   const { data } = await getApplyCount()
+      //   applyCountStore.setApplyCount(data!)
+      // }
       const items = getMenu()
 
       setMenuItems(() =>

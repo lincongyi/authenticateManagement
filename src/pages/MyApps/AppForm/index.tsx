@@ -1,6 +1,10 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Divider, Form, Input, Select, Typography } from 'antd'
-import type { FormInstance } from 'antd/lib/form/hooks/useForm'
+import { fieldNames } from '@utils/index'
+import { useStore } from '@stores/index'
+import { observer } from 'mobx-react-lite'
+import { getdictionary } from '@api/index'
+import { currentCompanyInfo } from '@api/myAccount'
 
 const { Title } = Typography
 const { TextArea } = Input
@@ -19,16 +23,39 @@ export const formProps = {
 
 const defaultMaxLength = 20
 
-const systemRangeOptions = [
-  { label: '互联网', value: 1 },
-  { label: '政务外网', value: 2 },
-  { label: '公安网', value: 3 },
-  { label: '移动警务网', value: 4 }
-]
-
 const AppForm = () => {
+  /**
+   * mobx存储数据字典
+   */
+  const { accessFormStore } = useStore()
+  useEffect(() => {
+    if (!accessFormStore.dictionary) {
+      ;(async () => {
+        const { data } = await getdictionary({
+          showType: 'appInfo'
+        })
+        accessFormStore.setDictionary(data)
+      })()
+    }
+  }, [])
+
+  /**
+   * 当前单位信息
+   */
+  const [companyInfo, setCompanyInfo] = useState<TCompanyInfo>()
+
+  /**
+   * 获取应用单位信息
+   */
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await currentCompanyInfo()
+      console.log(data)
+      setCompanyInfo(data)
+    })()
+  }, [])
   return (
-    <Form name='appForm' {...formProps} initialValues={{}}>
+    <Form name='appForm' {...formProps}>
       <Form.Item wrapperCol={{ span: 24 }} className='tr'>
         <Button type='primary' htmlType='submit'>
           提交
@@ -43,36 +70,37 @@ const AppForm = () => {
           maxLength={defaultMaxLength}
         />
       </Form.Item>
-      {/* <Form.Item
+      <Form.Item
         label='应用类型'
-        name='systemtype'
-        rules={[{ required: true, message: '请选择接入系统类型' }]}
+        name='appType'
+        rules={[{ required: true, message: '请选择应用类型' }]}
       >
         <Select
-          placeholder='请选择接入系统类型'
+          placeholder='请选择应用类型'
           fieldNames={fieldNames}
           options={accessFormStore.getDictionaryItem('appType')}
         />
       </Form.Item>
       <Form.Item
         label='所属级别'
-        name='systemlevel'
-        rules={[{ required: true, message: '请选择系统所属级别' }]}
+        name='appType'
+        rules={[{ required: true, message: '请选择所属级别' }]}
       >
         <Select
-          placeholder='请选择系统所属级别'
+          placeholder='请选择所属级别'
           fieldNames={fieldNames}
           options={accessFormStore.getDictionaryItem('systemlevel')}
         />
-      </Form.Item> */}
+      </Form.Item>
       <Form.Item
         label='所属网域'
         name='systemRange'
-        rules={[{ required: true, message: '请选择系统对外服务范围' }]}
+        rules={[{ required: true, message: '请选择所属网域' }]}
       >
         <Select
           placeholder='请选择系统对外服务范围'
-          options={systemRangeOptions}
+          fieldNames={fieldNames}
+          options={accessFormStore.getDictionaryItem('networkType')}
         />
       </Form.Item>
       <Form.Item
@@ -90,37 +118,17 @@ const AppForm = () => {
 
       <Title level={5}>应用单位信息</Title>
       <Divider />
-      <Form.Item
-        label='所属单位'
-        name='applyCompany'
-        rules={[{ required: true }]}
-      >
-        <Input
-          placeholder='请输入申请单位'
-          showCount
-          maxLength={defaultMaxLength}
-        />
+      <Form.Item label='单位名称' rules={[{ required: true }]}>
+        {companyInfo?.companyName}
       </Form.Item>
-      <Form.Item label='单位经办人' name='applyCompanyHandleMan'>
-        <Input
-          placeholder='请输入单位经办人'
-          showCount
-          maxLength={defaultMaxLength}
-        />
+      <Form.Item label='管理员姓名' rules={[{ required: true }]}>
+        {companyInfo?.adminName}
       </Form.Item>
-      <Form.Item label='经办人联系电话' name='applyCompanyHandleManPhone'>
-        <Input
-          placeholder='请输入经办人联系电话'
-          showCount
-          maxLength={defaultMaxLength}
-        />
+      <Form.Item label='联系电话' rules={[{ required: true }]}>
+        {companyInfo?.adminPhone}
       </Form.Item>
-      <Form.Item label='经办人联系邮箱' name='applyCompanyHandleManEmail'>
-        <Input
-          placeholder='请输入经办人联系邮箱'
-          showCount
-          maxLength={defaultMaxLength}
-        />
+      <Form.Item label='联系邮箱' rules={[{ required: true }]}>
+        {companyInfo?.adminEmail}
       </Form.Item>
 
       <Title level={5}>承建单位信息</Title>
@@ -136,21 +144,21 @@ const AppForm = () => {
           maxLength={defaultMaxLength}
         />
       </Form.Item>
-      <Form.Item label='项目负责人' name='undertakeCompanyHandleMan'>
+      <Form.Item label='项目负责人' name='projectManager'>
         <Input
           placeholder='请输入项目负责人'
           showCount
           maxLength={defaultMaxLength}
         />
       </Form.Item>
-      <Form.Item label='负责人联系电话' name='undertakeCompanyHandleManPhone'>
+      <Form.Item label='负责人联系电话' name='managerPhone'>
         <Input
           placeholder='请输入负责人联系电话'
           showCount
           maxLength={defaultMaxLength}
         />
       </Form.Item>
-      <Form.Item label='负责人联系邮箱' name='undertakeCompanyHandleManEmail'>
+      <Form.Item label='负责人联系邮箱' name='managerEmail'>
         <Input
           placeholder='请输入负责人联系邮箱'
           showCount
@@ -161,4 +169,4 @@ const AppForm = () => {
   )
 }
 
-export default AppForm
+export default observer(AppForm)

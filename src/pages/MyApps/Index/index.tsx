@@ -17,11 +17,10 @@ import {
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import 'dayjs/locale/zh-cn'
 import { rangePresets, disabledDate, dateFormat } from '@utils/date'
-import { getAppCount, getMyAppList } from '@mock/myApp'
+import { getAppCount } from '@mock/myApp'
 import { getdictionary } from '@api/index'
 
 import { useNavigate } from 'react-router-dom'
-// import { getMyAppList } from '@api/myApp'
 import Extension from './components/Extension'
 import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
@@ -30,6 +29,8 @@ import type { TAppCount, TDataType, TFormData } from './index.d'
 import { getCapabilityList } from '@api/ability'
 import { DefaultOptionType } from 'antd/es/select'
 import { AppstoreAddOutlined } from '@ant-design/icons'
+import { getAppList } from '@api/myApp'
+import { fieldNames, getDictionaryValue } from '@utils/index'
 
 const { RangePicker } = DatePicker
 
@@ -53,7 +54,7 @@ const Index = () => {
     if (!accessFormStore.dictionary) {
       ;(async () => {
         const { data } = await getdictionary({
-          showType: 'appAccess'
+          showType: 'appInfo'
         })
         accessFormStore.setDictionary(data)
       })()
@@ -68,7 +69,7 @@ const Index = () => {
     ;(async () => {
       const { data } = await getCapabilityList()
       if (!data) return
-      const options: DefaultOptionType[] = data.map(item => ({
+      const options: DefaultOptionType[] = data.map((item, indx) => ({
         label: item.baseInfo.name,
         value: item.id
       }))
@@ -83,8 +84,10 @@ const Index = () => {
    */
   useEffect(() => {
     ;(async () => {
-      const { data } = await getMyAppList()
-      setDataSource(data.list)
+      const { data } = await getAppList(pagination)
+      const { list, pageNum, pageSize, total } = data
+      setDataSource(list)
+      setPagination({ pageNum, pageSize, total })
     })()
   }, [])
 
@@ -100,28 +103,23 @@ const Index = () => {
   /**
    * 查询
    */
-  const onFinish = (values: TFormData) => {
-    console.log('Success:', values)
-    const { expiredRange, dateRange } = values
-    // format日期格式
-    if (expiredRange || dateRange) {
-      const params: {
-        expiredRange?: [string, string]
-        dateRange?: [string, string]
-      } = {}
-      if (expiredRange) {
-        params.expiredRange = [
-          dayjs(expiredRange[0]).format(dateFormat),
-          dayjs(expiredRange[1]).format(dateFormat)
-        ]
-      }
-      if (dateRange) {
-        params.dateRange = [
-          dayjs(dateRange[0]).format(dateFormat),
-          dayjs(dateRange[1]).format(dateFormat)
-        ]
-      }
+  const onFinish = async (values: TFormData) => {
+    const { dateRange, ...rest } = values
+    const params = {
+      ...rest
     }
+    // format日期格式
+    if (dateRange) {
+      params.startTime = dayjs(dateRange[0]).format(dateFormat)
+      params.endTime = dayjs(dateRange[1]).format(dateFormat)
+    }
+    const { data } = await getAppList({
+      ...params,
+      ...pagination
+    })
+    const { list, pageNum, pageSize, total } = data
+    setDataSource(list)
+    setPagination({ pageNum, pageSize, total })
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -190,9 +188,9 @@ const Index = () => {
    * 表格分页参数
    */
   const [pagination, setPagination] = useState({
-    current: 1,
+    pageNum: 1,
     pageSize: 10,
-    total: 31
+    total: 0
   })
 
   /**
@@ -202,6 +200,22 @@ const Index = () => {
     setPagination({ ...pagination, ...tablePagination })
   }
 
+  /**
+   * 根据id返回基础能力
+   */
+  const getAccessCapability = (accessCapability: string) => {
+    if (!accessCapability) return '-'
+
+    const capability = accessCapability.split(',')
+    const capabilityToString = capability.map(item => {
+      const result = capabilityList?.find(
+        __item => __item.value === Number(item)
+      )
+      return result?.label || ''
+    })
+    return capabilityToString.join(',')
+  }
+
   const columns: ColumnsType<TDataType> = [
     {
       title: '应用名称',
@@ -209,26 +223,27 @@ const Index = () => {
       ellipsis: true
     },
     {
-      title: '接入基础能力',
+      title: '接入环境',
+      render: (values: TDataType) => (
+        <>{{ sit: '测试环境', prod: '正式环境' }[values.appEnv]}</>
+      )
+    },
+    {
+      title: '应用类型',
+      render: (values: TDataType) => (
+        <>{getDictionaryValue(accessFormStore, 'appType', values.appType)}</>
+      )
+    },
+    {
+      title: '已接入基础能力',
       ellipsis: true,
       render: (values: TDataType) => (
-        <>
-          {accessFormStore.dictionary
-            ? accessFormStore.getDictionaryItem('accessSkill')![
-                values.appAbility
-              ].dictName
-            : '-'}
-        </>
+        <>{getAccessCapability(values.accessCapability)}</>
       )
     },
     {
       title: 'clientId',
       dataIndex: 'clientId',
-      ellipsis: true
-    },
-    {
-      title: '有效时间',
-      dataIndex: 'expiredTime',
       ellipsis: true
     },
     {
@@ -242,7 +257,7 @@ const Index = () => {
                 ['success', 'warning', 'error'][values?.state] || 'default'
               }
             >
-              {accessFormStore.dictionary
+              {dataSource && accessFormStore.dictionary
                 ? accessFormStore.getDictionaryItem('appState')![values.state]
                     .dictName
                 : '-'}
@@ -253,7 +268,7 @@ const Index = () => {
     },
     {
       title: '创建时间',
-      dataIndex: 'addTime',
+      dataIndex: 'createTime',
       ellipsis: true
     },
     {
@@ -327,8 +342,17 @@ const Index = () => {
                 </Form.Item>
               </Col>
               <Col span={6}>
+                <Form.Item label='接入环境' name='appEnv'>
+                  <Select
+                    placeholder='请选择接入环境'
+                    fieldNames={fieldNames}
+                    options={accessFormStore.getDictionaryItem('appEnv')}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
                 {capabilityList && (
-                  <Form.Item label='基础能力' name='appAbility'>
+                  <Form.Item label='基础能力' name='capabilityId'>
                     <Select
                       placeholder='请选择基础能力'
                       options={capabilityList}
@@ -337,17 +361,21 @@ const Index = () => {
                 )}
               </Col>
               <Col span={6}>
-                <Form.Item label='状态' name='state'>
+                <Form.Item label='应用类型' name='appType'>
                   <Select
-                    placeholder='请选择状态'
-                    fieldNames={{ label: 'dictName', value: 'dictValue' }}
-                    options={accessFormStore.getDictionaryItem('appState')}
+                    placeholder='请选择应用类型'
+                    fieldNames={fieldNames}
+                    options={accessFormStore.getDictionaryItem('appType')}
                   />
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='有效期：' name='expiredRange'>
-                  <RangePicker presets={rangePresets} />
+                <Form.Item label='状态' name='state'>
+                  <Select
+                    placeholder='请选择状态'
+                    fieldNames={fieldNames}
+                    options={accessFormStore.getDictionaryItem('appState')}
+                  />
                 </Form.Item>
               </Col>
               <Col span={6}>
@@ -358,7 +386,7 @@ const Index = () => {
                   />
                 </Form.Item>
               </Col>
-              <Col span={18} className='tr'>
+              <Col span={12} className='tr'>
                 <Form.Item>
                   <Space>
                     <Button onClick={onReset}>重置</Button>
@@ -387,7 +415,7 @@ const Index = () => {
       <Row>
         <Col span={24}>
           <Table
-            rowKey='id'
+            rowKey='appId'
             columns={columns}
             dataSource={dataSource}
             pagination={pagination}
