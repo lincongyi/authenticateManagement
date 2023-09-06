@@ -25,9 +25,11 @@ import { useNavigate } from 'react-router-dom'
 import Extension from './components/Extension'
 import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
-import { fieldNames } from '@utils/index'
 import dayjs from 'dayjs'
 import type { TAppCount, TDataType, TFormData } from './index.d'
+import { getCapabilityList } from '@api/ability'
+import { DefaultOptionType } from 'antd/es/select'
+import { AppstoreAddOutlined } from '@ant-design/icons'
 
 const { RangePicker } = DatePicker
 
@@ -56,6 +58,22 @@ const Index = () => {
         accessFormStore.setDictionary(data)
       })()
     }
+  }, [])
+
+  const [capabilityList, setCapabilityList] = useState<DefaultOptionType[]>() // 基础能力列表
+  /**
+   * 初始化基础能力列表
+   */
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await getCapabilityList()
+      if (!data) return
+      const options: DefaultOptionType[] = data.map(item => ({
+        label: item.baseInfo.name,
+        value: item.id
+      }))
+      setCapabilityList(options)
+    })()
   }, [])
 
   const [dataSource, setDataSource] = useState<TDataType[]>()
@@ -111,6 +129,14 @@ const Index = () => {
   }
 
   const navigate = useNavigate()
+
+  /**
+   * 创建单位应用
+   */
+  const onAdd = () => {
+    navigate('./appForm')
+  }
+
   /**
    * 查看
    */
@@ -182,13 +208,6 @@ const Index = () => {
       dataIndex: 'appName',
       ellipsis: true
     },
-    // {
-    //   title: '接入环境',
-    //   ellipsis: true,
-    //   render: (values: TDataType) => (
-    //     <>{appEnv && appEnv[values.appEnv + 1].dictName}</>
-    //   )
-    // },
     {
       title: '接入基础能力',
       ellipsis: true,
@@ -308,13 +327,14 @@ const Index = () => {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='基础能力' name='appAbility'>
-                  <Select
-                    placeholder='请选择基础能力'
-                    fieldNames={fieldNames}
-                    options={accessFormStore.getDictionaryItem('accessSkill')}
-                  />
-                </Form.Item>
+                {capabilityList && (
+                  <Form.Item label='基础能力' name='appAbility'>
+                    <Select
+                      placeholder='请选择基础能力'
+                      options={capabilityList}
+                    />
+                  </Form.Item>
+                )}
               </Col>
               <Col span={6}>
                 <Form.Item label='状态' name='state'>
@@ -346,6 +366,17 @@ const Index = () => {
                       查询
                     </Button>
                   </Space>
+                </Form.Item>
+              </Col>
+              <Col span={24} className='tr'>
+                <Form.Item>
+                  <Button
+                    type='primary'
+                    icon={<AppstoreAddOutlined />}
+                    onClick={onAdd}
+                  >
+                    创建单位应用
+                  </Button>
                 </Form.Item>
               </Col>
             </Row>

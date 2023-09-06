@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Button, Collapse, message } from 'antd'
+import { Button, Collapse, Typography, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { EditOutlined, ExceptionOutlined } from '@ant-design/icons'
 import CompanyDescriptions from './components/CompanyDescriptions'
@@ -75,8 +75,8 @@ const CompanyInfo = () => {
       <div className={`${style.title} font-primary-color`}>申请记录</div>
 
       <div className={style['record-wrap']}>
-        {companyInfo &&
-          companyInfo.applyRecord?.reverse().map((item: TApplyRecord) => (
+        {companyInfo && companyInfo.applyRecord ? (
+          companyInfo.applyRecord?.map((item: TApplyRecord) => (
             <React.Fragment key={item.id}>
               {item.state !== 1 && (
                 <div className={style['approve-tips']}>
@@ -100,7 +100,10 @@ const CompanyInfo = () => {
                 </Panel>
               </Collapse>
             </React.Fragment>
-          ))}
+          ))
+        ) : (
+          <Typography.Text type='secondary'>暂无申请记录</Typography.Text>
+        )}
       </div>
     </>
   )

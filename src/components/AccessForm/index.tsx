@@ -10,9 +10,8 @@ import Concurrency from './components/Concurrency'
 import UploadForm from './components/UploadForm'
 import AccountInfo from './components/AccountInfo'
 import ConfirmModal from './components/ConfirmModal'
-import { useNavigate } from 'react-router-dom'
 import { dateFormat } from '@utils/date'
-import { getdictionary } from '@api/index'
+// import { getdictionary } from '@api/index'
 import { useStore } from '@stores/index'
 import {
   TAccessForm,
@@ -31,8 +30,6 @@ const AccessForm = () => {
    */
   const { accessFormStore } = useStore()
 
-  const navigate = useNavigate()
-
   const [formState, setFormState] = useState(0)
 
   /**
@@ -41,19 +38,6 @@ const AccessForm = () => {
   useEffect(() => {
     const { state, id } = accessFormStore.current
     setFormState(state)
-    if (!state) navigate(-1)
-
-    /**
-     * 获取表单所需的数据字典
-     */
-    if (!accessFormStore.dictionary) {
-      ;(async () => {
-        const { data } = await getdictionary({
-          showType: 'appAccess'
-        })
-        accessFormStore.setDictionary(data)
-      })()
-    }
     /**
      * 获取表单数据
      */

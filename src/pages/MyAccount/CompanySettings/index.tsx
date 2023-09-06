@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from 'react'
-import style from './index.module.scss'
-import { Button, Form, Input, Result, Space, Upload, message } from 'antd'
-import { PlusOutlined, EditOutlined } from '@ant-design/icons'
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  Result,
+  Space,
+  Typography,
+  Upload,
+  message
+} from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
-import UpdatePhoneModal from './components/UpdatePhoneModal'
-import UpdateEmailModal from './components/UpdateEmailModal'
 import Area from '@components/Area'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import type { RcFile } from 'antd/es/upload/interface'
 import { getBase64, imgBeforeUpload } from '@utils/index'
 import { getProcessByKey } from '@api/index'
 import { applyUpdateCompanyInfo, currentCompanyInfo } from '@api/myAccount'
+
+const { Title } = Typography
 
 const CompanySettings = () => {
   const [form] = Form.useForm()
@@ -39,10 +48,10 @@ const CompanySettings = () => {
     ;(async () => {
       const { data: currentInfo } = await currentCompanyInfo()
 
-      const { data } = await getProcessByKey({
-        userId: currentInfo!.accountNumber,
-        key: 'UPDATE_COMPANY_INFO'
-      })
+      // const { data } = await getProcessByKey({
+      //   userId: currentInfo!.accountNumber,
+      //   key: 'UPDATE_COMPANY_INFO'
+      // })
       // 如果当前任务返回空 or 驳回状态，即可走提交申请流程，否则当前申请审批在审核中，不可重复提交申请
       form.setFieldsValue(currentInfo)
       if (currentInfo!.areaList) {
@@ -52,36 +61,18 @@ const CompanySettings = () => {
       setCertificateFile(
         `data:image/png;base64,${currentInfo!.certificatePhoto}`
       )
-      if (data) {
-        const { state, processInstanceId, starter, comment } = data.instanceInfo
-        setProcess({
-          taskId: data.taskId,
-          state,
-          processInstanceId,
-          starter,
-          comment
-        })
-      }
+      // if (data) {
+      //   const { state, processInstanceId, starter, comment } = data.instanceInfo
+      //   setProcess({
+      //     taskId: data.taskId,
+      //     state,
+      //     processInstanceId,
+      //     starter,
+      //     comment
+      //   })
+      // }
     })()
   }, [])
-
-  // 修改管理员手机号模态框
-  const [updatePhoneModalOpen, setUpdatePhoneModalOpen] = useState(false)
-  /**
-   * 修改管理员手机号
-   */
-  const updatePhone = () => {
-    setUpdatePhoneModalOpen(true)
-  }
-
-  // 修改管理员邮箱模态框
-  const [updateEmailModalOpen, setUpdateEmailModalOpen] = useState(false)
-  /**
-   * 修改管理员邮箱
-   */
-  const updateEmail = () => {
-    setUpdateEmailModalOpen(true)
-  }
 
   const [certificateFile, setCertificateFile] = useState('')
 
@@ -112,28 +103,24 @@ const CompanySettings = () => {
    */
   const onFinish = async (values: TCompanyInfo & { adminName: string }) => {
     if (!companyInfo) return
-    const { userId, adminPhone, adminEmail } = companyInfo
-    const {
-      adminName,
-      companyName,
-      companyShortName,
-      certificateNum,
-      areaCode
-    } = values
+    const { companyId, accountNumber, adminName, companyName, adminPhone } =
+      companyInfo // 这几项是固定不可编辑的
+    const { companyShortName, certificateNum, areaCode, adminEmail } = values
     const certificatePhoto = certificateFile.substring(
-      certificateFile.indexOf('base64,') + 7
+      certificateFile.indexOf('base64,') + 'base64,'.length
     )
 
     const { retMessage } = await applyUpdateCompanyInfo({
-      userId,
-      companyName,
-      companyShortName,
+      companyId,
+      adminAccountNumber: accountNumber,
       adminName,
+      companyName,
       adminPhone,
-      adminEmail,
+      companyShortName,
       certificateNum,
       certificatePhoto,
-      areaCode
+      areaCode,
+      adminEmail
     })
     message.success({
       content: retMessage,
@@ -150,7 +137,7 @@ const CompanySettings = () => {
 
   return (
     <>
-      {process!.state === 1 ? (
+      {process.state === 1 ? (
         <Result
           title='申请审核中，请稍后...'
           extra={
@@ -161,7 +148,7 @@ const CompanySettings = () => {
         />
       ) : (
         <>
-          {process!.state === 2 && (
+          {process.state === 2 && (
             <Result
               title={`${process.comment}，请重新确认信息，再提交申请`}
               status='error'
@@ -177,48 +164,13 @@ const CompanySettings = () => {
             validateMessages={validateMessages}
             autoComplete='off'
           >
-            <Form.Item
-              label='单位名称'
-              name='companyName'
-              rules={[{ required: true }]}
-            >
-              <Input showCount maxLength={20} />
+            <Title level={5}>单位机构基本信息</Title>
+            <Divider />
+            <Form.Item label='单位名称' rules={[{ required: true }]}>
+              {companyInfo?.companyName}
             </Form.Item>
             <Form.Item name='companyShortName' label='单位简称'>
               <Input showCount maxLength={10} />
-            </Form.Item>
-            <Form.Item
-              name='adminName'
-              label='单位管理员姓名'
-              rules={[{ required: true }]}
-            >
-              <Input showCount maxLength={20} />
-            </Form.Item>
-            <Form.Item label='管理员手机号' required>
-              <>
-                {companyInfo?.adminPhone}
-                <Button
-                  type='text'
-                  className={style['update-btn']}
-                  icon={<EditOutlined />}
-                  onClick={updatePhone}
-                >
-                  修改
-                </Button>
-              </>
-            </Form.Item>
-            <Form.Item label='管理员邮箱' required>
-              <>
-                {companyInfo?.adminEmail}
-                <Button
-                  type='text'
-                  className={style['update-btn']}
-                  icon={<EditOutlined />}
-                  onClick={updateEmail}
-                >
-                  修改
-                </Button>
-              </>
             </Form.Item>
             <Form.Item name='certificateNum' label='统一信用代码'>
               <Input showCount maxLength={20} />
@@ -259,6 +211,21 @@ const CompanySettings = () => {
                 />
               </Form.Item>
             )}
+            <Title level={5}>单位管理员信息</Title>
+            <Divider />
+            <Form.Item
+              name='adminName'
+              label='管理员姓名'
+              rules={[{ required: true }]}
+            >
+              {companyInfo?.adminName}
+            </Form.Item>
+            <Form.Item label='管理员手机号' required>
+              {companyInfo?.adminPhone}
+            </Form.Item>
+            <Form.Item name='adminEmail' label='管理员邮箱' required>
+              <Input showCount maxLength={40} />
+            </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 6, span: 12 }}>
               <Space>
@@ -270,27 +237,6 @@ const CompanySettings = () => {
             </Form.Item>
           </Form>
         </>
-      )}
-      {companyInfo?.adminPhone && (
-        <UpdatePhoneModal
-          open={updatePhoneModalOpen}
-          setOpen={setUpdatePhoneModalOpen}
-          companyInfo={companyInfo}
-          callback={(phone: string) =>
-            setCompanyInfo({ ...companyInfo, ...{ adminPhone: phone } })
-          }
-        />
-      )}
-
-      {companyInfo?.adminEmail && (
-        <UpdateEmailModal
-          open={updateEmailModalOpen}
-          setOpen={setUpdateEmailModalOpen}
-          companyInfo={companyInfo}
-          callback={(email: string) =>
-            setCompanyInfo({ ...companyInfo, ...{ adminEmail: email } })
-          }
-        />
       )}
     </>
   )

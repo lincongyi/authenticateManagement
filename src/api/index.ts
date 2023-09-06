@@ -27,7 +27,7 @@ const sendCaptcha = (params: object): Promise<TResponse> => {
 const imgCaptcha = (query: object): Promise<Blob> => {
   return request.get('/captcha/imgCaptcha', {
     responseType: 'blob',
-    params: query,
+    params: query
   })
 }
 
@@ -69,7 +69,7 @@ const getdictionary = (
         typeValues: string[]
       }
     | {
-        showType: 'appAccess'
+        showType: 'appInfo'
       }
 ): Promise<TResponse> => {
   return request.post('/getdictionary', params)
@@ -83,5 +83,5 @@ export {
   verifyCaptcha,
   getProcessByKey,
   getQrcode,
-  getdictionary,
+  getdictionary
 }

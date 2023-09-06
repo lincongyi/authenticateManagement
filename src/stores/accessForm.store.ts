@@ -45,6 +45,9 @@ const AccessFormStore = () => {
     current: {
       id: 0, // 应用id
       state: 0 // 0:默认状态；1-新增；2-查看；3-修改
+    } as {
+      id: number
+      state: 0 | 1 | 2 | 3
     }
   })
 }

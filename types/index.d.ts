@@ -66,6 +66,7 @@ type TApplyRecord = {
 }
 
 type TCompanyInfo = {
+  accountNumber: string
   userId: string
   companyId?: string
   companyName: string // 单位名称
