@@ -2,7 +2,6 @@ import { message } from 'antd'
 import type { RcFile } from 'antd/es/upload/interface'
 import { useEffect, useRef } from 'react'
 import type { TAccessFormStore } from '@stores/accessForm.store'
-import AccessFormStore from '@stores/accessForm.store'
 /**
  * 获取当前环境
  */
@@ -116,7 +115,7 @@ const formatDictionary = (array: TDictList[] | TDictValue[]) => {
 const getDictionaryValue = (
   store: any,
   item: keyof TAccessFormStore,
-  value: string
+  value: string | number
 ) => {
   if (!store.dictionary) return undefined
   const dictionaryItem = store.getDictionaryItem(item)

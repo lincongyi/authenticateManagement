@@ -45,7 +45,7 @@ const Introduction = () => {
     )
   }
 
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false) // 控制选择接入应用Modal显示隐藏
 
   const [modal, contextHolder] = Modal.useModal()
 

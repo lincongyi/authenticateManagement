@@ -205,10 +205,7 @@ const MyApplications = () => {
     console.log('Failed:', errorInfo)
   }
 
-  /**
-   * 控制查看Modal显示隐藏状态
-   */
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false) // 控制查看Modal显示隐藏
   const [instanceId, setInstanceId] = useState('') // 当前active审批单号
   /**
    * 查看

@@ -4,24 +4,19 @@ import {
   Button,
   Col,
   DatePicker,
-  Divider,
   Form,
   Input,
   Row,
   Select,
   Space,
   Table,
-  Tag,
-  Typography
+  Tag
 } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import 'dayjs/locale/zh-cn'
 import { rangePresets, disabledDate, dateFormat } from '@utils/date'
-import { getAppCount } from '@mock/myApp'
 import { getdictionary } from '@api/index'
-
 import { useNavigate } from 'react-router-dom'
-import Extension from './components/Extension'
 import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
 import dayjs from 'dayjs'
@@ -29,16 +24,14 @@ import type { TAppCount, TDataType, TFormData } from './index.d'
 import { getCapabilityList } from '@api/ability'
 import { DefaultOptionType } from 'antd/es/select'
 import { AppstoreAddOutlined } from '@ant-design/icons'
-import { getAppList } from '@api/myApp'
+import { getAppList, getAppCount } from '@api/myApp'
 import { fieldNames, getDictionaryValue } from '@utils/index'
+import EnableModal from './components/EnableModal'
 
 const { RangePicker } = DatePicker
 
 const Index = () => {
-  /**
-   * 我的应用数
-   */
-  const [appCount, setAppCount] = useState<TAppCount>()
+  const [appCount, setAppCount] = useState<TAppCount>() // 我的应用数
   useEffect(() => {
     ;(async () => {
       const { data } = await getAppCount()
@@ -85,6 +78,7 @@ const Index = () => {
   useEffect(() => {
     ;(async () => {
       const { data } = await getAppList(pagination)
+      if (!data) return
       const { list, pageNum, pageSize, total } = data
       setDataSource(list)
       setPagination({ pageNum, pageSize, total })
@@ -117,6 +111,7 @@ const Index = () => {
       ...params,
       ...pagination
     })
+    if (!data) return
     const { list, pageNum, pageSize, total } = data
     setDataSource(list)
     setPagination({ pageNum, pageSize, total })
@@ -138,50 +133,20 @@ const Index = () => {
   /**
    * 查看
    */
-  const onCheck = ({ id }: { id: TDataType['id'] }) => {
-    accessFormStore.current = {
-      id,
-      state: 2
-    }
+  const onCheck = (id: TDataType['appId']) => {
     navigate('./access')
   }
 
-  /**
-   * 认证数据
-   */
-  const onViewData = ({ id }: { id: TDataType['id'] }) => {
-    navigate(`./authenticationData?id=${id}`)
-  }
+  const [open, setOpen] = useState<boolean>(false) // 控制启用or停用Modal显示隐藏
+
+  const [activeItem, setActiveItem] = useState<TDataType>() // 传给申请启用or申请停用Modal的item
 
   /**
-   *  申请参数更改 or 申请正式账号
+   * 申请启用or申请停用
    */
-  const onReapply = (item: TDataType) => {
-    console.log(item)
-  }
-
-  /**
-   * 当前申请延期的应用id
-   */
-  const [id, setId] = useState<number>()
-  /**
-   * 控制申请延期Modal显示隐藏
-   */
-  const [open, setOpen] = useState(true)
-
-  /**
-   * 申请延期
-   */
-  const onDelay = ({ id }: { id: TDataType['id'] }) => {
-    setId(id)
+  const onEnable = (values: TDataType) => {
+    setActiveItem(values)
     setOpen(true)
-  }
-
-  /**
-   * 注销
-   */
-  const onLogoff = (item: TDataType) => {
-    console.log(item)
   }
 
   /**
@@ -254,13 +219,16 @@ const Index = () => {
           {accessFormStore.dictionary && (
             <Tag
               color={
-                ['success', 'warning', 'error'][values?.state] || 'default'
+                ['success', 'warning', 'error'][values?.state] || 'success'
               }
             >
-              {dataSource && accessFormStore.dictionary
-                ? accessFormStore.getDictionaryItem('appState')![values.state]
-                    .dictName
-                : '-'}
+              <>
+                {getDictionaryValue(
+                  accessFormStore,
+                  'appState',
+                  values.state
+                ) || '正常'}
+              </>
             </Tag>
           )}
         </>
@@ -277,29 +245,11 @@ const Index = () => {
       width: 250,
       render: (values: TDataType) => (
         <>
-          <Button type='link' onClick={() => onCheck(values)}>
-            查看
+          <Button type='link' onClick={() => onCheck(values.appId)}>
+            查看详情
           </Button>
-          <Divider type='vertical' style={{ margin: 0 }} />
-          <Button type='link' onClick={() => onViewData(values)}>
-            认证数据
-          </Button>
-          <Divider type='vertical' style={{ margin: 0 }} />
-          <Button type='link' onClick={() => onReapply(values)}>
-            {values.appEnv ? '申请参数更改' : '申请正式账号'}
-          </Button>
-          <Divider type='vertical' style={{ margin: 0 }} />
-
-          {[1, 2].includes(values.state) && (
-            <>
-              <Button type='link' onClick={() => onDelay(values)}>
-                申请延期
-              </Button>
-              <Divider type='vertical' style={{ margin: 0 }} />
-            </>
-          )}
-          <Button type='link' onClick={() => onLogoff(values)}>
-            <Typography.Text type='danger'>注销</Typography.Text>
+          <Button type='link' onClick={() => onEnable(values)}>
+            {`申请${values.state === 3 ? '启用' : '停用'}`}
           </Button>
         </>
       )
@@ -334,6 +284,12 @@ const Index = () => {
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete='off'
+            initialValues={{
+              appEnv: null,
+              capabilityId: null,
+              appType: null,
+              state: null
+            }}
           >
             <Row gutter={20}>
               <Col span={6}>
@@ -342,41 +298,59 @@ const Index = () => {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                <Form.Item label='接入环境' name='appEnv'>
-                  <Select
-                    placeholder='请选择接入环境'
-                    fieldNames={fieldNames}
-                    options={accessFormStore.getDictionaryItem('appEnv')}
-                  />
-                </Form.Item>
+                {accessFormStore.dictionary && (
+                  <Form.Item label='接入环境' name='appEnv'>
+                    <Select
+                      placeholder='请选择接入环境'
+                      fieldNames={fieldNames}
+                      options={[
+                        { dictName: '全部', dictValue: null },
+                        ...accessFormStore.getDictionaryItem('appEnv')!
+                      ]}
+                    />
+                  </Form.Item>
+                )}
               </Col>
               <Col span={6}>
                 {capabilityList && (
                   <Form.Item label='基础能力' name='capabilityId'>
                     <Select
                       placeholder='请选择基础能力'
-                      options={capabilityList}
+                      options={[
+                        { label: '全部', value: null },
+                        ...capabilityList
+                      ]}
                     />
                   </Form.Item>
                 )}
               </Col>
               <Col span={6}>
-                <Form.Item label='应用类型' name='appType'>
-                  <Select
-                    placeholder='请选择应用类型'
-                    fieldNames={fieldNames}
-                    options={accessFormStore.getDictionaryItem('appType')}
-                  />
-                </Form.Item>
+                {accessFormStore.dictionary && (
+                  <Form.Item label='应用类型' name='appType'>
+                    <Select
+                      placeholder='请选择应用类型'
+                      fieldNames={fieldNames}
+                      options={[
+                        { dictName: '全部', dictValue: null },
+                        ...accessFormStore.getDictionaryItem('appType')!
+                      ]}
+                    />
+                  </Form.Item>
+                )}
               </Col>
               <Col span={6}>
-                <Form.Item label='状态' name='state'>
-                  <Select
-                    placeholder='请选择状态'
-                    fieldNames={fieldNames}
-                    options={accessFormStore.getDictionaryItem('appState')}
-                  />
-                </Form.Item>
+                {accessFormStore.dictionary && (
+                  <Form.Item label='状态' name='state'>
+                    <Select
+                      placeholder='请选择状态'
+                      fieldNames={fieldNames}
+                      options={[
+                        { dictName: '全部', dictValue: null },
+                        ...accessFormStore.getDictionaryItem('appState')!
+                      ]}
+                    />
+                  </Form.Item>
+                )}
               </Col>
               <Col span={6}>
                 <Form.Item label='创建时间：' name='dateRange'>
@@ -424,8 +398,8 @@ const Index = () => {
         </Col>
       </Row>
 
-      {open && id && (
-        <Extension open={open} setOpen={setOpen} instanceId={id} />
+      {activeItem && (
+        <EnableModal open={open} setOpen={setOpen} item={activeItem} />
       )}
     </>
   )
