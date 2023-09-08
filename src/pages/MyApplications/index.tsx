@@ -144,7 +144,7 @@ const MyApplications = () => {
     setDataSource(list)
     const { pageNum, pageSize, total } = data
 
-    setPagination({ ...pagination, current: pageNum + 1, pageSize, total })
+    setPagination({ ...pagination, pageNum, pageSize, total })
   }
 
   /**
@@ -152,7 +152,7 @@ const MyApplications = () => {
    */
   useUpdateEffect(() => {
     form.resetFields()
-    setPagination({ ...pagination, current: 1 })
+    setPagination({ ...pagination, pageNum: 1 })
     renderTable({
       processState: activeState - 1,
       pageNum: 0,
@@ -291,11 +291,11 @@ const MyApplications = () => {
       ...form.getFieldsValue(),
       startTime,
       endTime,
-      pageNum: pagination.current - 1,
+      pageNum: pagination.pageNum,
       pageSize: 10
     }
     renderTable(params)
-  }, [pagination.current])
+  }, [pagination.pageNum])
 
   /**
    * 分页、排序、筛选变化时触发
