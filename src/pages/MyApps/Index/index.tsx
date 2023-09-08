@@ -134,7 +134,7 @@ const Index = () => {
    * 查看
    */
   const onCheck = (id: TDataType['appId']) => {
-    navigate('./access')
+    navigate(`./appInfo?id=${id}`)
   }
 
   const [open, setOpen] = useState<boolean>(false) // 控制启用or停用Modal显示隐藏

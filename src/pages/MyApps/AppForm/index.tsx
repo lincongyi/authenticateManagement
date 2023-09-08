@@ -16,9 +16,9 @@ import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
 import { getdictionary } from '@api/index'
 import { currentCompanyInfo } from '@api/myAccount'
-import { addApp } from '@api/myApp'
-import type { TAddAppParams } from '@api/myApp'
-import { useNavigate } from 'react-router-dom'
+import { addApp, getAppInfo, updateApp } from '@api/myApp'
+import type { TAppParams } from '@api/myApp'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const { Title } = Typography
 const { TextArea } = Input
@@ -68,15 +68,44 @@ const AppForm = () => {
     })()
   }, [])
 
+  const [searchParams] = useSearchParams()
+
+  const [form] = Form.useForm()
+
+  /**
+   * 编辑情况下获取表单初始值
+   */
+  useEffect(() => {
+    const id = searchParams.get('id')
+    if (!id) return
+    ;(async () => {
+      const { data } = await getAppInfo({ id })
+      if (!data) return
+      form.setFieldsValue(data)
+    })()
+  }, [])
+
   /**
    * 提交
    */
-  const onFinish = async (values: TAddAppParams) => {
-    await addApp({
-      ...values,
-      ...{ companyId: companyInfo!.companyId }
-    })
-    message.success('成功添加应用')
+  const onFinish = async (values: TAppParams) => {
+    const id = searchParams.get('id')
+    if (id) {
+      // 编辑
+      await updateApp({
+        ...values,
+        ...{ appId: form.getFieldValue('appId') },
+        ...{ companyId: companyInfo!.companyId }
+      })
+    } else {
+      // 新增
+      await addApp({
+        ...values,
+        ...{ companyId: companyInfo!.companyId }
+      })
+    }
+
+    message.success(`${id ? '编辑' : '添加'}成功`)
     navigate(-1)
   }
 
@@ -106,6 +135,7 @@ const AppForm = () => {
     <>
       {contextHolder}
       <Form
+        form={form}
         name='appForm'
         {...formProps}
         onFinish={onFinish}

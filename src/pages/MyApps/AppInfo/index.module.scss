@@ -1,0 +1,64 @@
+.section {
+  padding: 20px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+}
+
+.basic-info {
+  margin-bottom: 20px;
+
+  .primary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .name {
+      font-weight: bold;
+      font-size: 22px;
+    }
+
+    .edit {
+      color: $primary-color;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  }
+
+  .remark {
+    display: -webkit-box;
+    margin: 10px 0;
+    overflow: hidden;
+    word-break: break-all;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+}
+
+.env-info {
+  .tab-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .icon {
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+  }
+
+  .sit-icon {
+    background-image: url('@/assets/myApp-sit-unselect.png');
+
+    &.active {
+      background-image: url('@/assets/myApp-sit-selected.png');
+    }
+  }
+
+  .prod-icon {
+    background-image: url('@/assets/myApp-prod-unselect.png');
+
+    &.active {
+      background-image: url('@/assets/myApp-prod-selected.png');
+    }
+  }
+}

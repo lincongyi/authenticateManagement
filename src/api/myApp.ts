@@ -20,7 +20,7 @@ type TGetAppListParams = {
   pageSize: number
   total: number
   appAbility?: string
-  appEnv?: string
+  appEnv?: 'sit' | 'prod'
   appName?: string
   appType?: string
   startTime?: string
@@ -28,7 +28,7 @@ type TGetAppListParams = {
   state?: TDataType['state']
 }
 
-type TTGetAppListResponse = {
+type TGetAppListResponse = {
   list: TDataType[]
   pageNum: number
   pageSize: number
@@ -40,11 +40,11 @@ type TTGetAppListResponse = {
  */
 const getAppList = (
   params: TGetAppListParams
-): Promise<TResponse<TTGetAppListResponse>> => {
+): Promise<TResponse<TGetAppListResponse>> => {
   return request.post('/access/getAppList', params)
 }
 
-export type TAddAppParams = {
+export type TAppParams = {
   appName: string
   appType: string
   managerEmail: string | undefined
@@ -59,8 +59,58 @@ export type TAddAppParams = {
 /**
  * 添加应用
  */
-const addApp = (params: TAddAppParams): Promise<TResponse> => {
+const addApp = (params: TAppParams): Promise<TResponse> => {
   return request.post('/access/addApp', params)
 }
 
-export { getAppCount, getMyAppList, getAppList, addApp }
+export type TGetAppInfoResponse = {
+  state: TDataType['state']
+  appEnv: 'sit' | 'prod'
+  createTime: string
+  clientId: string
+} & TAppParams
+
+/**
+ * 根据id获取应用详情
+ */
+const getAppInfo = (params: {
+  id: string
+}): Promise<TResponse<TGetAppInfoResponse>> => {
+  return request.post('/access/getAppInfo', params)
+}
+
+/**
+ * 编辑应用
+ */
+const updateApp = (params: TAppParams): Promise<TResponse> => {
+  return request.post('/access/updateApp', params)
+}
+
+export type TGetAppInfoByEnv = {
+  capability: {
+    // 基础能力详情
+    id: string
+    name: string
+  }
+  state: 0 | 1 // 0-未接入该能力；1-已接入该能力
+}
+
+/**
+ * 获取能力信息
+ */
+const getAppInfoByEnv = (params: {
+  appId: string
+  appEnv: TGetAppInfoResponse['appEnv']
+}): Promise<TResponse<TGetAppInfoByEnv[]>> => {
+  return request.post('/access/getAppInfoByEnv', params)
+}
+
+export {
+  getAppCount,
+  getMyAppList,
+  getAppList,
+  addApp,
+  getAppInfo,
+  updateApp,
+  getAppInfoByEnv
+}

@@ -177,7 +177,14 @@ const routes: TRoutes[] = [
             path: 'appForm',
             element: lazyLoad('MyApps/AppForm'),
             meta: {
-              breadcrumb: '创建单位应用'
+              breadcrumb: '编辑单位应用'
+            }
+          },
+          {
+            path: 'appInfo',
+            element: lazyLoad('MyApps/AppInfo'),
+            meta: {
+              breadcrumb: '查看应用详情'
             }
           },
           {
