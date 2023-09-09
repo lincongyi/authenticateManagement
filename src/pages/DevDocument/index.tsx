@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Row, Col, Tree, Divider, Select, Input, Typography } from 'antd'
+import { Row, Col, Tree, Divider, Input, Typography, Tabs } from 'antd'
 import type { EventDataNode, TreeProps } from 'antd/es/tree'
 import { getDirectory, queryDocument } from '@api/devDocument'
 import type {
@@ -11,6 +11,7 @@ import type {
 import {
   CloudDownloadOutlined,
   FileOutlined,
+  FolderOpenOutlined,
   DownloadOutlined
 } from '@ant-design/icons'
 const { Link } = Typography
@@ -20,7 +21,7 @@ const { Search } = Input
 const DevDocument = () => {
   const [directoryList, setDirectoryList] = useState<TGetDirectoryResponse[]>()
   const [activeDirectory, setActiveDirectory] =
-    useState<TGetDirectoryResponse>() // 当前文档目录
+    useState<TGetDirectoryResponse['directoryList']>() // 当前文档目录
 
   /**
    * 初始化时选中的第一个node
@@ -55,6 +56,21 @@ const DevDocument = () => {
   }
 
   /**
+   * 为目录标题添加上icon
+   */
+  const setCatalog = (list: TDirectory[]) => {
+    return list.map(item => ({
+      ...item,
+      icon:
+        item.leafDirectory && item.leafDirectory?.length ? (
+          <FolderOpenOutlined />
+        ) : (
+          <FileOutlined />
+        )
+    }))
+  }
+
+  /**
    * 获取所有项目目录
    */
   useEffect(() => {
@@ -62,8 +78,10 @@ const DevDocument = () => {
       const { data } = await getDirectory()
       if (data) {
         setDirectoryList(data)
-        setActiveDirectory(data && data[0])
         initNode(data[0])
+        const { directoryList } = data[0]
+        const catalog = setCatalog(directoryList)
+        setActiveDirectory(catalog)
       }
     })()
   }, [])
@@ -74,8 +92,9 @@ const DevDocument = () => {
   const handleChange = (value: string) => {
     const item = directoryList?.find(item => item.projectId === Number(value))
     if (!item) return false
-    setActiveDirectory(item)
     initNode(item)
+    const catalog = setCatalog(item.directoryList)
+    setActiveDirectory(catalog)
   }
 
   /**
@@ -106,16 +125,21 @@ const DevDocument = () => {
     <>
       <div className={style['document-header']}>
         <div className={style['left-side']}>
-          {activeDirectory?.projectId && (
+          {activeDirectory && (
             <>
               项目：
-              <Select
-                defaultValue={activeDirectory.projectId}
-                style={{ width: 200 }}
-                fieldNames={{ label: 'projectName', value: 'projectId' }}
-                onChange={handleChange}
-                options={directoryList}
-              />
+              {directoryList && (
+                <Tabs
+                  style={{ width: 'calc(100% - 80px)' }}
+                  onChange={handleChange}
+                  items={directoryList.map(item => {
+                    return {
+                      label: item.projectName,
+                      key: item.projectId.toString()
+                    }
+                  })}
+                />
+              )}
             </>
           )}
         </div>
@@ -132,20 +156,22 @@ const DevDocument = () => {
         <Col span={6}>
           <div className={`${style.title} ${style['catalog-title']}`}>目录</div>
           <div className={`${style.content} ${style['catalog-content']}`}>
-            {activeDirectory?.directoryList.length && selectedNode && (
-              <Tree
-                fieldNames={{
-                  title: 'name',
-                  key: 'id',
-                  children: 'leafDirectory'
-                }}
-                defaultSelectedKeys={[selectedNode.id]}
-                showLine
-                defaultExpandAll={true}
-                onSelect={onSelect}
-                treeData={activeDirectory?.directoryList}
-              />
-            )}
+            {activeDirectory &&
+              Boolean(activeDirectory.length) &&
+              selectedNode && (
+                <Tree
+                  fieldNames={{
+                    title: 'name',
+                    key: 'id',
+                    children: 'leafDirectory'
+                  }}
+                  showIcon
+                  defaultSelectedKeys={[selectedNode.id]}
+                  defaultExpandAll={true}
+                  onSelect={onSelect}
+                  treeData={activeDirectory}
+                />
+              )}
           </div>
         </Col>
         <Col span={18}>
@@ -160,7 +186,7 @@ const DevDocument = () => {
               ></div>
             )}
 
-            {annexUrl && (
+            {annexUrl && Boolean(annexUrl.length) && (
               <div className={style['download-content']}>
                 <p className={style['download-title']}>
                   <CloudDownloadOutlined />

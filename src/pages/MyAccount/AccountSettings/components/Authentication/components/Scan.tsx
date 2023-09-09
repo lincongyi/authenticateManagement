@@ -6,6 +6,7 @@ import accountSettingScanStep01 from '@/assets/accountSetting-scan-step-01.png'
 import accountSettingScanStep02 from '@/assets/accountSetting-scan-step-02.png'
 import accountSettingScanStep03 from '@/assets/accountSetting-scan-step-03.png'
 import accountSettingScanArrow from '@/assets/accountSetting-scan-arrow.png'
+import accountSettingScanFlow from '@/assets/accountSetting-scan-flow.png'
 import ScanQrcode from '@components/ScanQrcode'
 import { settingContext } from '@pages/MyAccount/AccountSettings'
 
@@ -31,7 +32,7 @@ const Scan = () => {
         <div className={`${style.title} font-primary-color`}>请扫描二维码</div>
         <ScanQrcode callback={context?.onNext as Function} />
         <Divider dashed />
-        <div className={`${style.subtitle} font-primary-color`}>
+        {/* <div className={`${style.subtitle} font-primary-color`}>
           人脸认证方式如下所示：
         </div>
         <div className={style['scan-flow']}>
@@ -60,7 +61,8 @@ const Scan = () => {
               )}
             </React.Fragment>
           ))}
-        </div>
+        </div> */}
+        <img src={accountSettingScanFlow} />
       </div>
       <div className='tc'>
         <Space>

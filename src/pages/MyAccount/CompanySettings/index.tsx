@@ -213,11 +213,7 @@ const CompanySettings = () => {
             )}
             <Title level={5}>单位管理员信息</Title>
             <Divider />
-            <Form.Item
-              name='adminName'
-              label='管理员姓名'
-              rules={[{ required: true }]}
-            >
+            <Form.Item label='管理员姓名' rules={[{ required: true }]}>
               {companyInfo?.adminName}
             </Form.Item>
             <Form.Item label='管理员手机号' required>

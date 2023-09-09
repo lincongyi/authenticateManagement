@@ -261,17 +261,26 @@ const Index = () => {
       <Row gutter={20} style={{ marginBottom: 20 }}>
         <Col span={8}>
           <div className={`${style.tag} ${style.icon01}`}>
-            我的应用数<span className={style.count}>{appCount?.total}</span>
+            <span className={`${style.count} font-primary-color`}>
+              {appCount?.total}
+            </span>
+            <span className='font-secondary-color'>我的应用数</span>
           </div>
         </Col>
         <Col span={8}>
           <div className={`${style.tag} ${style.icon02}`}>
-            正式应用<span className={style.count}>{appCount?.prod}</span>
+            <span className={`${style.count} font-primary-color`}>
+              {appCount?.prod}
+            </span>
+            <span className='font-secondary-color'>正式应用</span>
           </div>
         </Col>
         <Col span={8}>
-          <div className={`${style.tag} ${style.icon03}`}>
-            测试应用<span className={style.count}>{appCount?.sit}</span>
+          <div className={`${style.tag} ${style.icon03} ${style.last}`}>
+            <span className={`${style.count} font-primary-color`}>
+              {appCount?.sit}
+            </span>
+            <span className='font-secondary-color'>测试应用</span>
           </div>
         </Col>
       </Row>

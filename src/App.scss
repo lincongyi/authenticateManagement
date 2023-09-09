@@ -10,6 +10,10 @@
   @include font-primary-color;
 }
 
+.font-secondary-color {
+  @include font-secondary-color;
+}
+
 .tool {
   position: fixed;
   bottom: 0;

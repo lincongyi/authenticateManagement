@@ -4,13 +4,17 @@ $border-color: #d9d9d9;
 
 $light-font-primary-color: #1e2636;
 $dark-font-primary-color: #dbdbdb;
+$light-font-secondary-color: #575d69;
+$dark-font-secondary-color: #dbdbdb;
 
 $themes: (
   light:(
     'font-primary-color':$light-font-primary-color,
+    'font-secondary-color':$light-font-secondary-color,
   ),
   dark:(
     'font-primary-color':$dark-font-primary-color,
+    'font-secondary-color':$dark-font-secondary-color,
   )
 );
 
@@ -36,5 +40,11 @@ $themes: (
 @mixin font-primary-color {
   @include themeify {
     color: themed('font-primary-color');
+  }
+}
+
+@mixin font-secondary-color {
+  @include themeify {
+    color: themed('font-secondary-color');
   }
 }

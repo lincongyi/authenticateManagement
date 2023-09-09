@@ -1,14 +1,28 @@
 .tag {
+  position: relative;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   height: 80px;
-  padding-left: 80px;
+  padding-left: 110px;
   font-size: 16px;
   background-repeat: no-repeat;
-  background-position: 20px;
-  border-style: solid;
-  border-width: 1px;
-  border-radius: 4px;
+  background-position: 30px;
+
+
+  &::after {
+    position: absolute;
+    right: 0;
+    display: inline-block;
+    width: 1px;
+    height: 50%;
+    background-color: $border-color;
+    content: '';
+  }
+
+  &.last::after {
+    width: 0;
+  }
 
   @for $i from 1 through 3 {
     &.icon0#{$i} {
@@ -17,15 +31,14 @@
   }
 
   .count {
-    margin: 0 16px;
+    margin-bottom: 10px;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 28px;
   }
 }
 
 [data-theme='light'] .tag {
-  background-color: #edf5ff;
-  border-color: $border-color;
+
 }
 
 [data-theme='dark'] .tag {

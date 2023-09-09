@@ -38,9 +38,9 @@ const Methods = () => {
             key={item.type}
             onClick={() => selectMethod(item.type)}
           >
-            <i className={`${style.select}`}></i>
+            <i className={`${style.selected}`}></i>
+            <p className={`${style['method-name']}`}>{item.description}</p>
             <img src={item.icon} />
-            <p className='font-primary-color'>{item.description}</p>
           </div>
         ))}
       </div>

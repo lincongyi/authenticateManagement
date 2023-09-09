@@ -102,7 +102,12 @@ const CompanyInfo = () => {
             </React.Fragment>
           ))
         ) : (
-          <Typography.Text type='secondary'>暂无申请记录</Typography.Text>
+          <Typography.Text
+            type='secondary'
+            style={{ marginTop: 20, display: 'block' }}
+          >
+            暂无申请记录
+          </Typography.Text>
         )}
       </div>
     </>

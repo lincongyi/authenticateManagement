@@ -12,7 +12,12 @@ const CompanyDescriptions = ({
 }) => {
   return (
     <>
-      <Descriptions bordered className='tc' column={column}>
+      <Descriptions
+        bordered
+        className='tc'
+        column={column}
+        labelStyle={{ textAlign: 'center', fontWeight: 'bold' }}
+      >
         <Descriptions.Item label='单位名称：'>
           {companyInfo?.companyName || '-'}
         </Descriptions.Item>

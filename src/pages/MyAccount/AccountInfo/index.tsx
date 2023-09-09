@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import style from './index.module.scss'
 import { Button, Col, Row } from 'antd'
-import { EditOutlined } from '@ant-design/icons'
+import { EditOutlined, UserOutlined, LockOutlined } from '@ant-design/icons'
 import { currentUserInfo } from '@api/myAccount'
 
 const AccountInfo = () => {
@@ -32,7 +32,10 @@ const AccountInfo = () => {
     <Row className={style['account-wrap']}>
       <Col span={24}>
         <div className={style.column}>
-          <label className='font-primary-color'>登录账号：</label>
+          <label className='primary-color'>
+            <UserOutlined style={{ marginRight: 8 }} />
+            登录账号：
+          </label>
           <span className={style['column-value']}>
             {userInfo?.accountNumber}
           </span>
@@ -40,7 +43,10 @@ const AccountInfo = () => {
       </Col>
       <Col span={24}>
         <div className={style.column}>
-          <label className='font-primary-color'>登录密码：</label>
+          <label className='primary-color'>
+            <LockOutlined style={{ marginRight: 8 }} />
+            登录密码：
+          </label>
           <span className={style['column-value']}>{userInfo?.password}</span>
         </div>
       </Col>
