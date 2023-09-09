@@ -89,7 +89,7 @@ const DevDocument = () => {
   /**
    *  切换项目
    */
-  const handleChange = (value: string) => {
+  const onChange = (value: string) => {
     const item = directoryList?.find(item => item.projectId === Number(value))
     if (!item) return false
     initNode(item)
@@ -131,7 +131,7 @@ const DevDocument = () => {
               {directoryList && (
                 <Tabs
                   style={{ width: 'calc(100% - 80px)' }}
-                  onChange={handleChange}
+                  onChange={onChange}
                   items={directoryList.map(item => {
                     return {
                       label: item.projectName,
@@ -156,22 +156,20 @@ const DevDocument = () => {
         <Col span={6}>
           <div className={`${style.title} ${style['catalog-title']}`}>目录</div>
           <div className={`${style.content} ${style['catalog-content']}`}>
-            {activeDirectory &&
-              Boolean(activeDirectory.length) &&
-              selectedNode && (
-                <Tree
-                  fieldNames={{
-                    title: 'name',
-                    key: 'id',
-                    children: 'leafDirectory'
-                  }}
-                  showIcon
-                  defaultSelectedKeys={[selectedNode.id]}
-                  defaultExpandAll={true}
-                  onSelect={onSelect}
-                  treeData={activeDirectory}
-                />
-              )}
+            {activeDirectory && !!activeDirectory.length && selectedNode && (
+              <Tree
+                fieldNames={{
+                  title: 'name',
+                  key: 'id',
+                  children: 'leafDirectory'
+                }}
+                showIcon
+                defaultSelectedKeys={[selectedNode.id]}
+                defaultExpandAll={true}
+                onSelect={onSelect}
+                treeData={activeDirectory}
+              />
+            )}
           </div>
         </Col>
         <Col span={18}>
@@ -186,7 +184,7 @@ const DevDocument = () => {
               ></div>
             )}
 
-            {annexUrl && Boolean(annexUrl.length) && (
+            {annexUrl && !!annexUrl.length && (
               <div className={style['download-content']}>
                 <p className={style['download-title']}>
                   <CloudDownloadOutlined />

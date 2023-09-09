@@ -12,7 +12,7 @@ import {
   Typography
 } from 'antd'
 import { FormOutlined } from '@ant-design/icons'
-import UnAccessedSitEnv from './components/UnAccessedSitEnv'
+import SitEnv from './components/SitEnv'
 
 const { Paragraph } = Typography
 
@@ -60,8 +60,8 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {Boolean(searchParams.get('id')) && (
-            <UnAccessedSitEnv id={searchParams.get('id') as string} />
+          {!!searchParams.get('id') && (
+            <SitEnv id={searchParams.get('id') as string} />
           )}
         </>
       )
@@ -149,6 +149,7 @@ const AppInfo = () => {
           </Descriptions.Item>
         </Descriptions>
       </div>
+
       <div className={`${style.section} ${style['env-info']}`}>
         <Tabs
           defaultActiveKey='1'

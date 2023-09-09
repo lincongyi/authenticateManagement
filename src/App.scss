@@ -44,25 +44,6 @@
   }
 }
 
-.modal-sub-title {
-  position: relative;
-  margin-bottom: 20px;
-  padding-left: 12px;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 1;
-
-  &::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    height: 100%;
-    background-color: #000;
-    content: '';
-  }
-}
-
 .tc {
   text-align: center;
 }

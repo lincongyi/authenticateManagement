@@ -89,7 +89,7 @@ const updateApp = (params: TAppParams): Promise<TResponse> => {
 export type TGetAppInfoByEnv = {
   capability: {
     // 基础能力详情
-    id: string
+    id: number
     name: string
   }
   state: 0 | 1 // 0-未接入该能力；1-已接入该能力
