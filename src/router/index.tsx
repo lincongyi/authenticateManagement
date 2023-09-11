@@ -10,7 +10,6 @@ import {
   ProfileOutlined,
   AppstoreOutlined,
   SolutionOutlined,
-  FileExclamationOutlined,
   FileSearchOutlined
 } from '@ant-design/icons'
 
@@ -209,58 +208,58 @@ const routes: TRoutes[] = [
           icon: React.createElement(SolutionOutlined),
           breadcrumb: '我的申请'
         }
-      },
-      {
-        path: 'helps', // 问题帮助
-        element: lazyLoad('Helps'),
-        meta: {
-          isMenuItem: true,
-          icon: React.createElement(FileExclamationOutlined),
-          breadcrumb: '问题帮助'
-        }
-      },
-      {
-        path: 'issues', // 业务问题
-        children: [
-          {
-            path: 'daily', // 日常问题
-            element: lazyLoad('Issues/Daily'),
-            meta: {
-              isMenuItem: true,
-              breadcrumb: '日常问题'
-            }
-          },
-          {
-            path: 'recommend', // 问题推荐
-            element: lazyLoad('Issues/Recommend'),
-            meta: {
-              isMenuItem: true,
-              breadcrumb: '问题推荐'
-            }
-          },
-          {
-            path: 'classification', // 问题分类
-            element: lazyLoad('Issues/Classification'),
-            meta: {
-              isMenuItem: true,
-              breadcrumb: '问题分类'
-            }
-          },
-          {
-            path: 'reply', // 自动回复
-            element: lazyLoad('Issues/Reply'),
-            meta: {
-              isMenuItem: true,
-              breadcrumb: '自动回复'
-            }
-          }
-        ],
-        meta: {
-          isMenuItem: true,
-          icon: React.createElement(FileExclamationOutlined),
-          breadcrumb: '业务问题'
-        }
       }
+      // {
+      //   path: 'helps', // 问题帮助
+      //   element: lazyLoad('Helps'),
+      //   meta: {
+      //     isMenuItem: true,
+      //     icon: React.createElement(FileExclamationOutlined),
+      //     breadcrumb: '问题帮助'
+      //   }
+      // },
+      // {
+      //   path: 'issues', // 业务问题
+      //   children: [
+      //     {
+      //       path: 'daily', // 日常问题
+      //       element: lazyLoad('Issues/Daily'),
+      //       meta: {
+      //         isMenuItem: true,
+      //         breadcrumb: '日常问题'
+      //       }
+      //     },
+      //     {
+      //       path: 'recommend', // 问题推荐
+      //       element: lazyLoad('Issues/Recommend'),
+      //       meta: {
+      //         isMenuItem: true,
+      //         breadcrumb: '问题推荐'
+      //       }
+      //     },
+      //     {
+      //       path: 'classification', // 问题分类
+      //       element: lazyLoad('Issues/Classification'),
+      //       meta: {
+      //         isMenuItem: true,
+      //         breadcrumb: '问题分类'
+      //       }
+      //     },
+      //     {
+      //       path: 'reply', // 自动回复
+      //       element: lazyLoad('Issues/Reply'),
+      //       meta: {
+      //         isMenuItem: true,
+      //         breadcrumb: '自动回复'
+      //       }
+      //     }
+      //   ],
+      //   meta: {
+      //     isMenuItem: true,
+      //     icon: React.createElement(FileExclamationOutlined),
+      //     breadcrumb: '业务问题'
+      //   }
+      // }
     ]
   }
 ]

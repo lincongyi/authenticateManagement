@@ -122,8 +122,16 @@ const AppInfo = () => {
           type='info'
         />
         <Descriptions column={4}>
-          <Descriptions.Item label='clientId'>
-            <Paragraph copyable>{appInfo?.clientId || '-'}</Paragraph>
+          {appInfo?.appName === '身份认证V2版本' && (
+            <Descriptions.Item label='Client Secret' span={4}>
+              {appInfo?.clientSecret || '-'}
+            </Descriptions.Item>
+          )}
+
+          <Descriptions.Item label='Client Id'>
+            <Paragraph copyable style={{ marginBottom: 0 }}>
+              {appInfo?.clientId || '-'}
+            </Paragraph>
           </Descriptions.Item>
           <Descriptions.Item label='应用类型'>
             {appInfo?.appType || '-'}

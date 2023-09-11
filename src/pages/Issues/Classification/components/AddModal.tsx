@@ -21,6 +21,13 @@ const AddModal = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   }
   /* eslint-disable no-template-curly-in-string */
 
+  const formProps = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+    validateMessages,
+    autoComplete: 'off'
+  }
+
   /**
    * 分类级别
    */
@@ -65,12 +72,9 @@ const AddModal = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
       <Form
         form={form}
         name='add'
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
-        validateMessages={validateMessages}
+        {...formProps}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
       >
         <Form.Item label='分类名称' name='name' rules={[{ required: true }]}>
           <Input placeholder='请输入分类名称' maxLength={10} />

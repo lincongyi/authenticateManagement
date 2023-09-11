@@ -34,6 +34,13 @@ const AddModal = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
   }
   /* eslint-disable no-template-curly-in-string */
 
+  const formProps = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    validateMessages,
+    autoComplete: 'off'
+  }
+
   /**
    * 关闭
    */
@@ -86,15 +93,12 @@ const AddModal = ({ open, setOpen }: { open: boolean; setOpen: Function }) => {
     >
       <Divider />
       <Form
-        name='add'
         form={form}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        name='add'
+        {...formProps}
         initialValues={{ apps: [] }}
-        validateMessages={validateMessages}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
       >
         <Form.Item
           label='关键字/词'

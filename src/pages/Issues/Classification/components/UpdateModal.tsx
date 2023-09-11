@@ -27,6 +27,13 @@ const UpdateModal = ({
   }
   /* eslint-disable no-template-curly-in-string */
 
+  const formProps = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+    validateMessages,
+    autoComplete: 'off'
+  }
+
   /**
    * 分类级别
    */
@@ -78,13 +85,10 @@ const UpdateModal = ({
       <Form
         form={form}
         name='update'
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
-        validateMessages={validateMessages}
+        {...formProps}
         initialValues={item}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
       >
         <Form.Item label='分类编号'>
           <p>FL2344</p>

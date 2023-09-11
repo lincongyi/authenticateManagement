@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { TGetAppInfoByEnv, getAppInfoByEnv } from '@api/myApp'
-import style from './index.module.scss'
+import style from '../index.module.scss'
 import { Col, Row, Tabs } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'
-import AccessedEnv from './AccessedEnv'
+import AccessedEnv from '../AccessedEnv'
 
 const SitEnv = ({ id }: { id: string }) => {
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()

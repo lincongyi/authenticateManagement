@@ -34,6 +34,12 @@ const SettingsModal = ({
 }) => {
   const [form] = Form.useForm()
 
+  const formProps = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+    autoComplete: 'off'
+  }
+
   const [checkedList, setCheckedList] =
     useState<CheckboxValueType[]>(defaultCheckedList)
   const [checkAll, setCheckAll] = useState(false)
@@ -109,14 +115,12 @@ const SettingsModal = ({
       <Form
         form={form}
         name='settings'
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        {...formProps}
         initialValues={{
           relavance: defaultCheckedList
         }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
       >
         <Form.Item label='关联至应用名称' required labelCol={{ span: 24 }}>
           <>

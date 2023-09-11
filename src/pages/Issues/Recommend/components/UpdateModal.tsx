@@ -29,6 +29,13 @@ const UpdateModal = ({
   }
   /* eslint-disable no-template-curly-in-string */
 
+  const formProps = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    validateMessages,
+    autoComplete: 'off'
+  }
+
   const classificationOptions = [
     { value: 0, label: '其他' },
     { value: 1, label: '注册' },
@@ -75,13 +82,10 @@ const UpdateModal = ({
       <Form
         form={form}
         name='update'
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        {...formProps}
         initialValues={item}
-        validateMessages={validateMessages}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
       >
         <Form.Item label='应用名称'>
           <p>南沙分局微信小程序</p>

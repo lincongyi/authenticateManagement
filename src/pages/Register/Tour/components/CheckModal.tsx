@@ -14,6 +14,12 @@ const CheckModal = ({
 }) => {
   const [form] = Form.useForm()
 
+  const formProps = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+    autoComplete: 'off'
+  }
+
   /**
    * 关闭
    */
@@ -61,12 +67,10 @@ const CheckModal = ({
       <Form
         form={form}
         name='check'
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
+        {...formProps}
         colon={false}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
       >
         <Form.Item
           name='accountNumber'

@@ -211,8 +211,10 @@
     }
 
     .value {
+      display: flex;
       flex: 1;
-      padding-left: 10px;
+      justify-content: space-between;
+      padding: 0 10px;
     }
   }
 }
@@ -221,6 +223,22 @@
   margin-left: 4px;
   font-weight: bold;
   font-size: 18px;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+
+  &.accessed-dot {
+    background-color: #12be55;
+  }
+
+  &.unaccessed-dot {
+    background-color: #ffa814;
+  }
 }
 
 [data-theme='light'] .panel .label {

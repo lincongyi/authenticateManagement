@@ -49,7 +49,7 @@ const Classification = () => {
     console.log('Failed:', errorInfo)
   }
 
-  const [addModalOpen, setAddModalOpen] = useState(false) // 控制新增功能弹窗Modal显示隐藏
+  const [addModalOpen, setAddModalOpen] = useState(false) // 控制新增功能Modal显示隐藏
 
   /**
    * 新增
@@ -68,7 +68,7 @@ const Classification = () => {
     isDisplay: number
   }
 
-  const [checkModalOpen, setCheckModalOpen] = useState(false) // 控制查看功能弹窗Modal显示隐藏
+  const [checkModalOpen, setCheckModalOpen] = useState(false) // 控制查看功能Modal显示隐藏
   /**
    * 详情
    * @param {TDataType} values
@@ -78,7 +78,7 @@ const Classification = () => {
     setCheckModalOpen(true)
   }
 
-  const [updateModalOpen, setUpdateModalOpen] = useState(false) // 控制更新功能弹窗Modal显示隐藏
+  const [updateModalOpen, setUpdateModalOpen] = useState(false) // 控制更新功能Modal显示隐藏
 
   /**
    * 修改

@@ -1,33 +1,25 @@
 import React from 'react'
 import {
   Alert,
-  Form,
   Modal,
-  message,
-  Input,
+  Form,
+  Divider,
   Row,
   Col,
   Space,
-  Button
+  Button,
+  Input
 } from 'antd'
-import { TDataType } from '../index.d'
 
-const { TextArea } = Input
-
-const EnableModal = ({
+const WarningModal = ({
   open,
   setOpen,
-  item
+  callback
 }: {
   open: boolean
   setOpen: Function
-  item: TDataType
+  callback: Function
 }) => {
-  const isEnable = item.state === 3
-  const alertTips = `${isEnable ? '启用' : '停用'}申请通过后，将同时${
-    isEnable ? '启用' : '停用'
-  }此应用测试、正式环境的应用账号、及已接入能力服务！`
-
   const [form] = Form.useForm()
 
   /* eslint-disable no-template-curly-in-string */
@@ -36,11 +28,12 @@ const EnableModal = ({
   }
 
   const formProps = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 20 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
     validateMessages,
     autoComplete: 'off'
   }
+
   /**
    * 关闭
    */
@@ -54,45 +47,58 @@ const EnableModal = ({
    */
   const onFinish = (values: any) => {
     console.log('values', values)
-    message.success({
-      content: `已成功${isEnable ? '启用' : '停用'}`
-    })
     onCancel()
+    callback()
   }
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
   }
-
   return (
     <Modal
-      title={`申请${isEnable ? '启用' : '停用'}`}
+      title='预警设置'
       centered
       open={open}
       width={640}
       onCancel={onCancel}
       footer={[]}
     >
-      <Alert message={alertTips} type='warning' style={{ marginBottom: 20 }} />
+      <Divider />
+      <Alert
+        message='平台将根据您的预警设置进行推送系统通知及邮件通知！'
+        type='info'
+        showIcon
+        style={{ marginBottom: 20 }}
+      />
       <Form
         form={form}
-        name='enable'
+        name='warning'
         {...formProps}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
         <Form.Item
-          label={`${isEnable ? '启用' : '停用'}原因`}
-          name='reason'
+          label='调用量预警阈值'
+          name='amount'
           rules={[{ required: true }]}
         >
-          <TextArea
-            showCount
-            maxLength={50}
-            style={{ height: 120, resize: 'none' }}
-            placeholder={`请输入${isEnable ? '启用' : '停用'}原因`}
-          />
+          <Input placeholder='请输入调用量预警阈值' suffix='%' />
         </Form.Item>
+        <Form.Item
+          label='报错次数预警阈值'
+          name='times'
+          rules={[{ required: true }]}
+        >
+          <Input placeholder='报错次数预警阈值' suffix='次/分钟' />
+        </Form.Item>
+        <Form.Item
+          label='调用超时预警阈值'
+          name='timeout'
+          rules={[{ required: true }]}
+        >
+          <Input placeholder='调用超时预警阈值' suffix='毫秒（ms）' />
+        </Form.Item>
+        <Divider />
         <Form.Item noStyle wrapperCol={{ span: 24 }}>
           <Row>
             <Col span={24} className='tr'>
@@ -110,4 +116,4 @@ const EnableModal = ({
   )
 }
 
-export default EnableModal
+export default WarningModal

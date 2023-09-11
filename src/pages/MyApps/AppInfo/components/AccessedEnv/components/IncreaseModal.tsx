@@ -1,33 +1,25 @@
 import React from 'react'
 import {
   Alert,
-  Form,
   Modal,
-  message,
-  Input,
+  Form,
+  Divider,
   Row,
   Col,
   Space,
-  Button
+  Button,
+  Input
 } from 'antd'
-import { TDataType } from '../index.d'
 
-const { TextArea } = Input
-
-const EnableModal = ({
+const IncreaseModal = ({
   open,
   setOpen,
-  item
+  callback
 }: {
   open: boolean
   setOpen: Function
-  item: TDataType
+  callback: Function
 }) => {
-  const isEnable = item.state === 3
-  const alertTips = `${isEnable ? '启用' : '停用'}申请通过后，将同时${
-    isEnable ? '启用' : '停用'
-  }此应用测试、正式环境的应用账号、及已接入能力服务！`
-
   const [form] = Form.useForm()
 
   /* eslint-disable no-template-curly-in-string */
@@ -41,6 +33,7 @@ const EnableModal = ({
     validateMessages,
     autoComplete: 'off'
   }
+
   /**
    * 关闭
    */
@@ -52,47 +45,41 @@ const EnableModal = ({
   /**
    * 提交数据
    */
-  const onFinish = (values: any) => {
-    console.log('values', values)
-    message.success({
-      content: `已成功${isEnable ? '启用' : '停用'}`
-    })
+  const onFinish = () => {
     onCancel()
+    callback()
   }
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo)
   }
-
   return (
     <Modal
-      title={`申请${isEnable ? '启用' : '停用'}`}
+      title='申请增加用量'
       centered
       open={open}
       width={640}
       onCancel={onCancel}
       footer={[]}
     >
-      <Alert message={alertTips} type='warning' style={{ marginBottom: 20 }} />
+      <Divider />
+      <Alert
+        message='每日可发起3次申请增加用量，次日将重置用量限额。'
+        type='info'
+        showIcon
+        style={{ marginBottom: 20 }}
+      />
       <Form
         form={form}
-        name='enable'
+        name='increase'
         {...formProps}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
-        <Form.Item
-          label={`${isEnable ? '启用' : '停用'}原因`}
-          name='reason'
-          rules={[{ required: true }]}
-        >
-          <TextArea
-            showCount
-            maxLength={50}
-            style={{ height: 120, resize: 'none' }}
-            placeholder={`请输入${isEnable ? '启用' : '停用'}原因`}
-          />
+        <Form.Item label='增加用量' name='name' rules={[{ required: true }]}>
+          <Input placeholder='请输入增加用量' maxLength={10} />
         </Form.Item>
+        <Divider />
         <Form.Item noStyle wrapperCol={{ span: 24 }}>
           <Row>
             <Col span={24} className='tr'>
@@ -110,4 +97,4 @@ const EnableModal = ({
   )
 }
 
-export default EnableModal
+export default IncreaseModal

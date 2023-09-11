@@ -37,6 +37,13 @@ const UpdateModal = ({
   }
   /* eslint-disable no-template-curly-in-string */
 
+  const formProps = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+    validateMessages,
+    autoComplete: 'off'
+  }
+
   const [relevanceAppList, setRelevanceAppList] = useState([
     { name: '认证服务管理平台', icon: appIcon01 },
     { name: '微警认证APP', icon: appIcon02 },
@@ -95,12 +102,9 @@ const UpdateModal = ({
       <Form
         form={form}
         name='update'
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
-        validateMessages={validateMessages}
+        {...formProps}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
       >
         <Form.Item label='问题编号' name='number'>
           <p>WTP23445</p>

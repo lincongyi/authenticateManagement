@@ -21,6 +21,12 @@ const CheckModal = ({
   open: boolean
   setOpen: Function
 }) => {
+  const formProps = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    autoComplete: 'off'
+  }
+
   const classificationOptions = [
     { value: 0, label: '其他' },
     { value: 1, label: '注册' },
@@ -45,13 +51,7 @@ const CheckModal = ({
       footer={[]}
     >
       <Divider />
-      <Form
-        name='check'
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
-        initialValues={item}
-        autoComplete='off'
-      >
+      <Form name='check' {...formProps} initialValues={item}>
         <Form.Item label='应用名称'>
           <p>南沙分局微信小程序</p>
         </Form.Item>

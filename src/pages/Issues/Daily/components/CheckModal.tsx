@@ -26,6 +26,12 @@ const CheckModal = ({
   open: boolean
   setOpen: Function
 }) => {
+  const formProps = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+    autoComplete: 'off'
+  }
+
   const [relevanceAppList] = useState([
     { name: '认证服务管理平台', icon: appIcon01 },
     { name: '微警认证APP', icon: appIcon02 },
@@ -55,13 +61,7 @@ const CheckModal = ({
       footer={[]}
     >
       <Divider />
-      <Form
-        name='check'
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
-        initialValues={{ ...item }}
-        autoComplete='off'
-      >
+      <Form name='check' {...formProps} initialValues={{ ...item }}>
         <Form.Item label='问题编号' name='number'>
           <p>WTP23445</p>
         </Form.Item>

@@ -68,6 +68,7 @@ export type TGetAppInfoResponse = {
   appEnv: 'sit' | 'prod'
   createTime: string
   clientId: string
+  clientSecret?: string
 } & TAppParams
 
 /**

@@ -40,6 +40,13 @@ const UpdateModal = ({
   }
   /* eslint-disable no-template-curly-in-string */
 
+  const formProps = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+    validateMessages,
+    autoComplete: 'off'
+  }
+
   /**
    * 关闭
    */
@@ -92,15 +99,12 @@ const UpdateModal = ({
     >
       <Divider />
       <Form
-        name='update'
         form={form}
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
+        name='update'
+        {...formProps}
         initialValues={{ apps: [] }}
-        validateMessages={validateMessages}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
-        autoComplete='off'
       >
         <Form.Item label='关键字编号' name='number'>
           <p>G12321</p>
