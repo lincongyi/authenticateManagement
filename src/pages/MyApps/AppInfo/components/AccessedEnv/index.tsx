@@ -42,7 +42,7 @@ const AccessedEnv = ({ id }: { id: number }) => {
 
   const [clientSecret, setClientSecret] = useState<string>() // Client Secret
 
-  const [isHide, setIsHide] = useState<boolean>(true) // 查看or隐藏Client Secret
+  const [isHide, setIsHide] = useState(true) // 查看or隐藏Client Secret
 
   useEffect(() => {
     setClientSecret('12345678-1234-5678')
@@ -127,7 +127,7 @@ const AccessedEnv = ({ id }: { id: number }) => {
     console.log('开发文档')
   }
 
-  const [increaseModalOpen, setIncreaseModalOpen] = useState<boolean>(false) // 控制申请增加用量Modal显示隐藏
+  const [increaseModalOpen, setIncreaseModalOpen] = useState(false) // 控制申请增加用量Modal显示隐藏
 
   const [activeId, setActiveId] = useState<string | undefined>() // 当前需要操作的id
 
@@ -145,7 +145,7 @@ const AccessedEnv = ({ id }: { id: number }) => {
    */
   const increaseUsageCallback = () => {}
 
-  const [warningModalOpen, setWarningModalOpen] = useState<boolean>(false) // 控制预警设置Modal显示隐藏
+  const [warningModalOpen, setWarningModalOpen] = useState(false) // 控制预警设置Modal显示隐藏
 
   /**
    * 预警设置
@@ -268,7 +268,7 @@ const AccessedEnv = ({ id }: { id: number }) => {
     console.log('activeKey', activeKey)
   }
 
-  const [delayModalOpen, setDelayModalOpen] = useState<boolean>(false) // 控制申请延期Modal显示隐藏
+  const [delayModalOpen, setDelayModalOpen] = useState(false) // 控制申请延期Modal显示隐藏
 
   /**
    * 申请延期

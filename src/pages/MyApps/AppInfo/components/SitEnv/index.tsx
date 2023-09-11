@@ -8,7 +8,7 @@ import AccessedEnv from '../AccessedEnv'
 const SitEnv = ({ id }: { id: string }) => {
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
 
-  const [isAccessed, setIsAccessed] = useState<boolean>(false) // 应用是否已经接入当前active基础能力
+  const [isAccessed, setIsAccessed] = useState(false) // 应用是否已经接入当前active基础能力
 
   const [activeCapabilityId, setActiveCapabilityId] = useState<number>() // 当前基础能力id
 

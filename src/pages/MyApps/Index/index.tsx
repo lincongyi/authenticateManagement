@@ -137,7 +137,7 @@ const Index = () => {
     navigate(`./appInfo?id=${id}`)
   }
 
-  const [open, setOpen] = useState<boolean>(false) // 控制启用or停用Modal显示隐藏
+  const [open, setOpen] = useState(false) // 控制启用or停用Modal显示隐藏
 
   const [activeItem, setActiveItem] = useState<TDataType>() // 传给申请启用or申请停用Modal的item
 
