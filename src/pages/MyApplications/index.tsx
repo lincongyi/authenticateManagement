@@ -28,11 +28,12 @@ import {
 } from '@api/myApplications'
 import { getdictionary } from '@api/index'
 import type { TGetApplyListParams } from '@api/myApplications'
-import { useUpdateEffect, formatDictionary } from '@utils/index'
+import { formatDictionary } from '@utils/index'
 import CheckModal from './components/CheckModal'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { useStore } from '@stores/index'
+import { useUpdateEffect } from '@/hooks'
 
 const { RangePicker } = DatePicker
 

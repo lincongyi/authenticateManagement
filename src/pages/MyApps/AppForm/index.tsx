@@ -12,13 +12,12 @@ import {
   message
 } from 'antd'
 import { fieldNames } from '@utils/index'
-import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
-import { getdictionary } from '@api/index'
 import { currentCompanyInfo } from '@api/myAccount'
 import { addApp, getAppInfo, updateApp } from '@api/myApp'
 import type { TAppParams } from '@api/myApp'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useGetDictionaryLabel } from '@/hooks'
 
 const { Title } = Typography
 const { TextArea } = Input
@@ -38,20 +37,7 @@ export const formProps = {
 const defaultMaxLength = 20
 
 const AppForm = () => {
-  /**
-   * mobx存储数据字典
-   */
-  const { accessFormStore } = useStore()
-  useEffect(() => {
-    if (!accessFormStore.dictionary) {
-      ;(async () => {
-        const { data } = await getdictionary({
-          showType: 'appInfo'
-        })
-        accessFormStore.setDictionary(data)
-      })()
-    }
-  }, [])
+  const { accessFormStore } = useGetDictionaryLabel()
 
   /**
    * 当前单位信息

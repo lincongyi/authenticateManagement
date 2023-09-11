@@ -3,7 +3,8 @@ import { QRCode, message } from 'antd'
 import { useStore } from '@stores/index'
 import { getQrcode } from '@api/index'
 import { v4 as uuidv4 } from 'uuid'
-import { loadEnv, useUpdateEffect } from '@utils/index'
+import { loadEnv } from '@utils/index'
+import { useUpdateEffect } from '@/hooks'
 
 const { VITE_WEBSOCKET_URL } = loadEnv()
 

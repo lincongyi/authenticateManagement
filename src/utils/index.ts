@@ -1,7 +1,5 @@
 import { message } from 'antd'
 import type { RcFile } from 'antd/es/upload/interface'
-import { useEffect, useRef } from 'react'
-import type { TAccessFormStore } from '@stores/accessForm.store'
 /**
  * 获取当前环境
  */
@@ -70,18 +68,6 @@ const reverseArray = (array: TAreaItem[]) => {
 }
 
 /**
- * 自定义hook使useEffect在更新时才执行
- * @param {Function} callback useEffect里执行的方法
- * @param {string[]} params 依赖项
- */
-const useUpdateEffect = (callback: Function, params: any[]) => {
-  const didMountRef = useRef(false)
-  useEffect(() => {
-    didMountRef.current ? callback && callback() : (didMountRef.current = true)
-  }, params)
-}
-
-/**
  * 格式化处理特殊数据字典返回格式
  * @param {TDictList[] | TDictValue[]} array
  * @returns {Option[]} list 符合Cascader组件使用的options
@@ -106,29 +92,6 @@ const formatDictionary = (array: TDictList[] | TDictValue[]) => {
 }
 
 /**
- * 返回目标字典item的dictName
- * @param {object} store mobx实例
- * @param {string} item 目标字典item
- * @returns {string} dictName
- */
-
-const getDictionaryValue = (
-  store: any,
-  item: keyof TAccessFormStore,
-  value: string | number
-) => {
-  if (!store.dictionary) return undefined
-  const dictionaryItem = store.getDictionaryItem(item)
-  const target =
-    dictionaryItem?.find(
-      (__item: { dictValue: string | number; dictName: string }) =>
-        __item.dictValue === value
-    ) || undefined
-  if (!target) return undefined
-  return target.dictName
-}
-
-/**
  * 上传前校验文件
  */
 const imgBeforeUpload = (file: RcFile) => {
@@ -150,8 +113,6 @@ export {
   handleCopy,
   getBase64,
   reverseArray,
-  useUpdateEffect,
   formatDictionary,
-  getDictionaryValue,
   imgBeforeUpload
 }

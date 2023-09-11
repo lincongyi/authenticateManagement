@@ -122,6 +122,7 @@ const AppInfo = () => {
           type='info'
         />
         <Descriptions column={4}>
+          {/* 这里之后最好用id来判断 */}
           {appInfo?.appName === '身份认证V2版本' && (
             <Descriptions.Item label='Client Secret' span={4}>
               {appInfo?.clientSecret || '-'}

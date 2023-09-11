@@ -15,9 +15,7 @@ import {
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import 'dayjs/locale/zh-cn'
 import { rangePresets, disabledDate, dateFormat } from '@utils/date'
-import { getdictionary } from '@api/index'
 import { useNavigate } from 'react-router-dom'
-import { useStore } from '@stores/index'
 import { observer } from 'mobx-react-lite'
 import dayjs from 'dayjs'
 import type { TAppCount, TDataType, TFormData } from './index.d'
@@ -25,8 +23,9 @@ import { getCapabilityList } from '@api/ability'
 import { DefaultOptionType } from 'antd/es/select'
 import { AppstoreAddOutlined } from '@ant-design/icons'
 import { getAppList, getAppCount } from '@api/myApp'
-import { fieldNames, getDictionaryValue } from '@utils/index'
+import { fieldNames } from '@utils/index'
 import EnableModal from './components/EnableModal'
+import { useGetDictionaryLabel } from '@/hooks'
 
 const { RangePicker } = DatePicker
 
@@ -39,20 +38,7 @@ const Index = () => {
     })()
   }, [])
 
-  /**
-   * mobx存储数据字典
-   */
-  const { accessFormStore } = useStore()
-  useEffect(() => {
-    if (!accessFormStore.dictionary) {
-      ;(async () => {
-        const { data } = await getdictionary({
-          showType: 'appInfo'
-        })
-        accessFormStore.setDictionary(data)
-      })()
-    }
-  }, [])
+  const { accessFormStore, getDictionaryItem } = useGetDictionaryLabel()
 
   const [capabilityList, setCapabilityList] = useState<DefaultOptionType[]>() // 基础能力列表
   /**
@@ -190,13 +176,13 @@ const Index = () => {
     {
       title: '接入环境',
       render: (values: TDataType) => (
-        <>{{ sit: '测试环境', prod: '正式环境' }[values.appEnv]}</>
+        <>{getDictionaryItem('appEnv', values.appEnv)}环境</>
       )
     },
     {
       title: '应用类型',
       render: (values: TDataType) => (
-        <>{getDictionaryValue(accessFormStore, 'appType', values.appType)}</>
+        <>{getDictionaryItem('appType', values.appType)}</>
       )
     },
     {
@@ -222,13 +208,7 @@ const Index = () => {
                 ['success', 'warning', 'error'][values?.state] || 'success'
               }
             >
-              <>
-                {getDictionaryValue(
-                  accessFormStore,
-                  'appState',
-                  values.state
-                ) || '正常'}
-              </>
+              <>{getDictionaryItem('appState', values.state) || '正常'}</>
             </Tag>
           )}
         </>
