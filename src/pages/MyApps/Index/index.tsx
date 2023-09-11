@@ -38,7 +38,7 @@ const Index = () => {
     })()
   }, [])
 
-  const { accessFormStore, getDictionaryItem } = useGetDictionaryLabel()
+  const { accessFormStore, getDictionaryItemName } = useGetDictionaryLabel()
 
   const [capabilityList, setCapabilityList] = useState<DefaultOptionType[]>() // 基础能力列表
   /**
@@ -176,13 +176,13 @@ const Index = () => {
     {
       title: '接入环境',
       render: (values: TDataType) => (
-        <>{getDictionaryItem('appEnv', values.appEnv)}环境</>
+        <>{getDictionaryItemName('appEnv', values.appEnv)}环境</>
       )
     },
     {
       title: '应用类型',
       render: (values: TDataType) => (
-        <>{getDictionaryItem('appType', values.appType)}</>
+        <>{getDictionaryItemName('appType', values.appType)}</>
       )
     },
     {
@@ -208,7 +208,7 @@ const Index = () => {
                 ['success', 'warning', 'error'][values?.state] || 'success'
               }
             >
-              <>{getDictionaryItem('appState', values.state) || '正常'}</>
+              <>{getDictionaryItemName('appState', values.state) || '正常'}</>
             </Tag>
           )}
         </>

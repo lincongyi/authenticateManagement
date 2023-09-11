@@ -36,7 +36,7 @@ const useGetDictionaryLabel = () => {
   /**
    * 根据dictValue获取dictName
    */
-  const getDictionaryItem = (
+  const getDictionaryItemName = (
     item: keyof TAccessFormStore,
     value: string | number
   ) => {
@@ -48,7 +48,7 @@ const useGetDictionaryLabel = () => {
   }
   return {
     accessFormStore,
-    getDictionaryItem
+    getDictionaryItemName
   }
 }
 

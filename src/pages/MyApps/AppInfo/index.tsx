@@ -13,6 +13,7 @@ import {
 } from 'antd'
 import { FormOutlined } from '@ant-design/icons'
 import SitEnv from './components/SitEnv'
+import { useGetDictionaryLabel } from '@/hooks'
 
 const { Paragraph } = Typography
 
@@ -21,6 +22,8 @@ const AppInfo = () => {
   const navigate = useNavigate()
 
   const [appInfo, setAppInfo] = useState<TGetAppInfoResponse>()
+
+  const { getDictionaryItemName } = useGetDictionaryLabel()
 
   /**
    * 初始化应用详情
@@ -135,13 +138,18 @@ const AppInfo = () => {
             </Paragraph>
           </Descriptions.Item>
           <Descriptions.Item label='应用类型'>
-            {appInfo?.appType || '-'}
+            {(appInfo && getDictionaryItemName('appType', appInfo.appType)) ||
+              '-'}
           </Descriptions.Item>
           <Descriptions.Item label='所属级别'>
-            {appInfo?.sysLevel || '-'}
+            {(appInfo &&
+              getDictionaryItemName('systemlevel', appInfo.sysLevel)) ||
+              '-'}
           </Descriptions.Item>
           <Descriptions.Item label='所属网域'>
-            {appInfo?.sysInternet || '-'}
+            {(appInfo &&
+              getDictionaryItemName('networkType', appInfo.sysInternet)) ||
+              '-'}
           </Descriptions.Item>
 
           <Descriptions.Item label='承建单位'>
