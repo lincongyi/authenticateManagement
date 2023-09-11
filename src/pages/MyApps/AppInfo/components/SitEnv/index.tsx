@@ -10,6 +10,8 @@ const SitEnv = ({ id }: { id: string }) => {
 
   const [isAccessed, setIsAccessed] = useState<boolean>(false) // 应用是否已经接入当前active基础能力
 
+  const [activeCapabilityId, setActiveCapabilityId] = useState<number>() // 当前基础能力id
+
   /**
    * 初始化当前应用所拥有的能力信息
    */
@@ -22,6 +24,8 @@ const SitEnv = ({ id }: { id: string }) => {
       if (!data) return
       setAppInfoByEnv(data)
 
+      setActiveCapabilityId(data[0].capability.id)
+
       const state = data[0].state
       setIsAccessed(!state)
       if (state) {
@@ -31,13 +35,14 @@ const SitEnv = ({ id }: { id: string }) => {
   }, [])
 
   /**
-   * 切换标签
+   * 切换基础能力标签
    */
   const onChange = (activeKey: string) => {
     const item = appInfoByEnv?.find(
       item => item.capability.id === Number(activeKey)
     )
     console.log(item)
+    setActiveCapabilityId(item?.capability.id)
   }
   return (
     <>
@@ -149,7 +154,7 @@ const SitEnv = ({ id }: { id: string }) => {
             </div>
           ) : (
             // 已接入
-            <AccessedEnv />
+            <>{activeCapabilityId && <AccessedEnv id={activeCapabilityId} />}</>
           )}
         </>
       ) : (

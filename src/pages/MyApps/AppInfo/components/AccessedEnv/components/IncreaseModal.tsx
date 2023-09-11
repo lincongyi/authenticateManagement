@@ -12,10 +12,12 @@ import {
 } from 'antd'
 
 const IncreaseModal = ({
+  id,
   open,
   setOpen,
   callback
 }: {
+  id: string | undefined
   open: boolean
   setOpen: Function
   callback: Function

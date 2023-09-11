@@ -29,11 +29,12 @@ import LineChart from './components/LineChart'
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import IncreaseModal from './components/IncreaseModal'
 import WarningModal from './components/WarningModal'
+import DelayModal from './components/DelayModal'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
 
-const AccessedEnv = () => {
+const AccessedEnv = ({ id }: { id: number }) => {
   const [currentEnv, setCurrentEnv] = useState<'sit' | 'prod'>() // 当前环境
   useEffect(() => {
     setCurrentEnv('sit')
@@ -41,7 +42,7 @@ const AccessedEnv = () => {
 
   const [clientSecret, setClientSecret] = useState<string>() // Client Secret
 
-  const [isHide, setIsHide] = useState<boolean>(true)
+  const [isHide, setIsHide] = useState<boolean>(true) // 查看or隐藏Client Secret
 
   useEffect(() => {
     setClientSecret('12345678-1234-5678')
@@ -68,7 +69,7 @@ const AccessedEnv = () => {
     if (!open) renderChart()
   }
 
-  const amount = 100000
+  const amount = 100000 // 今日能力调用量
   /**
    * 图表数据
    */
@@ -122,17 +123,20 @@ const AccessedEnv = () => {
   /**
    * 开发文档
    */
-  const toDevDocument = (id: string) => {
-    console.log(id)
+  const toDevDocument = () => {
+    console.log('开发文档')
   }
 
   const [increaseModalOpen, setIncreaseModalOpen] = useState<boolean>(false) // 控制申请增加用量Modal显示隐藏
+
+  const [activeId, setActiveId] = useState<string | undefined>() // 当前需要操作的id
 
   /**
    * 申请增加用量
    */
   const onIncreaseUsage = (id: string) => {
     console.log(id)
+    setActiveId(id)
     setIncreaseModalOpen(true)
   }
 
@@ -148,6 +152,7 @@ const AccessedEnv = () => {
    */
   const onWarningSetting = (id: string) => {
     console.log(id)
+    setActiveId(id)
     setWarningModalOpen(true)
   }
 
@@ -234,7 +239,7 @@ const AccessedEnv = () => {
       width: 250,
       render: values => (
         <>
-          <Button type='link' onClick={() => toDevDocument(values.id)}>
+          <Button type='link' onClick={toDevDocument}>
             开发文档
           </Button>
           {currentEnv === 'sit' ? (
@@ -261,6 +266,23 @@ const AccessedEnv = () => {
    */
   const onChange = (activeKey: string) => {
     console.log('activeKey', activeKey)
+  }
+
+  const [delayModalOpen, setDelayModalOpen] = useState<boolean>(false) // 控制申请延期Modal显示隐藏
+
+  /**
+   * 申请延期
+   */
+  const onDelay = () => {
+    // console.log(id)
+    setDelayModalOpen(true)
+  }
+
+  /**
+   * 申请延期回调函数
+   */
+  const delayCallback = () => {
+    setActiveId(undefined)
   }
 
   return (
@@ -396,10 +418,20 @@ const AccessedEnv = () => {
                 <Button type='primary' icon={<EditOutlined />} ghost>
                   申请配置更改
                 </Button>
-                <Button type='primary' icon={<HistoryOutlined />} ghost>
+                <Button
+                  type='primary'
+                  icon={<HistoryOutlined />}
+                  ghost
+                  onClick={onDelay}
+                >
                   申请延期
                 </Button>
-                <Button type='primary' icon={<FileTextOutlined />} ghost>
+                <Button
+                  type='primary'
+                  icon={<FileTextOutlined />}
+                  ghost
+                  onClick={toDevDocument}
+                >
                   开发文档
                 </Button>
               </Space>
@@ -423,17 +455,25 @@ const AccessedEnv = () => {
       </Row>
       {currentEnv === 'sit' ? (
         <IncreaseModal
+          id={activeId}
           open={increaseModalOpen}
           setOpen={setIncreaseModalOpen}
           callback={increaseUsageCallback}
         />
       ) : (
         <WarningModal
+          id={activeId}
           open={warningModalOpen}
           setOpen={setWarningModalOpen}
           callback={warningSettingCallback}
         />
       )}
+      <DelayModal
+        id={activeId}
+        open={delayModalOpen}
+        setOpen={setDelayModalOpen}
+        callback={delayCallback}
+      />
     </>
   )
 }
