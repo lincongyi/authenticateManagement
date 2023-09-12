@@ -11,7 +11,7 @@ const SitEnv = ({ id }: { id: string }) => {
 
   const [isAccessed, setIsAccessed] = useState(false) // 应用是否已经接入当前active基础能力
 
-  const [activeCapabilityId, setActiveCapabilityId] = useState<number>() // 当前基础能力id
+  const [activeCapability, setActiveCapability] = useState<TGetAppInfoByEnv>() // 当前基础能力
 
   /**
    * 初始化当前应用所拥有的能力信息
@@ -25,7 +25,7 @@ const SitEnv = ({ id }: { id: string }) => {
       if (!data) return
       setAppInfoByEnv(data)
 
-      setActiveCapabilityId(data[0].capability.id)
+      setActiveCapability(data[0])
 
       const state = data[0].state
       setIsAccessed(!!state)
@@ -40,9 +40,9 @@ const SitEnv = ({ id }: { id: string }) => {
    */
   const onChange = (activeKey: string) => {
     const item = appInfoByEnv?.find(
-      item => item.capability.id === Number(activeKey)
+      item => item.capabilityId === Number(activeKey)
     )
-    setActiveCapabilityId(item?.capability.id)
+    setActiveCapability(item)
   }
 
   const navigate = useNavigate()
@@ -64,13 +64,13 @@ const SitEnv = ({ id }: { id: string }) => {
             return {
               label: (
                 <>
-                  {item.capability.name}
+                  {item.capabilityName}
                   {!!item.state && (
                     <CheckCircleOutlined style={{ marginLeft: 10 }} />
                   )}
                 </>
               ),
-              key: item.capability.id.toString()
+              key: item.capabilityId.toString()
             }
           })}
         />
@@ -166,7 +166,11 @@ const SitEnv = ({ id }: { id: string }) => {
             </div>
           ) : (
             // 已接入
-            <>{activeCapabilityId && <AccessedEnv id={activeCapabilityId} />}</>
+            <>
+              {activeCapability && (
+                <AccessedEnv capability={activeCapability} />
+              )}
+            </>
           )}
         </>
       ) : (

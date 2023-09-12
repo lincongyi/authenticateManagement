@@ -88,11 +88,12 @@ const updateApp = (params: TAppParams): Promise<TResponse> => {
 }
 
 export type TGetAppInfoByEnv = {
-  capability: {
-    // 基础能力详情
-    id: number
-    name: string
-  }
+  capabilityName: string
+  capabilityId: number
+  clientSecret: string //
+  path: string // 能力访问路径
+  addTime: string // 接入时间
+  updateTime: string // 配置更新时间
   state: 0 | 1 // 0-未接入该能力；1-已接入该能力
 }
 

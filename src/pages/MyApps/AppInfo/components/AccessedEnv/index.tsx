@@ -30,23 +30,25 @@ import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import IncreaseModal from './components/IncreaseModal'
 import WarningModal from './components/WarningModal'
 import DelayModal from './components/DelayModal'
+import { TGetAppInfoByEnv } from '@/api/myApp'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
 
-const AccessedEnv = ({ id }: { id: number }) => {
+const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
   const [currentEnv, setCurrentEnv] = useState<'sit' | 'prod'>() // 当前环境
   useEffect(() => {
     setCurrentEnv('sit')
   }, [])
 
-  const [clientSecret, setClientSecret] = useState<string>() // Client Secret
-
   const [isHide, setIsHide] = useState(true) // 查看or隐藏Client Secret
 
-  useEffect(() => {
-    setClientSecret('12345678-1234-5678')
-  }, [])
+  /**
+   * 查看配置更新记录
+   */
+  const onCheck = () => {
+    console.log('onCheck')
+  }
 
   const [dateRange, setDateRange] = useState<string[]>([
     dayjs().add(-7, 'd').format(dateFormat),
@@ -303,7 +305,7 @@ const AccessedEnv = ({ id }: { id: number }) => {
             <div className={style['info-item']}>
               <div className={style.label}>Client Secret</div>
               <div className={style.value}>
-                {isHide ? '**************' : clientSecret}
+                {isHide ? '**************' : capability.clientSecret}
                 <Space>
                   <div>
                     {isHide ? (
@@ -329,7 +331,7 @@ const AccessedEnv = ({ id }: { id: number }) => {
                   </div>
                   <div>
                     <Paragraph
-                      copyable={{ text: clientSecret }}
+                      copyable={{ text: capability.clientSecret }}
                       style={{
                         marginRight: 4,
                         marginBottom: 0,
@@ -343,19 +345,19 @@ const AccessedEnv = ({ id }: { id: number }) => {
             </div>
             <div className={style['info-item']}>
               <div className={style.label}>能力访问路径</div>
-              <div className={style.value}>
-                https://open.weijing.com/ausudjjcndjfe
-              </div>
+              <div className={style.value}>{capability.path}</div>
             </div>
             <div className={style['info-item']}>
               <div className={style.label}>接入时间</div>
-              <div className={style.value}>2023-07-01 09:12:14</div>
+              <div className={style.value}>{capability.addTime}</div>
             </div>
             <div className={style['info-item']}>
               <div className={style.label}>配置更新时间</div>
               <div className={style.value}>
-                2023-07-01 09:12:14
-                <Button type='link'>查看配置更新记录</Button>
+                {capability.updateTime}
+                <Button type='link' onClick={onCheck}>
+                  查看配置更新记录
+                </Button>
               </div>
             </div>
           </div>
