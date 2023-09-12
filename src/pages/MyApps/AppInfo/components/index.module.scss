@@ -15,14 +15,26 @@
   background: url('@/assets/myApp-sit-step-bar.png') center no-repeat;
 }
 
+.prod-bar {
+  width: 24px;
+  height: 230px;
+  margin-right: 20px;
+  background: url('@/assets/myApp-prod-step-bar.png') top no-repeat;
+}
+
+.sit-env {
+  .content {
+    justify-content: space-between;
+    height: 100%;
+  }
+}
+
 .process {
   flex: 1;
 
   .content {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
   }
 
   .title {
@@ -98,6 +110,10 @@
 
       &.step03 {
         background-image: url('@/assets/myApp-step-btn-icon-03.png');
+      }
+
+      &.step05 {
+        background-image: url('@/assets/myApp-step-btn-icon-05.png');
       }
     }
   }

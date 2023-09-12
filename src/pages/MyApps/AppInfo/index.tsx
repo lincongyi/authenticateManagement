@@ -14,6 +14,7 @@ import {
 import { FormOutlined } from '@ant-design/icons'
 import SitEnv from './components/SitEnv'
 import { useGetDictionaryLabel } from '@/hooks'
+import ProdEnv from './components/ProdEnv'
 
 const { Paragraph } = Typography
 
@@ -81,7 +82,13 @@ const AppInfo = () => {
           正式环境
         </div>
       ),
-      children: '正式环境 section'
+      children: (
+        <>
+          {!!searchParams.get('id') && (
+            <ProdEnv id={searchParams.get('id') as string} />
+          )}
+        </>
+      )
     }
   ]
 

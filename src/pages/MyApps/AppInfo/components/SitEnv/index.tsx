@@ -27,7 +27,7 @@ const SitEnv = ({ id }: { id: string }) => {
       setActiveCapabilityId(data[0].capability.id)
 
       const state = data[0].state
-      setIsAccessed(!state)
+      setIsAccessed(!!state)
       if (state) {
         // 该应用已经接入第一个基础能力，需要请求获取详细信息
       }
@@ -41,12 +41,12 @@ const SitEnv = ({ id }: { id: string }) => {
     const item = appInfoByEnv?.find(
       item => item.capability.id === Number(activeKey)
     )
-    console.log(item)
     setActiveCapabilityId(item?.capability.id)
   }
+
   return (
     <>
-      {appInfoByEnv && (
+      {appInfoByEnv ? (
         <Tabs
           onChange={onChange}
           type='card'
@@ -64,6 +64,8 @@ const SitEnv = ({ id }: { id: string }) => {
             }
           })}
         />
+      ) : (
+        '没有接入任何基础能力，快去添加接入吧~'
       )}
       {appInfoByEnv && !!appInfoByEnv.length ? (
         <>
@@ -71,7 +73,7 @@ const SitEnv = ({ id }: { id: string }) => {
             // 未接入
             <div className={`${style.section} ${style.flex}`}>
               <div className={style['sit-bar']}></div>
-              <div className={style.process}>
+              <div className={`${style.process} ${style['sit-env']}`}>
                 <div className={style.content}>
                   <div className={`${style.title} ${style.active}`}>
                     能力接入应用流程
