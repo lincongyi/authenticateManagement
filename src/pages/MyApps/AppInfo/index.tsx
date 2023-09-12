@@ -15,6 +15,7 @@ import { FormOutlined } from '@ant-design/icons'
 import SitEnv from './components/SitEnv'
 import { useGetDictionaryLabel } from '@/hooks'
 import ProdEnv from './components/ProdEnv'
+import { useStore } from '@stores/index'
 
 const { Paragraph } = Typography
 
@@ -22,6 +23,8 @@ const AppInfo = () => {
   const [appInfo, setAppInfo] = useState<TGetAppInfoResponse>()
 
   const { getDictionaryItemName } = useGetDictionaryLabel()
+
+  const { myAppStore } = useStore()
 
   const [searchParams] = useSearchParams()
 
@@ -31,8 +34,16 @@ const AppInfo = () => {
    * 初始化应用详情
    */
   useEffect(() => {
-    const id = searchParams.get('id')
+    const id = myAppStore.id || searchParams.get('id')
     if (!id) return navigate('..')
+
+    if (!myAppStore.id && id) {
+      myAppStore.setId(id)
+    } else if (myAppStore.id && !searchParams.get('id')) {
+      // 针对点击面包屑导航跳转到该页面的情况，需要补充url query
+      navigate(`../appInfo?id=${id}`, { replace: true })
+    }
+
     ;(async () => {
       const { data } = await getAppInfo({ id })
       if (!data) return
