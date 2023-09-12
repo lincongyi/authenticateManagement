@@ -181,7 +181,19 @@ const routes: TRoutes[] = [
           },
           {
             path: 'appInfo',
-            element: lazyLoad('MyApps/AppInfo'),
+            children: [
+              {
+                path: '',
+                element: lazyLoad('MyApps/AppInfo')
+              },
+              {
+                path: 'uploadForm',
+                element: lazyLoad('MyApps/AppInfo/UploadForm'),
+                meta: {
+                  breadcrumb: '上传申请表'
+                }
+              }
+            ],
             meta: {
               breadcrumb: '查看应用详情'
             }

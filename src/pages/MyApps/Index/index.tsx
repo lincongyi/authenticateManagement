@@ -38,7 +38,7 @@ const Index = () => {
     })()
   }, [])
 
-  const { accessFormStore, getDictionaryItemName } = useGetDictionaryLabel()
+  const { dictionaryStore, getDictionaryItemName } = useGetDictionaryLabel()
 
   const [capabilityList, setCapabilityList] = useState<DefaultOptionType[]>() // 基础能力列表
   /**
@@ -202,7 +202,7 @@ const Index = () => {
       ellipsis: true,
       render: (values: TDataType) => (
         <>
-          {accessFormStore.dictionary && (
+          {dictionaryStore.dictionary && (
             <Tag
               color={
                 ['success', 'warning', 'error'][values?.state] || 'success'
@@ -287,14 +287,14 @@ const Index = () => {
                 </Form.Item>
               </Col>
               <Col span={6}>
-                {accessFormStore.dictionary && (
+                {dictionaryStore.dictionary && (
                   <Form.Item label='接入环境' name='appEnv'>
                     <Select
                       placeholder='请选择接入环境'
                       fieldNames={fieldNames}
                       options={[
                         { dictName: '全部', dictValue: null },
-                        ...accessFormStore.getDictionaryItem('appEnv')!
+                        ...dictionaryStore.getDictionaryItem('appEnv')!
                       ]}
                     />
                   </Form.Item>
@@ -314,28 +314,28 @@ const Index = () => {
                 )}
               </Col>
               <Col span={6}>
-                {accessFormStore.dictionary && (
+                {dictionaryStore.dictionary && (
                   <Form.Item label='应用类型' name='appType'>
                     <Select
                       placeholder='请选择应用类型'
                       fieldNames={fieldNames}
                       options={[
                         { dictName: '全部', dictValue: null },
-                        ...accessFormStore.getDictionaryItem('appType')!
+                        ...dictionaryStore.getDictionaryItem('appType')!
                       ]}
                     />
                   </Form.Item>
                 )}
               </Col>
               <Col span={6}>
-                {accessFormStore.dictionary && (
+                {dictionaryStore.dictionary && (
                   <Form.Item label='状态' name='state'>
                     <Select
                       placeholder='请选择状态'
                       fieldNames={fieldNames}
                       options={[
                         { dictName: '全部', dictValue: null },
-                        ...accessFormStore.getDictionaryItem('appState')!
+                        ...dictionaryStore.getDictionaryItem('appState')!
                       ]}
                     />
                   </Form.Item>

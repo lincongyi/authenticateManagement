@@ -4,6 +4,7 @@ import style from '../index.module.scss'
 import { Col, Row, Tabs } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'
 import AccessedEnv from '../AccessedEnv'
+import { useNavigate } from 'react-router-dom'
 
 const SitEnv = ({ id }: { id: string }) => {
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
@@ -42,6 +43,15 @@ const SitEnv = ({ id }: { id: string }) => {
       item => item.capability.id === Number(activeKey)
     )
     setActiveCapabilityId(item?.capability.id)
+  }
+
+  const navigate = useNavigate()
+
+  /**
+   * 上传盖章申请表
+   */
+  const toUploadForm = () => {
+    navigate(`./uploadForm?id=${id}`)
   }
 
   return (
@@ -124,7 +134,7 @@ const SitEnv = ({ id }: { id: string }) => {
                           {/* <i className={style['done-icon']} /> */}
                           上传盖章申请表
                         </div>
-                        <div className={style.btn}>
+                        <div className={style.btn} onClick={toUploadForm}>
                           <i
                             className={`${style['btn-icon']} ${style.step01}`}
                           />

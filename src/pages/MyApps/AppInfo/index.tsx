@@ -19,19 +19,20 @@ import ProdEnv from './components/ProdEnv'
 const { Paragraph } = Typography
 
 const AppInfo = () => {
-  const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
-
   const [appInfo, setAppInfo] = useState<TGetAppInfoResponse>()
 
   const { getDictionaryItemName } = useGetDictionaryLabel()
+
+  const [searchParams] = useSearchParams()
+
+  const navigate = useNavigate()
 
   /**
    * 初始化应用详情
    */
   useEffect(() => {
     const id = searchParams.get('id')
-    if (!id) return navigate(-1)
+    if (!id) return navigate('..')
     ;(async () => {
       const { data } = await getAppInfo({ id })
       if (!data) return

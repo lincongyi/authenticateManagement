@@ -1,5 +1,5 @@
 import { getdictionary } from '@api/index'
-import { TAccessFormStore } from '@stores/accessForm.store'
+import { TDictionaryList } from '@stores/dictionary.store'
 import { useStore } from '@stores/index'
 import { useEffect, useRef } from 'react'
 
@@ -21,14 +21,14 @@ const useUpdateEffect = (callback: Function, params: any[]) => {
  *                   Function 根据dictValue获取dictName
  */
 const useGetDictionaryLabel = () => {
-  const { accessFormStore } = useStore()
+  const { dictionaryStore } = useStore()
   useEffect(() => {
-    if (!accessFormStore.dictionary) {
+    if (!dictionaryStore.dictionary) {
       ;(async () => {
         const { data } = await getdictionary({
           showType: 'appInfo'
         })
-        accessFormStore.setDictionary(data)
+        dictionaryStore.setDictionary(data)
       })()
     }
   }, [])
@@ -37,17 +37,17 @@ const useGetDictionaryLabel = () => {
    * 根据dictValue获取dictName
    */
   const getDictionaryItemName = (
-    item: keyof TAccessFormStore,
+    item: keyof TDictionaryList,
     value: string | number
   ) => {
-    const options = accessFormStore.getDictionaryItem(item)
+    const options = dictionaryStore.getDictionaryItem(item)
     if (!options) return false
     const result = options?.find(item => item.dictValue === value)
     if (!result) return false
     return result.dictName
   }
   return {
-    accessFormStore,
+    dictionaryStore,
     getDictionaryItemName
   }
 }

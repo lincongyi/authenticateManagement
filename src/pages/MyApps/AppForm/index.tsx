@@ -37,7 +37,7 @@ export const formProps = {
 const defaultMaxLength = 20
 
 const AppForm = () => {
-  const { accessFormStore } = useGetDictionaryLabel()
+  const { dictionaryStore } = useGetDictionaryLabel()
 
   /**
    * 当前单位信息
@@ -154,7 +154,7 @@ const AppForm = () => {
           <Select
             placeholder='请选择应用类型'
             fieldNames={fieldNames}
-            options={accessFormStore.getDictionaryItem('appType')}
+            options={dictionaryStore.getDictionaryItem('appType')}
           />
         </Form.Item>
         <Form.Item
@@ -165,7 +165,7 @@ const AppForm = () => {
           <Select
             placeholder='请选择所属级别'
             fieldNames={fieldNames}
-            options={accessFormStore.getDictionaryItem('systemlevel')}
+            options={dictionaryStore.getDictionaryItem('systemlevel')}
           />
         </Form.Item>
         <Form.Item
@@ -176,7 +176,7 @@ const AppForm = () => {
           <Select
             placeholder='请选择系统对外服务范围'
             fieldNames={fieldNames}
-            options={accessFormStore.getDictionaryItem('networkType')}
+            options={dictionaryStore.getDictionaryItem('networkType')}
           />
         </Form.Item>
         <Form.Item
