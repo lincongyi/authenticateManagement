@@ -192,6 +192,13 @@ const routes: TRoutes[] = [
                 meta: {
                   breadcrumb: '上传申请表'
                 }
+              },
+              {
+                path: 'applyForProdEnv',
+                element: lazyLoad('MyApps/AppInfo/ApplyForProdEnv'),
+                meta: {
+                  breadcrumb: '申请接入正式环境'
+                }
               }
             ],
             meta: {
