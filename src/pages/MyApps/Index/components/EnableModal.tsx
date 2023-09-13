@@ -11,17 +11,20 @@ import {
   Button
 } from 'antd'
 import { TDataType } from '../index.d'
+import { applyStartApp, applyStopApp } from '@/api/myApp'
 
 const { TextArea } = Input
 
 const EnableModal = ({
   open,
   setOpen,
-  item
+  item,
+  callback
 }: {
   open: boolean
   setOpen: Function
   item: TDataType
+  callback: Function
 }) => {
   const isEnable = item.state === 3
   const alertTips = `${isEnable ? '启用' : '停用'}申请通过后，将同时${
@@ -52,11 +55,13 @@ const EnableModal = ({
   /**
    * 提交数据
    */
-  const onFinish = (values: any) => {
-    console.log('values', values)
+  const onFinish = async ({ describe }: { describe: string }) => {
+    if (isEnable) await applyStartApp({ clientId: item.clientId, describe })
+    else await applyStopApp({ clientId: item.clientId, describe })
     message.success({
       content: `已成功${isEnable ? '启用' : '停用'}`
     })
+    callback()
     onCancel()
   }
 
@@ -83,7 +88,7 @@ const EnableModal = ({
       >
         <Form.Item
           label={`${isEnable ? '启用' : '停用'}原因`}
-          name='reason'
+          name='describe'
           rules={[{ required: true }]}
         >
           <TextArea

@@ -84,6 +84,7 @@ const Index = () => {
    * 查询
    */
   const onFinish = async (values: TFormData) => {
+    console.log('values', values)
     const { dateRange, ...rest } = values
     const params = {
       ...rest
@@ -388,7 +389,12 @@ const Index = () => {
       </Row>
 
       {activeItem && (
-        <EnableModal open={open} setOpen={setOpen} item={activeItem} />
+        <EnableModal
+          open={open}
+          setOpen={setOpen}
+          item={activeItem}
+          callback={() => onFinish(form.getFieldsValue())}
+        />
       )}
     </>
   )

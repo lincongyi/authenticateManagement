@@ -107,6 +107,26 @@ const getAppInfoByEnv = (params: {
   return request.post('/access/getAppInfoByEnv', params)
 }
 
+/**
+ * 申请启用
+ */
+const applyStartApp = (params: {
+  clientId: string
+  describe: string
+}): Promise<TResponse<TResponse>> => {
+  return request.post('/access/applyStartApp', params)
+}
+
+/**
+ * 申请停用
+ */
+const applyStopApp = (params: {
+  clientId: string
+  describe: string
+}): Promise<TResponse<TResponse>> => {
+  return request.post('/access/applyStopApp', params)
+}
+
 export {
   getAppCount,
   getMyAppList,
@@ -114,5 +134,7 @@ export {
   addApp,
   getAppInfo,
   updateApp,
-  getAppInfoByEnv
+  getAppInfoByEnv,
+  applyStartApp,
+  applyStopApp
 }
