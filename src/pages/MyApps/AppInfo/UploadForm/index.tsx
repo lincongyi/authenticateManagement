@@ -30,7 +30,7 @@ const UploadForm = () => {
 
   const formProps = {
     labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    wrapperCol: { span: 12 },
     autoComplete: 'off'
   }
 

@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .title {
+    @include font-primary-color;
+
+    font-weight: bold;
+    font-size: 18px;
+  }
+}
+
+.section {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.tag {
+  display: inline-block;
+  height: 40px;
+  margin-bottom: 24px;
+  padding: 0 12px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 40px;
+  background-color: $primary-color;
+}
+
+.method {
+  margin-bottom: 30px;
+
+  .label {
+    font-weight: bold;
+    line-height: 3;
+  }
+}

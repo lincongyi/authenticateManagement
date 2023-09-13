@@ -1,0 +1,73 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .title {
+    @include font-primary-color;
+
+    font-weight: bold;
+    font-size: 18px;
+  }
+}
+
+.section {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.guide {
+  margin-bottom: 20px;
+  padding-left: 36px;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 24px;
+  background: url('@/assets/myApp-guide.png') no-repeat;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+
+  .step-item {
+    @include font-secondary-color;
+
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border: 1px solid #c7d6f6;
+    border-radius: 4px;
+
+    .step-icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 10px;
+
+      @for $i from 1 through 3 {
+        &.icon0#{$i} {
+          background-image: url('@/assets/myApp-uploadForm-step-icon-0#{$i}.png');
+        }
+      }
+    }
+  }
+
+  .arrow {
+    width: 48px;
+    height: 12px;
+    background-image: url('@/assets/accountSetting-scan-arrow.png');
+  }
+}
+
+[data-theme='light'] .step-item {
+  background-color: #f7faff;
+}
+
+[data-theme='dark'] .step-item {
+  background-color: transparent;
+}
