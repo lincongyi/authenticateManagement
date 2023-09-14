@@ -17,7 +17,7 @@ const WarningModal = ({
   setOpen,
   callback
 }: {
-  id: string | undefined
+  id: string | undefined // 预警设置接口id
   open: boolean
   setOpen: Function
   callback: Function

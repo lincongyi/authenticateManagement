@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   Modal,
   Form,
@@ -10,23 +10,29 @@ import {
   Input,
   Radio,
   Tag,
-  Alert
+  Alert,
+  message
 } from 'antd'
 import type { RadioChangeEvent } from 'antd'
+import { TApplyExtensionParams, applyExtension } from '@/api/myApp'
+import { appInfoContext } from '../../..'
+import { sitEnvContext } from '../../SitEnv'
+import { prodEnvContext } from '../../ProdEnv'
 
 const { TextArea } = Input
 
 const DelayModal = ({
-  id,
   open,
-  setOpen,
-  callback
+  setOpen
 }: {
-  id: string | undefined
   open: boolean
   setOpen: Function
-  callback: Function
 }) => {
+  const { appId, env } = useContext(appInfoContext)!
+  const { capability, fetchAppInfoByEnv } = useContext(
+    env === 'sit' ? sitEnvContext : prodEnvContext
+  )!
+
   const [form] = Form.useForm()
 
   /* eslint-disable no-template-curly-in-string */
@@ -55,18 +61,30 @@ const DelayModal = ({
     setOpen(false)
   }
 
-  const [isDelay, setIsDelay] = useState(true) // 是否延期
+  const [type, setType] = useState(true) // 是否延期
 
   const onChange = (e: RadioChangeEvent) => {
-    setIsDelay(!!e.target.value)
+    setType(!!e.target.value)
   }
 
   /**
    * 提交数据
    */
-  const onFinish = () => {
+  const onFinish = async (
+    values: Pick<TApplyExtensionParams, 'type' | 'describe'>
+  ) => {
+    await applyExtension({
+      appId,
+      capabilityId: capability!.capabilityId,
+      env,
+      ...values
+    })
+    message.success({
+      content: '已成功提交申请',
+      duration: 2
+    })
+    fetchAppInfoByEnv!(capability)
     onCancel()
-    callback()
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -86,7 +104,7 @@ const DelayModal = ({
         form={form}
         name='increase'
         {...formProps}
-        initialValues={{ isDelay: 1 }}
+        initialValues={{ type: 1 }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
@@ -114,13 +132,13 @@ const DelayModal = ({
         </Form.Item>
         <Form.Item
           label='是否延长有效期:'
-          name='isDelay'
+          name='type'
           rules={[{ required: true }]}
         >
           {info?.state ? (
             <>是</>
           ) : (
-            <Radio.Group onChange={onChange} value={isDelay}>
+            <Radio.Group onChange={onChange} value={type}>
               <Space direction='vertical' style={{ margin: '6px 0' }}>
                 <Radio value={1}>
                   是
@@ -142,7 +160,7 @@ const DelayModal = ({
           <Form.Item label='延长有效期至'>2024-04-01</Form.Item>
         )}
 
-        <Form.Item label='备注说明' name='remark'>
+        <Form.Item label='备注说明' name='describe'>
           {info?.state ? (
             '备注说明备注说明备注说明'
           ) : (
@@ -164,7 +182,7 @@ const DelayModal = ({
               <Space>
                 <Button onClick={onCancel}>取消</Button>,
                 <Button type='primary' htmlType='submit'>
-                  {info?.state ? '查看审批进度' : isDelay ? '提交申请' : '确定'}
+                  {info?.state ? '查看审批进度' : type ? '提交申请' : '确定'}
                 </Button>
               </Space>
             </Col>

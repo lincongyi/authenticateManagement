@@ -12,14 +12,26 @@
   width: 24px;
   height: 216px;
   margin-right: 20px;
-  background: url('@/assets/myApp-sit-step-bar.png') center no-repeat;
+  background-image: url('@/assets/myApp-sit-step-bar-enable.png');
+  background-repeat: no-repeat;
+  background-position: center;
+
+  &.disable {
+    background-image: url('@/assets/myApp-sit-step-bar-disable.png');
+  }
 }
 
 .prod-bar {
   width: 24px;
   height: 230px;
   margin-right: 20px;
-  background: url('@/assets/myApp-prod-step-bar.png') top no-repeat;
+  background: url('@/assets/myApp-prod-step-bar-enable.png') top no-repeat;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  &.disable {
+    background-image: url('@/assets/myApp-prod-step-bar-disable.png');
+  }
 }
 
 .sit-env {

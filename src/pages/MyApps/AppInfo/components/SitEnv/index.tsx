@@ -1,38 +1,59 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { TGetAppInfoByEnv, getAppInfoByEnv } from '@api/myApp'
 import style from '../index.module.scss'
 import { Col, Row, Tabs } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'
 import AccessedEnv from '../AccessedEnv'
 import { useNavigate } from 'react-router-dom'
+import { appInfoContext } from '../..'
 
-const SitEnv = ({ id }: { id: string }) => {
+const sitEnvContext = React.createContext<{
+  capability: TGetAppInfoByEnv | undefined
+  fetchAppInfoByEnv: Function | undefined
+}>({
+  capability: undefined,
+  fetchAppInfoByEnv: undefined
+})
+
+const SitEnv = () => {
+  const { appId, env, isEnable } = useContext(appInfoContext)!
+
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
 
   const [isAccessed, setIsAccessed] = useState(false) // 应用是否已经接入当前active基础能力
 
-  const [activeCapability, setActiveCapability] = useState<TGetAppInfoByEnv>() // 当前基础能力
+  const [activeCapability, setActiveCapability] = useState<TGetAppInfoByEnv>() // 当前active基础能力
 
   /**
    * 初始化当前应用所拥有的能力信息
    */
+  const fetchAppInfoByEnv = async (capability?: TGetAppInfoByEnv) => {
+    const { data } = await getAppInfoByEnv({
+      appId,
+      appEnv: env
+    })
+    if (!data) return
+    setAppInfoByEnv(data)
+
+    let index = 0
+    if (capability) {
+      const result = data.findIndex(
+        __item => __item.capabilityId === capability.capabilityId
+      )
+      if (result !== -1) index = result
+    }
+
+    setActiveCapability(data[index])
+
+    const state = data[index].state
+    setIsAccessed(!!state)
+    if (state) {
+      // 该应用已经接入第一个基础能力，需要请求获取详细信息
+    }
+  }
+
   useEffect(() => {
-    ;(async () => {
-      const { data } = await getAppInfoByEnv({
-        appId: id,
-        appEnv: 'sit'
-      })
-      if (!data) return
-      setAppInfoByEnv(data)
-
-      setActiveCapability(data[0])
-
-      const state = data[0].state
-      setIsAccessed(!!state)
-      if (state) {
-        // 该应用已经接入第一个基础能力，需要请求获取详细信息
-      }
-    })()
+    fetchAppInfoByEnv()
   }, [])
 
   /**
@@ -51,13 +72,17 @@ const SitEnv = ({ id }: { id: string }) => {
    * 上传盖章申请表
    */
   const toUploadForm = () => {
-    navigate(`./uploadForm?id=${id}`)
+    if (!isEnable) return
+    navigate(`./uploadForm?appId=${appId}`)
   }
 
   return (
     <>
       {appInfoByEnv ? (
         <Tabs
+          activeKey={
+            activeCapability && activeCapability?.capabilityId.toString()
+          }
           onChange={onChange}
           type='card'
           items={appInfoByEnv.map(item => {
@@ -79,10 +104,23 @@ const SitEnv = ({ id }: { id: string }) => {
       )}
       {appInfoByEnv && !!appInfoByEnv.length ? (
         <>
-          {!isAccessed ? (
-            // 未接入
+          {isEnable && isAccessed ? (
+            // 启用状态 && 已接入
+            <>
+              {activeCapability && (
+                <sitEnvContext.Provider
+                  value={{ capability: activeCapability, fetchAppInfoByEnv }}
+                >
+                  <AccessedEnv />
+                </sitEnvContext.Provider>
+              )}
+            </>
+          ) : (
+            // 停用状态 || 未接入
             <div className={`${style.section} ${style.flex}`}>
-              <div className={style['sit-bar']}></div>
+              <div
+                className={`${style['sit-bar']} ${!isEnable && style.disable}`}
+              ></div>
               <div className={`${style.process} ${style['sit-env']}`}>
                 <div className={style.content}>
                   <div className={`${style.title} ${style.active}`}>
@@ -164,13 +202,6 @@ const SitEnv = ({ id }: { id: string }) => {
                 </div>
               </div>
             </div>
-          ) : (
-            // 已接入
-            <>
-              {activeCapability && (
-                <AccessedEnv capability={activeCapability} />
-              )}
-            </>
           )}
         </>
       ) : (
@@ -181,3 +212,5 @@ const SitEnv = ({ id }: { id: string }) => {
 }
 
 export default SitEnv
+
+export { sitEnvContext }

@@ -20,7 +20,7 @@ type TGetAppListParams = {
   pageSize: number
   total: number
   appAbility?: string
-  appEnv?: 'sit' | 'prod'
+  appEnv?: TEnv
   appName?: string
   appType?: string
   startTime?: string
@@ -65,7 +65,7 @@ const addApp = (params: TAppParams): Promise<TResponse> => {
 
 export type TGetAppInfoResponse = {
   state: TDataType['state']
-  appEnv: 'sit' | 'prod'
+  appEnv: TEnv
   createTime: string
   clientId: string
   clientSecret?: string
@@ -95,6 +95,8 @@ export type TGetAppInfoByEnv = {
   addTime: string // 接入时间
   updateTime: string // 配置更新时间
   state: 0 | 1 // 0-未接入该能力；1-已接入该能力
+  capabilityExpireTime: string // 有效期止
+  applystate: boolean // true-未申请延期；false-已申请延期
 }
 
 /**
@@ -127,6 +129,23 @@ const applyStopApp = (params: {
   return request.post('/access/applyStopApp', params)
 }
 
+export type TApplyExtensionParams = {
+  appId: string
+  capabilityId: number
+  env: TEnv
+  type: 0 | 1 // 是否延长有效期：0-否；1-是
+  describe: string // 应用描述
+}
+
+/**
+ * 申请延期
+ */
+const applyExtension = (
+  params: TApplyExtensionParams
+): Promise<TResponse<TResponse>> => {
+  return request.post('/access/applyExtension', params)
+}
+
 export {
   getAppCount,
   getMyAppList,
@@ -136,5 +155,6 @@ export {
   updateApp,
   getAppInfoByEnv,
   applyStartApp,
-  applyStopApp
+  applyStopApp,
+  applyExtension
 }

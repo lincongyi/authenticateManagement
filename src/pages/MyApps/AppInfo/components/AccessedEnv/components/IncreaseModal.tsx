@@ -17,7 +17,7 @@ const IncreaseModal = ({
   setOpen,
   callback
 }: {
-  id: string | undefined
+  id: string | undefined // 申请增加用量接口id
   open: boolean
   setOpen: Function
   callback: Function

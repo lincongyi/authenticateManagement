@@ -9,7 +9,7 @@ export type TDataType = {
   appId: string
   clientId: string
   accessCapability: string // 已接入能力id
-  appEnv: 'sit' | 'prod' // 接入环境：sit-测试环境；prod-正式环境
+  appEnv: TEnv // 接入环境：sit-测试环境；prod-正式环境
   appName: string // 应用名称
   appType: string // 应用类型
   startTime: string // 创建时间
@@ -18,7 +18,7 @@ export type TDataType = {
 }
 
 export type TFormData = {
-  appEnv: 'sit' | 'prod'
+  appEnv: TEnv
   appName: string
   capabilityId: number
   appType: string

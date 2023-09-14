@@ -19,6 +19,15 @@ import { useStore } from '@stores/index'
 
 const { Paragraph } = Typography
 
+const appInfoContext = React.createContext<
+  | {
+      appId: string
+      env: TEnv
+      isEnable: Boolean
+    }
+  | undefined
+>(undefined)
+
 const AppInfo = () => {
   const [appInfo, setAppInfo] = useState<TGetAppInfoResponse>()
 
@@ -30,22 +39,23 @@ const AppInfo = () => {
 
   const navigate = useNavigate()
 
+  const appId = myAppStore.appId || searchParams.get('appId')
+
   /**
    * 初始化应用详情
    */
   useEffect(() => {
-    const id = myAppStore.id || searchParams.get('id')
-    if (!id) return navigate('..')
+    if (!appId) return navigate('..')
 
-    if (!myAppStore.id && id) {
-      myAppStore.setId(id)
-    } else if (myAppStore.id && !searchParams.get('id')) {
+    if (!myAppStore.appId && searchParams.get('appId')) {
+      myAppStore.setAppId(appId)
+    } else if (myAppStore.appId && !searchParams.get('appId')) {
       // 针对点击面包屑导航跳转到该页面的情况，需要补充url query
-      navigate(`../appInfo?id=${id}`, { replace: true })
+      navigate(`../appInfo?appId=${appId}`, { replace: true })
     }
 
     ;(async () => {
-      const { data } = await getAppInfo({ id })
+      const { data } = await getAppInfo({ id: appId })
       if (!data) return
       setAppInfo(data)
     })()
@@ -55,11 +65,10 @@ const AppInfo = () => {
    * 编辑应用详情
    */
   const onEdit = () => {
-    const id = searchParams.get('id')
-    navigate(`../appForm?id=${id}`)
+    navigate(`../appForm?appId=${appId}`)
   }
 
-  const [env, setEnv] = useState<'sit' | 'prod'>('sit') // 当前active标签
+  const [env, setEnv] = useState<TEnv>('sit') // 当前active标签
 
   const items: TabsProps['items'] = [
     {
@@ -76,8 +85,16 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {!!searchParams.get('id') && (
-            <SitEnv id={searchParams.get('id') as string} />
+          {!!appId && (
+            <appInfoContext.Provider
+              value={{
+                appId,
+                env: 'sit',
+                isEnable: appInfo?.state !== 3
+              }}
+            >
+              <SitEnv />
+            </appInfoContext.Provider>
           )}
         </>
       )
@@ -96,15 +113,26 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {!!searchParams.get('id') && (
-            <ProdEnv id={searchParams.get('id') as string} />
+          {!!appId && (
+            <appInfoContext.Provider
+              value={{
+                appId,
+                env: 'sit',
+                isEnable: appInfo?.state !== 3
+              }}
+            >
+              <ProdEnv />
+            </appInfoContext.Provider>
           )}
         </>
       )
     }
   ]
 
-  const onChange = (key: 'sit' | 'prod') => {
+  /**
+   * 切换接入环境
+   */
+  const onChange = (key: TEnv) => {
     setEnv(key)
   }
 
@@ -190,7 +218,7 @@ const AppInfo = () => {
         <Tabs
           defaultActiveKey='1'
           items={items}
-          onChange={activeKey => onChange(activeKey as 'sit' | 'prod')}
+          onChange={activeKey => onChange(activeKey as TEnv)}
         />
       </div>
     </>
@@ -198,3 +226,5 @@ const AppInfo = () => {
 }
 
 export default AppInfo
+
+export { appInfoContext }

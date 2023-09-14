@@ -114,3 +114,5 @@ type TLineChart = {
   xAxis: (string | number)[]
   yAxis: (string | number)[]
 }
+
+type TEnv = 'sit' | 'prod'

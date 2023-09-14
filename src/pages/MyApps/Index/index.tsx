@@ -26,6 +26,7 @@ import { getAppList, getAppCount } from '@api/myApp'
 import { fieldNames } from '@utils/index'
 import EnableModal from './components/EnableModal'
 import { useGetDictionaryLabel } from '@/hooks'
+import { useStore } from '@/stores'
 
 const { RangePicker } = DatePicker
 
@@ -84,7 +85,6 @@ const Index = () => {
    * 查询
    */
   const onFinish = async (values: TFormData) => {
-    console.log('values', values)
     const { dateRange, ...rest } = values
     const params = {
       ...rest
@@ -117,11 +117,14 @@ const Index = () => {
     navigate('./appForm')
   }
 
+  const { myAppStore } = useStore()
+
   /**
    * 查看
    */
   const onCheck = (id: TDataType['appId']) => {
-    navigate(`./appInfo?id=${id}`)
+    myAppStore.setAppId(id)
+    navigate(`./appInfo?appId=${id}`)
   }
 
   const [open, setOpen] = useState(false) // 控制启用or停用Modal显示隐藏
@@ -206,7 +209,8 @@ const Index = () => {
           {dictionaryStore.dictionary && (
             <Tag
               color={
-                ['success', 'warning', 'error'][values?.state] || 'success'
+                ['success', 'warning', 'default', 'error'][values?.state] ||
+                'success'
               }
             >
               <>{getDictionaryItemName('appState', values.state) || '正常'}</>

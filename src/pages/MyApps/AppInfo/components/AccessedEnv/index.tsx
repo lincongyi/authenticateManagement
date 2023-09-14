@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import style from '../index.module.scss'
 import {
   Button,
@@ -30,16 +30,18 @@ import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import IncreaseModal from './components/IncreaseModal'
 import WarningModal from './components/WarningModal'
 import DelayModal from './components/DelayModal'
-import { TGetAppInfoByEnv } from '@/api/myApp'
+import { appInfoContext } from '../..'
+import { sitEnvContext } from '../SitEnv'
+import { prodEnvContext } from '../ProdEnv'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
 
-const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
-  const [currentEnv, setCurrentEnv] = useState<'sit' | 'prod'>() // 当前环境
-  useEffect(() => {
-    setCurrentEnv('sit')
-  }, [])
+const AccessedEnv = () => {
+  const { env } = useContext(appInfoContext)!
+  const { capability } = useContext(
+    env === 'sit' ? sitEnvContext : prodEnvContext
+  )!
 
   const [isHide, setIsHide] = useState(true) // 查看or隐藏Client Secret
 
@@ -131,7 +133,7 @@ const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
 
   const [increaseModalOpen, setIncreaseModalOpen] = useState(false) // 控制申请增加用量Modal显示隐藏
 
-  const [activeId, setActiveId] = useState<string | undefined>() // 当前需要操作的id
+  const [activeId, setActiveId] = useState<string | undefined>() // 能力API接入情况，当前需要操作的接口id
 
   /**
    * 申请增加用量
@@ -244,7 +246,7 @@ const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
           <Button type='link' onClick={toDevDocument}>
             开发文档
           </Button>
-          {currentEnv === 'sit' ? (
+          {env === 'sit' ? (
             <Button type='link' onClick={() => onIncreaseUsage(values.id)}>
               申请增加用量
             </Button>
@@ -276,15 +278,7 @@ const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
    * 申请延期
    */
   const onDelay = () => {
-    // console.log(id)
     setDelayModalOpen(true)
-  }
-
-  /**
-   * 申请延期回调函数
-   */
-  const delayCallback = () => {
-    setActiveId(undefined)
   }
 
   return (
@@ -305,7 +299,7 @@ const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
             <div className={style['info-item']}>
               <div className={style.label}>Client Secret</div>
               <div className={style.value}>
-                {isHide ? '**************' : capability.clientSecret}
+                {isHide ? '**************' : capability?.clientSecret}
                 <Space>
                   <div>
                     {isHide ? (
@@ -331,7 +325,7 @@ const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
                   </div>
                   <div>
                     <Paragraph
-                      copyable={{ text: capability.clientSecret }}
+                      copyable={{ text: capability?.clientSecret }}
                       style={{
                         marginRight: 4,
                         marginBottom: 0,
@@ -345,16 +339,16 @@ const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
             </div>
             <div className={style['info-item']}>
               <div className={style.label}>能力访问路径</div>
-              <div className={style.value}>{capability.path}</div>
+              <div className={style.value}>{capability?.path}</div>
             </div>
             <div className={style['info-item']}>
               <div className={style.label}>接入时间</div>
-              <div className={style.value}>{capability.addTime}</div>
+              <div className={style.value}>{capability?.addTime}</div>
             </div>
             <div className={style['info-item']}>
               <div className={style.label}>配置更新时间</div>
               <div className={style.value}>
-                {capability.updateTime}
+                {capability?.updateTime}
                 <Button type='link' onClick={onCheck}>
                   查看配置更新记录
                 </Button>
@@ -455,7 +449,7 @@ const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
           </div>
         </Col>
       </Row>
-      {currentEnv === 'sit' ? (
+      {env === 'sit' ? (
         <IncreaseModal
           id={activeId}
           open={increaseModalOpen}
@@ -470,12 +464,7 @@ const AccessedEnv = ({ capability }: { capability: TGetAppInfoByEnv }) => {
           callback={warningSettingCallback}
         />
       )}
-      <DelayModal
-        id={activeId}
-        open={delayModalOpen}
-        setOpen={setDelayModalOpen}
-        callback={delayCallback}
-      />
+      <DelayModal open={delayModalOpen} setOpen={setDelayModalOpen} />
     </>
   )
 }
