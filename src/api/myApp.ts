@@ -140,10 +140,23 @@ export type TApplyExtensionParams = {
 /**
  * 申请延期
  */
-const applyExtension = (
-  params: TApplyExtensionParams
-): Promise<TResponse<TResponse>> => {
+const applyExtension = (params: TApplyExtensionParams): Promise<TResponse> => {
   return request.post('/access/applyExtension', params)
+}
+
+type TApiConfigParams = {
+  apiId: number // 能力id
+  appId: string // 应用id
+  errorNum: number // 报错次数预警值
+  proportion: number // 调用量预警值
+  timeoutNum: number // 调用超时预警值
+}
+
+/**
+ * 预警设置
+ */
+const apiConfig = (params: TApiConfigParams): Promise<TResponse> => {
+  return request.post('/access/apiConfig', params)
 }
 
 export {
@@ -156,5 +169,6 @@ export {
   getAppInfoByEnv,
   applyStartApp,
   applyStopApp,
-  applyExtension
+  applyExtension,
+  apiConfig
 }

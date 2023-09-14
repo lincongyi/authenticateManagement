@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   Alert,
   Modal,
@@ -8,8 +8,12 @@ import {
   Col,
   Space,
   Button,
-  Input
+  InputNumber,
+  message
 } from 'antd'
+import { appInfoContext } from '../../..'
+import { sitEnvContext } from '../../SitEnv'
+import { prodEnvContext } from '../../ProdEnv'
 
 const IncreaseModal = ({
   id,
@@ -22,6 +26,12 @@ const IncreaseModal = ({
   setOpen: Function
   callback: Function
 }) => {
+  const { appId, env } = useContext(appInfoContext)!
+
+  const { capability, fetchAppInfoByEnv } = useContext(
+    env === 'sit' ? sitEnvContext : prodEnvContext
+  )!
+
   const [form] = Form.useForm()
 
   /* eslint-disable no-template-curly-in-string */
@@ -47,9 +57,23 @@ const IncreaseModal = ({
   /**
    * 提交数据
    */
-  const onFinish = () => {
+  const onFinish = async (values: any) => {
+    console.log('values', {
+      ...values,
+      apiId: Number(id),
+      appId
+    })
+    // await xxxxxx({
+    //   ...values,
+    //   apiId: Number(id),
+    //   appId
+    // })
+    message.success({
+      content: '申请成功',
+      duration: 2
+    })
+    fetchAppInfoByEnv!(capability)
     onCancel()
-    callback()
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -79,7 +103,11 @@ const IncreaseModal = ({
         onFinishFailed={onFinishFailed}
       >
         <Form.Item label='增加用量' name='name' rules={[{ required: true }]}>
-          <Input placeholder='请输入增加用量' maxLength={10} />
+          <InputNumber
+            placeholder='请输入增加用量值'
+            addonAfter='次'
+            style={{ width: '100%' }}
+          />
         </Form.Item>
         <Divider />
         <Form.Item noStyle wrapperCol={{ span: 24 }}>

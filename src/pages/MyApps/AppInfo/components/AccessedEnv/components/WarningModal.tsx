@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
   Alert,
   Modal,
@@ -8,20 +8,29 @@ import {
   Col,
   Space,
   Button,
-  Input
+  InputNumber,
+  message
 } from 'antd'
+import { appInfoContext } from '../../..'
+import { apiConfig } from '@/api/myApp'
+import { sitEnvContext } from '../../SitEnv'
+import { prodEnvContext } from '../../ProdEnv'
 
 const WarningModal = ({
   id,
   open,
-  setOpen,
-  callback
+  setOpen
 }: {
   id: string | undefined // 预警设置接口id
   open: boolean
   setOpen: Function
-  callback: Function
 }) => {
+  const { appId, env } = useContext(appInfoContext)!
+
+  const { capability, fetchAppInfoByEnv } = useContext(
+    env === 'sit' ? sitEnvContext : prodEnvContext
+  )!
+
   const [form] = Form.useForm()
 
   /* eslint-disable no-template-curly-in-string */
@@ -47,10 +56,23 @@ const WarningModal = ({
   /**
    * 提交数据
    */
-  const onFinish = (values: any) => {
-    console.log('values', values)
+  const onFinish = async (values: any) => {
+    console.log('values', {
+      ...values,
+      apiId: Number(id),
+      appId
+    })
+    await apiConfig({
+      ...values,
+      apiId: Number(id),
+      appId
+    })
+    message.success({
+      content: '预警设置成功',
+      duration: 2
+    })
+    fetchAppInfoByEnv!(capability)
     onCancel()
-    callback()
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -76,29 +98,42 @@ const WarningModal = ({
         form={form}
         name='warning'
         {...formProps}
+        initialValues={{ proportion: 60, errorNum: 1, timeoutNum: 5000 }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
         <Form.Item
           label='调用量预警阈值'
-          name='amount'
+          name='proportion'
           rules={[{ required: true }]}
         >
-          <Input placeholder='请输入调用量预警阈值' suffix='%' />
+          <InputNumber
+            placeholder='请输入调用量预警阈值'
+            addonAfter='%'
+            style={{ width: '100%' }}
+          />
         </Form.Item>
         <Form.Item
           label='报错次数预警阈值'
-          name='times'
+          name='errorNum'
           rules={[{ required: true }]}
         >
-          <Input placeholder='报错次数预警阈值' suffix='次/分钟' />
+          <InputNumber
+            placeholder='报错次数预警阈值'
+            addonAfter='次/分钟'
+            style={{ width: '100%' }}
+          />
         </Form.Item>
         <Form.Item
           label='调用超时预警阈值'
-          name='timeout'
+          name='timeoutNum'
           rules={[{ required: true }]}
         >
-          <Input placeholder='调用超时预警阈值' suffix='毫秒（ms）' />
+          <InputNumber
+            placeholder='调用超时预警阈值'
+            addonAfter='毫秒（ms）'
+            style={{ width: '100%' }}
+          />
         </Form.Item>
         <Divider />
         <Form.Item noStyle wrapperCol={{ span: 24 }}>

@@ -161,11 +161,6 @@ const AccessedEnv = () => {
   }
 
   /**
-   * 预警设置回调函数
-   */
-  const warningSettingCallback = () => {}
-
-  /**
    * 表格分页参数
    */
   const [pagination, setPagination] = useState({
@@ -461,7 +456,6 @@ const AccessedEnv = () => {
           id={activeId}
           open={warningModalOpen}
           setOpen={setWarningModalOpen}
-          callback={warningSettingCallback}
         />
       )}
       <DelayModal open={delayModalOpen} setOpen={setDelayModalOpen} />
