@@ -11,7 +11,8 @@ import {
   Space,
   Tabs,
   Form,
-  Typography
+  Typography,
+  Divider
 } from 'antd'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
@@ -33,6 +34,8 @@ import DelayModal from './components/DelayModal'
 import { appInfoContext } from '../..'
 import { sitEnvContext } from '../SitEnv'
 import { prodEnvContext } from '../ProdEnv'
+import type { Tab } from 'rc-tabs/lib/interface.d.ts'
+import { TFormItem } from '@/api/myApp'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
@@ -261,10 +264,33 @@ const AccessedEnv = () => {
   }
 
   /**
+   * 初始化能力配置信息表单内容
+   */
+
+  const [formTabs, setFormTabs] = useState<Tab[]>() // 能力配置信息Tabs
+  const [formItems, setFormItems] = useState<TFormItem[]>() // 表单展示的数据
+
+  useEffect(() => {
+    const { form } = capability!
+    if (form) {
+      const tabs = form.formsList.map(item => ({
+        label: item.formName,
+        key: item.sort.toString()
+      }))
+      setFormTabs(tabs)
+      setFormItems(capability?.form.formsList[0].form)
+    }
+  }, [capability])
+
+  /**
    * 切换能力配置信息表单内容
    */
   const onChange = (activeKey: string) => {
-    console.log('activeKey', activeKey)
+    const item = capability?.form.formsList.find(
+      item => item.sort === Number(activeKey)
+    )
+    if (!item) return
+    setFormItems(item.form)
   }
 
   const [delayModalOpen, setDelayModalOpen] = useState(false) // 控制申请延期Modal显示隐藏
@@ -406,7 +432,12 @@ const AccessedEnv = () => {
             <div className={style.title}>
               能力配置信息
               <Space>
-                <Button type='primary' icon={<EditOutlined />} ghost>
+                <Button
+                  type='primary'
+                  icon={<EditOutlined />}
+                  ghost
+                  disabled={!formItems || !formItems?.length}
+                >
                   申请配置更改
                 </Button>
                 <Button
@@ -414,6 +445,7 @@ const AccessedEnv = () => {
                   icon={<HistoryOutlined />}
                   ghost
                   onClick={onDelay}
+                  disabled={!formItems || !formItems?.length}
                 >
                   申请延期
                 </Button>
@@ -422,25 +454,30 @@ const AccessedEnv = () => {
                   icon={<FileTextOutlined />}
                   ghost
                   onClick={toDevDocument}
+                  disabled={!formItems || !formItems?.length}
                 >
                   开发文档
                 </Button>
               </Space>
             </div>
-            <Tabs
-              onChange={onChange}
-              items={[
-                { label: '基础能力信息', key: '1' },
-                { label: '并发配置', key: '2' },
-                { label: '开发配置', key: '3' }
-              ]}
-            />
-            <Form name='accessedForm' {...formProps}>
-              {/* 动态生成form表单内容 */}
-              <Form.Item label='接入基础能力' rules={[{ required: true }]}>
-                身份认证
-              </Form.Item>
-            </Form>
+            {formTabs?.length ? (
+              <>
+                <Tabs onChange={onChange} items={formTabs} />
+                <Form name='accessedForm' {...formProps}>
+                  {/* 动态生成form表单内容 */}
+                  {formItems?.map((item, index) => (
+                    <Form.Item label={item.cnName} key={index}>
+                      {item.value}
+                    </Form.Item>
+                  ))}
+                </Form>
+              </>
+            ) : (
+              <>
+                <Divider />
+                暂无数据
+              </>
+            )}
           </div>
         </Col>
       </Row>

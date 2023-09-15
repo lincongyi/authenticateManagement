@@ -87,6 +87,18 @@ const updateApp = (params: TAppParams): Promise<TResponse> => {
   return request.post('/access/updateApp', params)
 }
 
+export type TFormItem = {
+  cnName: string // Form.Item label
+  dataType: string // 数据类型
+  value: string // Form.Item value
+}
+
+type TFormsList = {
+  form: TFormItem[]
+  formName: string
+  sort: number
+}
+
 export type TGetAppInfoByEnv = {
   capabilityName: string
   capabilityId: number
@@ -97,6 +109,9 @@ export type TGetAppInfoByEnv = {
   state: 0 | 1 // 0-未接入该能力；1-已接入该能力
   capabilityExpireTime: string // 有效期止
   applystate: boolean // true-未申请延期；false-已申请延期
+  form: {
+    formsList: TFormsList[]
+  }
 }
 
 /**
