@@ -151,7 +151,19 @@ const routes: TRoutes[] = [
       },
       {
         path: 'devDocument', // 开发文档
-        element: lazyLoad('DevDocument'),
+        children: [
+          {
+            path: '',
+            element: lazyLoad('DevDocument')
+          },
+          {
+            path: 'searchDocument',
+            element: lazyLoad('DevDocument/SearchDocument'),
+            meta: {
+              breadcrumb: '搜索'
+            }
+          }
+        ],
         meta: {
           isMenuItem: true,
           icon: React.createElement(FileSearchOutlined),

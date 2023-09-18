@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Row, Col, Tree, Divider, Input, Typography, Tabs } from 'antd'
+import { Row, Col, Tree, Divider, Typography, Tabs, Button } from 'antd'
 import type { EventDataNode, TreeProps } from 'antd/es/tree'
 import { getDirectory, queryDocument } from '@api/devDocument'
 import type {
@@ -12,11 +12,11 @@ import {
   CloudDownloadOutlined,
   FileOutlined,
   FolderOpenOutlined,
-  DownloadOutlined
+  DownloadOutlined,
+  SearchOutlined
 } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 const { Link } = Typography
-
-const { Search } = Input
 
 const DevDocument = () => {
   const [directoryList, setDirectoryList] = useState<TGetDirectoryResponse[]>()
@@ -58,16 +58,32 @@ const DevDocument = () => {
   /**
    * 为目录标题添加上icon
    */
-  const setCatalog = (list: TDirectory[]) => {
-    return list.map(item => ({
-      ...item,
-      icon:
-        item.leafDirectory && item.leafDirectory?.length ? (
-          <FolderOpenOutlined />
-        ) : (
-          <FileOutlined />
-        )
-    }))
+  const setCatalog = (list: TDirectory[]): TDirectory[] => {
+    return list.map(item => {
+      if (!item.leafDirectory || !item.leafDirectory.length) {
+        return {
+          ...item,
+          icon:
+            item.leafDirectory && item.leafDirectory?.length ? (
+              <FolderOpenOutlined />
+            ) : (
+              <FileOutlined />
+            )
+        }
+      } else {
+        const { leafDirectory, ...rest } = item
+        return {
+          ...rest,
+          leafDirectory: setCatalog(leafDirectory) as TDirectory[],
+          icon:
+            item.leafDirectory && item.leafDirectory?.length ? (
+              <FolderOpenOutlined />
+            ) : (
+              <FileOutlined />
+            )
+        }
+      }
+    })
   }
 
   /**
@@ -97,11 +113,13 @@ const DevDocument = () => {
     setActiveDirectory(catalog)
   }
 
+  const navigate = useNavigate()
+
   /**
-   * 搜索
+   * 跳转到文档搜索
    */
-  const onSearch = (value: string) => {
-    console.log(`value ${value}`)
+  const toSearch = () => {
+    navigate('./searchDocument')
   }
 
   const [selectedNode, setSelectedNode] = useState<TDirectory>() // 当前选中的子节点
@@ -123,7 +141,7 @@ const DevDocument = () => {
 
   return (
     <>
-      <div className={style['document-header']}>
+      <div className={style.header}>
         <div className={style['left-side']}>
           {activeDirectory && (
             <>
@@ -143,13 +161,14 @@ const DevDocument = () => {
             </>
           )}
         </div>
-        <div className={style['right-side']}>
-          <Search
-            placeholder='请输入目录/文档关键词'
-            onSearch={onSearch}
-            enterButton
-          />
-        </div>
+        <Button
+          size='large'
+          type='primary'
+          icon={<SearchOutlined />}
+          onClick={toSearch}
+        >
+          文档搜索
+        </Button>
       </div>
       <Divider />
       <Row className={style.container}>
@@ -181,7 +200,7 @@ const DevDocument = () => {
               <div
                 className={`${style['doc-content']} markdown-body`}
                 dangerouslySetInnerHTML={{ __html: docContent }}
-              ></div>
+              />
             )}
 
             {annexUrl && !!annexUrl.length && (

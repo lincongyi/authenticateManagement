@@ -10,6 +10,7 @@ export interface TDirectory extends DataNode {
   projectId: number
   sort: number
   type: string
+  icon?: JSX.Element
 }
 
 export type TGetDirectoryResponse = {
@@ -24,7 +25,7 @@ export type TGetDirectoryResponse = {
  */
 const getDirectory = (): Promise<TResponse<TGetDirectoryResponse[]>> => {
   return request.post('/access/getDirectory', {
-    projectComponent: 'DEV_FILE_LIST',
+    projectComponent: 'DEV_FILE_LIST'
   })
 }
 
@@ -53,4 +54,21 @@ const queryDocument = (
   return request.post('/access/queryDocument', params)
 }
 
-export { getDirectory, queryDocument }
+export type TDevfileSearchResponse = {
+  projectId: number // 项目id
+  directoryId: number // 目录id
+  name: string // 标题
+  content: string // 内容
+}
+
+/**
+ * 文档搜索
+ */
+const devfileSearch = (params: {
+  projectId: number // 能力id
+  searchStr: string // 搜索内容
+}): Promise<TResponse<TDevfileSearchResponse[]>> => {
+  return request.post('/access/devfileSearch', params)
+}
+
+export { getDirectory, queryDocument, devfileSearch }
