@@ -15,7 +15,7 @@ import {
   DownloadOutlined,
   SearchOutlined
 } from '@ant-design/icons'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 const { Link } = Typography
 
 const DevDocument = () => {
@@ -86,19 +86,39 @@ const DevDocument = () => {
     })
   }
 
+  const [searchParams] = useSearchParams()
+
+  /**
+   * 获取展开指定的树节点
+   */
+  const getExpandedKeys = (list: TDirectory[]) => {
+    return list.reduce((prev: number[], next: TDirectory): number[] => {
+      if (next.leafDirectory && next.leafDirectory?.length) {
+        return [...prev, next.id, ...getExpandedKeys(next.leafDirectory)]
+      } else return prev
+    }, [])
+  }
+
   /**
    * 获取所有项目目录
    */
   useEffect(() => {
     ;(async () => {
       const { data } = await getDirectory()
-      if (data) {
-        setDirectoryList(data)
-        initNode(data[0])
-        const { directoryList } = data[0]
-        const catalog = setCatalog(directoryList)
-        setActiveDirectory(catalog)
+      if (!data) return
+      setDirectoryList(data)
+      let directoryItem = data[0]
+      if (searchParams.size) {
+        const projectId = Number(searchParams.get('projectId'))
+        directoryItem = data.find(item => item.projectId === projectId)!
       }
+      setDefaultActiveKey(directoryItem.projectId.toString())
+      initNode(directoryItem)
+      const { directoryList } = directoryItem
+      setExpandedKeys(getExpandedKeys(directoryList))
+
+      const catalog = setCatalog(directoryList)
+      setActiveDirectory(catalog)
     })()
   }, [])
 
@@ -109,6 +129,7 @@ const DevDocument = () => {
     const item = directoryList?.find(item => item.projectId === Number(value))
     if (!item) return false
     initNode(item)
+    setExpandedKeys(getExpandedKeys(item.directoryList))
     const catalog = setCatalog(item.directoryList)
     setActiveDirectory(catalog)
   }
@@ -122,11 +143,16 @@ const DevDocument = () => {
     navigate('./searchDocument')
   }
 
+  const [defaultActiveKey, setDefaultActiveKey] = useState<string>() // 初始化选中面板的 key
+
   const [selectedNode, setSelectedNode] = useState<TDirectory>() // 当前选中的子节点
+
+  const [expandedKeys, setExpandedKeys] = useState<number[]>() // （受控）展开指定的树节点
 
   const [docContent, setDocContent] = useState<string>() // 开发文档内容
 
   const [annexUrl, setAnnexUrl] = useState<TAnnexUrl[]>() // 开发文档下载信息
+
   /**
    * 选择目录节点
    */
@@ -139,6 +165,13 @@ const DevDocument = () => {
     }
   }
 
+  /**
+   * 展开/收起节点
+   */
+  const onExpand = (expandedKeys: number[]) => {
+    setExpandedKeys(expandedKeys)
+  }
+
   return (
     <>
       <div className={style.header}>
@@ -148,6 +181,7 @@ const DevDocument = () => {
               项目：
               {directoryList && (
                 <Tabs
+                  defaultActiveKey={defaultActiveKey}
                   style={{ width: 'calc(100% - 80px)' }}
                   onChange={onChange}
                   items={directoryList.map(item => {
@@ -183,10 +217,11 @@ const DevDocument = () => {
                   children: 'leafDirectory'
                 }}
                 showIcon
-                defaultSelectedKeys={[selectedNode.id]}
-                defaultExpandAll={true}
+                selectedKeys={[selectedNode.id]}
+                expandedKeys={expandedKeys}
                 onSelect={onSelect}
                 treeData={activeDirectory}
+                onExpand={expandedKeys => onExpand(expandedKeys as number[])}
               />
             )}
           </div>

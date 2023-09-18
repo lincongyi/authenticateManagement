@@ -7,6 +7,7 @@ import type {
   TDevfileSearchResponse
 } from '@/api/devDocument'
 import { useStore } from '@/stores'
+import { useNavigate } from 'react-router-dom'
 
 const { Search } = Input
 
@@ -89,6 +90,18 @@ const SearchDocument = () => {
     })
   }
 
+  const navigate = useNavigate()
+
+  /**
+   * 跳转到开发文档
+   */
+  const toDevDocument = (item: TDevfileSearchResponse) => {
+    const { projectId, directoryId } = item
+    navigate(
+      `../../devDocument?projectId=${projectId}&directoryId=${directoryId}`
+    )
+  }
+
   return (
     <>
       {contextHolder}
@@ -123,7 +136,11 @@ const SearchDocument = () => {
           <div className={style['result-list']}>
             {resultList &&
               resultList.map((item, index) => (
-                <div className={style['result-item']} key={index}>
+                <div
+                  className={style['result-item']}
+                  key={index}
+                  onClick={() => toDevDocument(item)}
+                >
                   <div
                     className={style.name}
                     dangerouslySetInnerHTML={{ __html: item.name }}
