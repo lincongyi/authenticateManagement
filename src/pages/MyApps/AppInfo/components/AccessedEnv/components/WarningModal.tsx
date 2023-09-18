@@ -53,6 +53,8 @@ const WarningModal = ({
     setOpen(false)
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 提交数据
    */
@@ -67,7 +69,7 @@ const WarningModal = ({
       apiId: Number(id),
       appId
     })
-    message.success({
+    messageApi.success({
       content: '预警设置成功',
       duration: 2
     })
@@ -79,77 +81,80 @@ const WarningModal = ({
     console.log('Failed:', errorInfo)
   }
   return (
-    <Modal
-      title='预警设置'
-      centered
-      open={open}
-      width={640}
-      onCancel={onCancel}
-      footer={[]}
-    >
-      <Divider />
-      <Alert
-        message='平台将根据您的预警设置进行推送系统通知及邮件通知！'
-        type='info'
-        showIcon
-        style={{ marginBottom: 20 }}
-      />
-      <Form
-        form={form}
-        name='warning'
-        {...formProps}
-        initialValues={{ proportion: 60, errorNum: 1, timeoutNum: 5000 }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+    <>
+      {contextHolder}
+      <Modal
+        title='预警设置'
+        centered
+        open={open}
+        width={640}
+        onCancel={onCancel}
+        footer={[]}
       >
-        <Form.Item
-          label='调用量预警阈值'
-          name='proportion'
-          rules={[{ required: true }]}
-        >
-          <InputNumber
-            placeholder='请输入调用量预警阈值'
-            addonAfter='%'
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        <Form.Item
-          label='报错次数预警阈值'
-          name='errorNum'
-          rules={[{ required: true }]}
-        >
-          <InputNumber
-            placeholder='报错次数预警阈值'
-            addonAfter='次/分钟'
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        <Form.Item
-          label='调用超时预警阈值'
-          name='timeoutNum'
-          rules={[{ required: true }]}
-        >
-          <InputNumber
-            placeholder='调用超时预警阈值'
-            addonAfter='毫秒（ms）'
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
         <Divider />
-        <Form.Item noStyle wrapperCol={{ span: 24 }}>
-          <Row>
-            <Col span={24} className='tr'>
-              <Space>
-                <Button onClick={onCancel}>取消</Button>,
-                <Button type='primary' htmlType='submit'>
-                  确定
-                </Button>
-              </Space>
-            </Col>
-          </Row>
-        </Form.Item>
-      </Form>
-    </Modal>
+        <Alert
+          message='平台将根据您的预警设置进行推送系统通知及邮件通知！'
+          type='info'
+          showIcon
+          style={{ marginBottom: 20 }}
+        />
+        <Form
+          form={form}
+          name='warning'
+          {...formProps}
+          initialValues={{ proportion: 60, errorNum: 1, timeoutNum: 5000 }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item
+            label='调用量预警阈值'
+            name='proportion'
+            rules={[{ required: true }]}
+          >
+            <InputNumber
+              placeholder='请输入调用量预警阈值'
+              addonAfter='%'
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+          <Form.Item
+            label='报错次数预警阈值'
+            name='errorNum'
+            rules={[{ required: true }]}
+          >
+            <InputNumber
+              placeholder='报错次数预警阈值'
+              addonAfter='次/分钟'
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+          <Form.Item
+            label='调用超时预警阈值'
+            name='timeoutNum'
+            rules={[{ required: true }]}
+          >
+            <InputNumber
+              placeholder='调用超时预警阈值'
+              addonAfter='毫秒（ms）'
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+          <Divider />
+          <Form.Item noStyle wrapperCol={{ span: 24 }}>
+            <Row>
+              <Col span={24} className='tr'>
+                <Space>
+                  <Button onClick={onCancel}>取消</Button>,
+                  <Button type='primary' htmlType='submit'>
+                    确定
+                  </Button>
+                </Space>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   )
 }
 

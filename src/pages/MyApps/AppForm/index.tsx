@@ -71,6 +71,8 @@ const AppForm = () => {
     })()
   }, [])
 
+  const [messageApi, messageApiHolder] = message.useMessage()
+
   /**
    * 提交
    */
@@ -91,7 +93,7 @@ const AppForm = () => {
       })
     }
 
-    message.success(`${appId ? '编辑' : '添加'}成功`)
+    messageApi.success(`${appId ? '编辑' : '添加'}成功`)
     navigate(-1)
   }
 
@@ -120,6 +122,7 @@ const AppForm = () => {
   return (
     <>
       {contextHolder}
+      {messageApiHolder}
       <Form
         form={form}
         name='appForm'

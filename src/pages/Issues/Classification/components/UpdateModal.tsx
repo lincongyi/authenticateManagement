@@ -51,12 +51,14 @@ const UpdateModal = ({
     setOpen(false)
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 提交数据
    */
   const onFinish = (values: any) => {
     console.log('Success:', values)
-    message.success({
+    messageApi.success({
       content: '新增成功',
       onClose: () => setOpen(false)
     })
@@ -74,74 +76,77 @@ const UpdateModal = ({
   }
 
   return (
-    <Modal
-      title='修改分类'
-      open={open}
-      width={640}
-      onCancel={onCancel}
-      footer={[]}
-    >
-      <Divider />
-      <Form
-        form={form}
-        name='update'
-        {...formProps}
-        initialValues={item}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+    <>
+      {contextHolder}
+      <Modal
+        title='修改分类'
+        open={open}
+        width={640}
+        onCancel={onCancel}
+        footer={[]}
       >
-        <Form.Item label='分类编号'>
-          <p>FL2344</p>
-        </Form.Item>
-        <Form.Item label='分类名称' name='name' rules={[{ required: true }]}>
-          <Input placeholder='请输入分类名称' maxLength={10} />
-        </Form.Item>
-        <Form.Item
-          label='分类级别'
-          name='level'
-          rules={[{ required: true, message: '请选择分类级别' }]}
-        >
-          <Select placeholder='请选择分类级别' options={levelOptions} />
-        </Form.Item>
-        <Form.Item
-          label='排序'
-          name='order'
-          rules={[{ required: true }]}
-          extra='从1-N进行排序，数字越大显示越后，如果设置了同样的数值，则按最新设置的时间进行排序'
-        >
-          <Input placeholder='请输入排序' maxLength={3} />
-        </Form.Item>
-        <Form.Item
-          label='显示'
-          name='isDisplay'
-          rules={[{ required: true, message: '请选择是否显示' }]}
-        >
-          <Select
-            placeholder='请选择是否显示'
-            options={[
-              { value: 0, label: '否' },
-              { value: 1, label: '是' }
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label='创建时间'>
-          <p>2022-11-22 10:00:00</p>
-        </Form.Item>
         <Divider />
-        <Form.Item noStyle wrapperCol={{ span: 24 }}>
-          <Row>
-            <Col span={24} className='tr'>
-              <Space>
-                <Button onClick={onCancel}>取消</Button>,
-                <Button type='primary' htmlType='submit'>
-                  确定
-                </Button>
-              </Space>
-            </Col>
-          </Row>
-        </Form.Item>
-      </Form>
-    </Modal>
+        <Form
+          form={form}
+          name='update'
+          {...formProps}
+          initialValues={item}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+        >
+          <Form.Item label='分类编号'>
+            <p>FL2344</p>
+          </Form.Item>
+          <Form.Item label='分类名称' name='name' rules={[{ required: true }]}>
+            <Input placeholder='请输入分类名称' maxLength={10} />
+          </Form.Item>
+          <Form.Item
+            label='分类级别'
+            name='level'
+            rules={[{ required: true, message: '请选择分类级别' }]}
+          >
+            <Select placeholder='请选择分类级别' options={levelOptions} />
+          </Form.Item>
+          <Form.Item
+            label='排序'
+            name='order'
+            rules={[{ required: true }]}
+            extra='从1-N进行排序，数字越大显示越后，如果设置了同样的数值，则按最新设置的时间进行排序'
+          >
+            <Input placeholder='请输入排序' maxLength={3} />
+          </Form.Item>
+          <Form.Item
+            label='显示'
+            name='isDisplay'
+            rules={[{ required: true, message: '请选择是否显示' }]}
+          >
+            <Select
+              placeholder='请选择是否显示'
+              options={[
+                { value: 0, label: '否' },
+                { value: 1, label: '是' }
+              ]}
+            />
+          </Form.Item>
+          <Form.Item label='创建时间'>
+            <p>2022-11-22 10:00:00</p>
+          </Form.Item>
+          <Divider />
+          <Form.Item noStyle wrapperCol={{ span: 24 }}>
+            <Row>
+              <Col span={24} className='tr'>
+                <Space>
+                  <Button onClick={onCancel}>取消</Button>,
+                  <Button type='primary' htmlType='submit'>
+                    确定
+                  </Button>
+                </Space>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   )
 }
 

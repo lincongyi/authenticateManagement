@@ -76,12 +76,14 @@ const Register = () => {
     return e?.fileList
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 提交
    */
   const onFinish = async (values: any) => {
     const { retMessage } = await registerApply(values)
-    message.success({
+    messageApi.success({
       content: retMessage,
       duration: 2,
       onClose () {
@@ -102,6 +104,7 @@ const Register = () => {
 
   return (
     <>
+      {contextHolder}
       <Header isLogin={false} />
       <div className='gray-bg'>
         <div className={style.content}>

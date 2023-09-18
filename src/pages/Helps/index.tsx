@@ -70,12 +70,14 @@ const Helps = () => {
   const description =
     '你好！目前“警快办”身份认证认证模式分为：实名认证、实人认证、实名+实人、这是一条正确答案这是一条正确答案这是一条正确答案，这是一条正确答案这是一条正确答案，这是一条正确答案这是一条正确答案这是一条正确答案。'
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 复制
    */
   const onCopy = () => {
     handleCopy(description)
-    message.success({
+    messageApi.success({
       content: '复制成功',
       duration: 2
     })
@@ -95,6 +97,7 @@ const Helps = () => {
 
   return (
     <>
+      {contextHolder}
       <Form
         name='search'
         labelCol={{ span: 2 }}

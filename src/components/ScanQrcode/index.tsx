@@ -30,6 +30,8 @@ const ScanQrcode = ({
     setQrcodeColor(isLightTheme ? '#000' : '#fff')
   }, [themeStore.mainTheme])
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   const connWebSocket = () => {
     ws = new WebSocket(VITE_WEBSOCKET_URL)
     ws.addEventListener('open', event => {
@@ -49,7 +51,7 @@ const ScanQrcode = ({
       if (JSON.parse(data).certRes === 0) {
         // 扫码认证结果的回调
         ws && ws.close()
-        message.success({
+        messageApi.success({
           content: '认证已通过！',
           duration: 2,
           onClose: () => {
@@ -113,6 +115,7 @@ const ScanQrcode = ({
   }, [qrcode.qrcodeContent])
   return (
     <>
+      {contextHolder}
       {qrcode.qrcodeContent && (
         <QRCode
           value={qrcode.qrcodeContent}

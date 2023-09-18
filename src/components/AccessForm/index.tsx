@@ -120,6 +120,8 @@ const AccessForm = () => {
     }
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 校验所有表单必填项
    * @returns {boolean} 返回所有表单是否录入所有必填项
@@ -127,31 +129,31 @@ const AccessForm = () => {
   const validateAllForms = async () => {
     const isBasicInfoPermitted = await validateForm(basicInfoRef!)
     if (!isBasicInfoPermitted) {
-      message.warning('请补充【基本信息】中的必填项')
+      messageApi.warning('请补充【基本信息】中的必填项')
       return false
     }
     const isAbilityInfoPermitted = await validateForm(abilityInfoRef!)
     if (!isAbilityInfoPermitted) {
-      message.warning('请补充【基础能力信息】中的必填项')
+      messageApi.warning('请补充【基础能力信息】中的必填项')
       return false
     }
     const isConcurrencyTestPermitted = await validateForm(
       concurrencyRef.current!.sitRef
     )
     if (!isConcurrencyTestPermitted) {
-      message.warning('请补充【并发配置】测试环境中的必填项')
+      messageApi.warning('请补充【并发配置】测试环境中的必填项')
       return false
     }
     const isConcurrencyProductionPermitted = await validateForm(
       concurrencyRef.current!.sitRef
     )
     if (!isConcurrencyProductionPermitted) {
-      message.warning('请补充【并发配置】正式环境中的必填项')
+      messageApi.warning('请补充【并发配置】正式环境中的必填项')
       return false
     }
     const isUploadFormPermitted = await validateForm(uploadFormRef!)
     if (!isUploadFormPermitted) {
-      message.warning('请补充【上传申请表】中的内容')
+      messageApi.warning('请补充【上传申请表】中的内容')
       return false
     }
     return true
@@ -209,6 +211,7 @@ const AccessForm = () => {
 
   return (
     <>
+      {contextHolder}
       <Affix offsetTop={offsetTop}>
         <div className={style.header}>
           <Radio.Group

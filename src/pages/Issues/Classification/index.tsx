@@ -89,6 +89,8 @@ const Classification = () => {
     setUpdateModalOpen(true)
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 删除
    * @param {TDataType} values
@@ -101,7 +103,7 @@ const Classification = () => {
       content: '确定要删除该记录吗？',
       okText: '确认',
       cancelText: '取消',
-      onOk: () => message.success({ content: '删除成功' })
+      onOk: () => messageApi.success({ content: '删除成功' })
     })
   }
 
@@ -237,6 +239,7 @@ const Classification = () => {
 
   return (
     <>
+      {contextHolder}
       <Row>
         <Col span={24}>
           <Form

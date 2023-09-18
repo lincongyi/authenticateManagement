@@ -30,6 +30,8 @@ const CheckModal = ({
 
   const { registerStore } = useStore()
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 提交
    */
@@ -38,7 +40,7 @@ const CheckModal = ({
       userId: values.accountNumber,
       key: 'ACCESS_REGISTER'
     })
-    if (!data) return message.warning('并未查询到该用户的注册结果')
+    if (!data) return messageApi.warning('并未查询到该用户的注册结果')
     const { taskId } = data
     const { state, processInstanceId, starter, comment } = data!.instanceInfo
     // 注册申请信息
@@ -56,39 +58,42 @@ const CheckModal = ({
     console.log(errorInfo)
   }
   return (
-    <Modal
-      title='查询注册申请结果'
-      open={open}
-      width={640}
-      onCancel={onCancel}
-      footer={[]}
-    >
-      <Divider />
-      <Form
-        form={form}
-        name='check'
-        {...formProps}
-        colon={false}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+    <>
+      {contextHolder}
+      <Modal
+        title='查询注册申请结果'
+        open={open}
+        width={640}
+        onCancel={onCancel}
+        footer={[]}
       >
-        <Form.Item
-          name='accountNumber'
-          label='账户登录名'
-          rules={[{ required: true, message: '请输入账户登录名' }]}
+        <Divider />
+        <Form
+          form={form}
+          name='check'
+          {...formProps}
+          colon={false}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
         >
-          <Input showCount maxLength={20} />
-        </Form.Item>
-        <Form.Item wrapperCol={{ span: 20, offset: 4 }}>
-          <Space>
-            <Button onClick={onCancel}>关闭</Button>
-            <Button type='primary' htmlType='submit'>
-              提交
-            </Button>
-          </Space>
-        </Form.Item>
-      </Form>
-    </Modal>
+          <Form.Item
+            name='accountNumber'
+            label='账户登录名'
+            rules={[{ required: true, message: '请输入账户登录名' }]}
+          >
+            <Input showCount maxLength={20} />
+          </Form.Item>
+          <Form.Item wrapperCol={{ span: 20, offset: 4 }}>
+            <Space>
+              <Button onClick={onCancel}>关闭</Button>
+              <Button type='primary' htmlType='submit'>
+                提交
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   )
 }
 

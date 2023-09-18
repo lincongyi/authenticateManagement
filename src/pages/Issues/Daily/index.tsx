@@ -92,6 +92,8 @@ const Daily = () => {
     setUpdateModalOpen(true)
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 删除
    */
@@ -103,7 +105,7 @@ const Daily = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: () => {
-        message.success({ content: '删除成功' })
+        messageApi.success({ content: '删除成功' })
       }
     })
   }
@@ -285,6 +287,7 @@ const Daily = () => {
 
   return (
     <>
+      {contextHolder}
       <Row>
         <Col span={24}>
           <Form

@@ -52,13 +52,15 @@ const EnableModal = ({
     setOpen(false)
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 提交数据
    */
   const onFinish = async ({ describe }: { describe: string }) => {
     if (isEnable) await applyStartApp({ clientId: item.clientId, describe })
     else await applyStopApp({ clientId: item.clientId, describe })
-    message.success({
+    messageApi.success({
       content: `已成功${isEnable ? '启用' : '停用'}`
     })
     callback()
@@ -70,48 +72,55 @@ const EnableModal = ({
   }
 
   return (
-    <Modal
-      title={`申请${isEnable ? '启用' : '停用'}`}
-      centered
-      open={open}
-      width={640}
-      onCancel={onCancel}
-      footer={[]}
-    >
-      <Alert message={alertTips} type='warning' style={{ marginBottom: 20 }} />
-      <Form
-        form={form}
-        name='enable'
-        {...formProps}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
+    <>
+      {contextHolder}
+      <Modal
+        title={`申请${isEnable ? '启用' : '停用'}`}
+        centered
+        open={open}
+        width={640}
+        onCancel={onCancel}
+        footer={[]}
       >
-        <Form.Item
-          label={`${isEnable ? '启用' : '停用'}原因`}
-          name='describe'
-          rules={[{ required: true }]}
+        <Alert
+          message={alertTips}
+          type='warning'
+          style={{ marginBottom: 20 }}
+        />
+        <Form
+          form={form}
+          name='enable'
+          {...formProps}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
         >
-          <TextArea
-            showCount
-            maxLength={50}
-            style={{ height: 120, resize: 'none' }}
-            placeholder={`请输入${isEnable ? '启用' : '停用'}原因`}
-          />
-        </Form.Item>
-        <Form.Item noStyle wrapperCol={{ span: 24 }}>
-          <Row>
-            <Col span={24} className='tr'>
-              <Space>
-                <Button onClick={onCancel}>取消</Button>,
-                <Button type='primary' htmlType='submit'>
-                  确定
-                </Button>
-              </Space>
-            </Col>
-          </Row>
-        </Form.Item>
-      </Form>
-    </Modal>
+          <Form.Item
+            label={`${isEnable ? '启用' : '停用'}原因`}
+            name='describe'
+            rules={[{ required: true }]}
+          >
+            <TextArea
+              showCount
+              maxLength={50}
+              style={{ height: 120, resize: 'none' }}
+              placeholder={`请输入${isEnable ? '启用' : '停用'}原因`}
+            />
+          </Form.Item>
+          <Form.Item noStyle wrapperCol={{ span: 24 }}>
+            <Row>
+              <Col span={24} className='tr'>
+                <Space>
+                  <Button onClick={onCancel}>取消</Button>,
+                  <Button type='primary' htmlType='submit'>
+                    确定
+                  </Button>
+                </Space>
+              </Col>
+            </Row>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   )
 }
 

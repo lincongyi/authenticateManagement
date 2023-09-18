@@ -26,6 +26,8 @@ const Captcha = ({ type }: { type: 0 | 1 }) => {
   const btnText = ['获取验证码', '看不清？换一张']
   const [imgCaptchaBtnStatus, setGetimgCaptchaBtnStatus] = useState(0) // 按钮文字状态
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 获取图片验证码
    */
@@ -36,18 +38,18 @@ const Captcha = ({ type }: { type: 0 | 1 }) => {
     if (!value) {
       setImageUrl('')
       setGetimgCaptchaBtnStatus(0)
-      return message.warning(`请输入${!type ? '手机号' : '邮箱'}`)
+      return messageApi.warning(`请输入${!type ? '手机号' : '邮箱'}`)
     }
     if (!type && !phonePattern.test(value)) {
       // 校验手机号码
       setImageUrl('')
       setGetimgCaptchaBtnStatus(0)
-      return message.warning('手机号格式有误，请重新确认')
+      return messageApi.warning('手机号格式有误，请重新确认')
     } else if (type && !emailPattern.test(value)) {
       // 校验邮箱地址
       setImageUrl('')
       setGetimgCaptchaBtnStatus(0)
-      return message.warning('邮箱格式有误，请重新确认')
+      return messageApi.warning('邮箱格式有误，请重新确认')
     }
 
     const blob = await imgCaptcha({ key: value })
@@ -101,6 +103,7 @@ const Captcha = ({ type }: { type: 0 | 1 }) => {
 
   return (
     <>
+      {contextHolder}
       {!captchaStep ? (
         <>
           <p className={style.tips}>

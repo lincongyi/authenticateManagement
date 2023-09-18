@@ -36,13 +36,15 @@ const CompanyInfo = () => {
     })()
   }, [])
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   const navigate = useNavigate()
   /**
    * 单位注册信息修改申请
    */
   const toEditCompany = () => {
     if (isApproving) {
-      message.warning({
+      messageApi.warning({
         content: '您已提交信息修改申请，且正在审批环节，请勿重复提交！'
       })
     } else {
@@ -52,6 +54,7 @@ const CompanyInfo = () => {
 
   return (
     <>
+      {contextHolder}
       <div className={style['tool-bar']}>
         {isApproving && (
           <div className={style.warning}>

@@ -78,6 +78,8 @@ const Recommend = () => {
     setUpdateModalOpen(true)
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 删除
    */
@@ -88,7 +90,7 @@ const Recommend = () => {
       content: '确定要删除该记录吗？',
       okText: '确认',
       cancelText: '取消',
-      onOk: () => message.success({ content: '删除成功' })
+      onOk: () => messageApi.success({ content: '删除成功' })
     })
   }
 
@@ -249,6 +251,7 @@ const Recommend = () => {
 
   return (
     <>
+      {contextHolder}
       <Row>
         <Col span={24}>
           <Form

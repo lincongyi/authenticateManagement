@@ -67,6 +67,7 @@ const SearchDocument = () => {
    */
   const onReplaceHtml = (list: TDevfileSearchResponse[]) => {
     const colorPrimary = themeStore.antdThemeColor
+    if (!list) return
     return list.map(item => {
       const { name, content, ...rest } = item
       const pattern = /<span style='color:blue'>/g

@@ -45,6 +45,8 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
 
   const [modal, contextHolder] = Modal.useModal()
 
+  const [messageApi, messageApiHolder] = message.useMessage()
+
   const navTo = ({ key }: { key: string }) => {
     switch (key) {
       case 'logout':
@@ -57,7 +59,7 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
             await logout()
             localStorage.removeItem('token')
             localStorage.removeItem('userInfo')
-            message.success({
+            messageApi.success({
               content: '成功退出登录',
               duration: 2
             })
@@ -75,6 +77,7 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
   return (
     <>
       {contextHolder}
+      {messageApiHolder}
       <div className={`${style.header} ${isLogin && style['is-fixed']}`}>
         <div className={style['left-side']}>
           <div className={style.logo}>

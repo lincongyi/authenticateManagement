@@ -60,13 +60,15 @@ const RegisterResult = () => {
    */
   const toLogin = () => navigate('/login')
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 催办
    */
   const toUrge = async () => {
     const { processInstanceId } = registerStore.registerInfo
     await hastenProcess({ instanceId: processInstanceId })
-    message.warning({
+    messageApi.warning({
       content: '催办信息已发送！5秒后自动关闭',
       duration: 5,
       onClose: () => {
@@ -134,7 +136,7 @@ const RegisterResult = () => {
       ...rest,
       ...{ instanceId: processInstanceId }
     })
-    message.success({
+    messageApi.success({
       content: retMessage,
       onClose: () => {
         registerStore.setRegisterInfo({
@@ -160,6 +162,7 @@ const RegisterResult = () => {
 
   return (
     <>
+      {contextHolder}
       {registerStatus !== -1 && (
         <>
           <Header isLogin={false} />

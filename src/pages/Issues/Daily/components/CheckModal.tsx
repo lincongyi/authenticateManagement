@@ -38,12 +38,14 @@ const CheckModal = ({
     { name: '微警认证小程序', icon: appIcon03 }
   ])
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 复制
    */
   const onCopy = () => {
     handleCopy(item.answer)
-    message.success({ content: '复制成功' })
+    messageApi.success({ content: '复制成功' })
   }
 
   const item = {
@@ -53,90 +55,93 @@ const CheckModal = ({
   }
 
   return (
-    <Modal
-      title='问题详情'
-      open={open}
-      width={640}
-      onCancel={() => setOpen(false)}
-      footer={[]}
-    >
-      <Divider />
-      <Form name='check' {...formProps} initialValues={{ ...item }}>
-        <Form.Item label='问题编号' name='number'>
-          <p>WTP23445</p>
-        </Form.Item>
-        <Form.Item label='帮助问题' name='issue'>
-          <TextArea
-            rows={4}
-            placeholder='请输入帮助问题，建议文字控制在30字内'
-            showCount
-            maxLength={30}
-            disabled
-          />
-        </Form.Item>
-        <Form.Item label='回答' name='answer'>
-          <TextArea
-            rows={4}
-            placeholder='请输入回答，建议文字控制在100字内'
-            showCount
-            maxLength={100}
-            disabled
-          />
-        </Form.Item>
-        <Form.Item wrapperCol={{ span: 20, offset: 4 }}>
-          <div className={style['copy-btn']}>
-            <Button type='link' onClick={onCopy}>
-              复制
-            </Button>
-          </div>
-        </Form.Item>
-        <Form.Item label='已关联' name='relevance'>
-          <Space direction='vertical' style={{ width: '100%' }}>
-            <div className={style['client-app']}>
-              {relevanceAppList.map(item => (
-                <Space
-                  direction='vertical'
-                  style={{ textAlign: 'center' }}
-                  key={item.name}
-                >
-                  <div className={style['app-icon-item']}>
-                    <img src={item.icon} className={style['app-icon']} />
-                  </div>
-                  <p>{item.name}</p>
-                </Space>
-              ))}
-            </div>
-          </Space>
-        </Form.Item>
-        <Form.Item label='创建时间' name='date'>
-          <p>2022-07-12 10:00:00</p>
-        </Form.Item>
-        <Form.Item name='feedback' wrapperCol={{ span: 20, offset: 4 }}>
-          <Space>
-            <Button
-              shape='round'
-              icon={<LikeOutlined style={{ color: '#0db97f' }} />}
-            >
-              有帮助（2）
-            </Button>
-            <Button
-              shape='round'
-              icon={<DislikeOutlined style={{ color: '#f34646' }} />}
-            >
-              没帮助（3）
-            </Button>
-          </Space>
-        </Form.Item>
+    <>
+      {contextHolder}
+      <Modal
+        title='问题详情'
+        open={open}
+        width={640}
+        onCancel={() => setOpen(false)}
+        footer={[]}
+      >
         <Divider />
-        <Form.Item noStyle wrapperCol={{ span: 24 }}>
-          <Row>
-            <Col span={24} className='tr'>
-              <Button onClick={() => setOpen(false)}>关闭</Button>,
-            </Col>
-          </Row>
-        </Form.Item>
-      </Form>
-    </Modal>
+        <Form name='check' {...formProps} initialValues={{ ...item }}>
+          <Form.Item label='问题编号' name='number'>
+            <p>WTP23445</p>
+          </Form.Item>
+          <Form.Item label='帮助问题' name='issue'>
+            <TextArea
+              rows={4}
+              placeholder='请输入帮助问题，建议文字控制在30字内'
+              showCount
+              maxLength={30}
+              disabled
+            />
+          </Form.Item>
+          <Form.Item label='回答' name='answer'>
+            <TextArea
+              rows={4}
+              placeholder='请输入回答，建议文字控制在100字内'
+              showCount
+              maxLength={100}
+              disabled
+            />
+          </Form.Item>
+          <Form.Item wrapperCol={{ span: 20, offset: 4 }}>
+            <div className={style['copy-btn']}>
+              <Button type='link' onClick={onCopy}>
+                复制
+              </Button>
+            </div>
+          </Form.Item>
+          <Form.Item label='已关联' name='relevance'>
+            <Space direction='vertical' style={{ width: '100%' }}>
+              <div className={style['client-app']}>
+                {relevanceAppList.map(item => (
+                  <Space
+                    direction='vertical'
+                    style={{ textAlign: 'center' }}
+                    key={item.name}
+                  >
+                    <div className={style['app-icon-item']}>
+                      <img src={item.icon} className={style['app-icon']} />
+                    </div>
+                    <p>{item.name}</p>
+                  </Space>
+                ))}
+              </div>
+            </Space>
+          </Form.Item>
+          <Form.Item label='创建时间' name='date'>
+            <p>2022-07-12 10:00:00</p>
+          </Form.Item>
+          <Form.Item name='feedback' wrapperCol={{ span: 20, offset: 4 }}>
+            <Space>
+              <Button
+                shape='round'
+                icon={<LikeOutlined style={{ color: '#0db97f' }} />}
+              >
+                有帮助（2）
+              </Button>
+              <Button
+                shape='round'
+                icon={<DislikeOutlined style={{ color: '#f34646' }} />}
+              >
+                没帮助（3）
+              </Button>
+            </Space>
+          </Form.Item>
+          <Divider />
+          <Form.Item noStyle wrapperCol={{ span: 24 }}>
+            <Row>
+              <Col span={24} className='tr'>
+                <Button onClick={() => setOpen(false)}>关闭</Button>,
+              </Col>
+            </Row>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </>
   )
 }
 

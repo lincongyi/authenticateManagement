@@ -46,13 +46,15 @@ const UploadForm = React.forwardRef<
     'https://www.baidu.com'
   ])
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 上传前校验文件格式
    */
   const beforeUpload = (file: RcFile) => {
     const reg = /application\/vnd|application\/pdf|image\/jpeg/
     const isPermitted = reg.test(file.type)
-    if (!isPermitted) message.error('上传只支持doc/docx/pdf/jpg格式')
+    if (!isPermitted) messageApi.error('上传只支持doc/docx/pdf/jpg格式')
     return isPermitted
   }
 
@@ -65,6 +67,7 @@ const UploadForm = React.forwardRef<
 
   return (
     <>
+      {contextHolder}
       <div
         className={style['guide-box']}
         style={{

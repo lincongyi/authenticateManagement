@@ -18,16 +18,20 @@ const EmailCaptcha = ({
   operation?: string
 }) => {
   let emailCaptchaTimer: NodeJS.Timer
+
   const [emailCaptcha, setEmailCaptcha] = useState({
     text: '获取验证码',
     isWaiting: false
   })
+
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 发送短信验证码
    */
   const getEmailCaptcha = async () => {
     const adminEmail = form.getFieldValue('adminEmail')
-    if (!adminEmail) return message.warning('请输入管理员邮箱')
+    if (!adminEmail) return messageApi.warning('请输入管理员邮箱')
     await sendCaptcha({
       type: 1,
       key: adminEmail,
@@ -46,31 +50,34 @@ const EmailCaptcha = ({
     }, 1000)
   }
   return (
-    <Space>
-      <Form.Item
-        name='emailCaptcha'
-        rules={[
-          { required: true, message: '请输入邮箱验证码' },
-          { min: 6, message: '请输入6位验证码' }
-        ]}
-        noStyle
-      >
-        <Input
-          showCount
-          maxLength={6}
-          style={{ width: widthList[0] }}
-          onBlur={e => callback(e.target.value)}
-        />
-      </Form.Item>
-      <Button
-        type='primary'
-        onClick={getEmailCaptcha}
-        style={{ width: widthList[1] }}
-        disabled={emailCaptcha.isWaiting}
-      >
-        {emailCaptcha.text}
-      </Button>
-    </Space>
+    <>
+      {contextHolder}
+      <Space>
+        <Form.Item
+          name='emailCaptcha'
+          rules={[
+            { required: true, message: '请输入邮箱验证码' },
+            { min: 6, message: '请输入6位验证码' }
+          ]}
+          noStyle
+        >
+          <Input
+            showCount
+            maxLength={6}
+            style={{ width: widthList[0] }}
+            onBlur={e => callback(e.target.value)}
+          />
+        </Form.Item>
+        <Button
+          type='primary'
+          onClick={getEmailCaptcha}
+          style={{ width: widthList[1] }}
+          disabled={emailCaptcha.isWaiting}
+        >
+          {emailCaptcha.text}
+        </Button>
+      </Space>
+    </>
   )
 }
 

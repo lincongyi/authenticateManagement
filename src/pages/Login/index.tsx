@@ -21,7 +21,6 @@ const Login = () => {
    */
 
   const switchLoginMethod = (index: number) => {
-    // if (index) return message.warning('暂未支持扫码登录')
     setSelectedIndex(index)
   }
   const methodList = [

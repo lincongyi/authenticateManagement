@@ -220,12 +220,14 @@ const MyApplications = () => {
     setOpen(true)
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 催办
    */
   const onUrge = async (value: TApplyDetail) => {
     if (value.urging) {
-      return message.warning({
+      return messageApi.warning({
         content: '当前审批节点已发送催办，请勿重复操作',
         duration: 2
       })
@@ -233,7 +235,7 @@ const MyApplications = () => {
     await handleUrging({
       instanceId: value.processInstanceId
     })
-    message.success({
+    messageApi.success({
       content: '已成功对审批人发送催办提醒！',
       duration: 2
     })
@@ -251,7 +253,7 @@ const MyApplications = () => {
     await handleStopApply({
       instanceId: value.processInstanceId
     })
-    message.success({
+    messageApi.success({
       content: '已成功撤回！',
       duration: 2
     })
@@ -422,6 +424,7 @@ const MyApplications = () => {
 
   return (
     <>
+      {contextHolder}
       <div className={style['state-filter']}>
         {stateList?.length &&
           stateList.map((item, index) => {

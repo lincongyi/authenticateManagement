@@ -98,6 +98,8 @@ const CompanySettings = () => {
    */
   const onBack = () => navigate(-1)
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 提交数据
    */
@@ -122,7 +124,7 @@ const CompanySettings = () => {
       areaCode,
       adminEmail
     })
-    message.success({
+    messageApi.success({
       content: retMessage,
       duration: 2,
       onClose () {
@@ -137,6 +139,7 @@ const CompanySettings = () => {
 
   return (
     <>
+      {contextHolder}
       {process.state === 1 ? (
         <Result
           title='申请审核中，请稍后...'
