@@ -5,6 +5,7 @@ import { CheckCircleOutlined } from '@ant-design/icons'
 import { TGetAppInfoByEnv, getAppInfoByEnv } from '@/api/myApp'
 import AccessedEnv from '../AccessedEnv'
 import { appInfoContext } from '../..'
+import { useNavigate } from 'react-router-dom'
 
 const prodEnvContext = React.createContext<{
   capability: TGetAppInfoByEnv | undefined
@@ -60,6 +61,15 @@ const ProdEnv = () => {
       item => item.capabilityId === Number(activeKey)
     )
     setActiveCapability(item)
+  }
+
+  const navigate = useNavigate()
+
+  /**
+   * 申请接入正式环境
+   */
+  const toApplyForProdEnv = () => {
+    navigate(`./applyForProdEnv?appId=${appId}`)
   }
 
   return (
@@ -127,7 +137,7 @@ const ProdEnv = () => {
                           {/* <i className={style['done-icon']} /> */}
                           添加接入基础能力
                         </div>
-                        <div className={style.btn}>
+                        <div className={style.btn} onClick={toApplyForProdEnv}>
                           <i
                             className={`${style['btn-icon']} ${style.step05}`}
                           />

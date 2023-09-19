@@ -27,7 +27,7 @@
   margin-right: 20px;
   background: url('@/assets/myApp-prod-step-bar-enable.png') top no-repeat;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: top;
 
   &.disable {
     background-image: url('@/assets/myApp-prod-step-bar-disable.png');
