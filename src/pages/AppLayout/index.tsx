@@ -109,14 +109,14 @@ const AppLayout = () => {
    * 匹配当前地址导航菜单高亮
    */
   const highLightMenuItem = (menu: TMenuItem[]) => {
-    menu.forEach(item => {
-      if (!item.children) {
-        console.log('key', item.key)
-        if (pathname.includes(item.key)) {
-          setPath(item.key)
-        }
-      } else highLightMenuItem(item.children)
-    })
+    let key = ''
+    for (let i = 0; i < menu.length; i++) {
+      if (pathname.includes(menu[i].key)) {
+        key = menu[i].key
+        break
+      }
+    }
+    setPath(key)
   }
 
   useEffect(() => {
