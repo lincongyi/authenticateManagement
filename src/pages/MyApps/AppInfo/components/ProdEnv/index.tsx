@@ -13,7 +13,7 @@ const prodEnvContext = React.createContext<{
 }>({ capability: undefined, fetchAppInfoByEnv: undefined })
 
 const ProdEnv = () => {
-  const { appId, env, isEnable } = useContext(appInfoContext)!
+  const { clientId, env, isEnable } = useContext(appInfoContext)!
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
 
@@ -26,7 +26,7 @@ const ProdEnv = () => {
    */
   const fetchAppInfoByEnv = async (capability?: TGetAppInfoByEnv) => {
     const { data } = await getAppInfoByEnv({
-      appId,
+      clientId,
       appEnv: env
     })
     if (!data) return
@@ -69,7 +69,7 @@ const ProdEnv = () => {
    * 申请接入正式环境
    */
   const toApplyForProdEnv = () => {
-    navigate(`./applyForProdEnv?appId=${appId}`)
+    navigate(`./applyForProdEnv?clientId=${clientId}`)
   }
 
   return (

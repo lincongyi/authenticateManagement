@@ -25,7 +25,7 @@ const WarningModal = ({
   open: boolean
   setOpen: Function
 }) => {
-  const { appId, env } = useContext(appInfoContext)!
+  const { clientId, env } = useContext(appInfoContext)!
 
   const { capability, fetchAppInfoByEnv } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
@@ -62,12 +62,12 @@ const WarningModal = ({
     console.log('values', {
       ...values,
       apiId: Number(id),
-      appId
+      clientId
     })
     await apiConfig({
       ...values,
       apiId: Number(id),
-      appId
+      clientId
     })
     messageApi.success({
       content: '预警设置成功',

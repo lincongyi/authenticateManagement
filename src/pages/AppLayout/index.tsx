@@ -15,7 +15,7 @@ import { ColorChangeHandler, SketchPicker } from 'react-color'
 import Header from '@components/Header'
 import { getMenu, getAppRoutes } from './index.config'
 import { runInAction } from 'mobx'
-import { getApplyCount } from '@api/myApplications'
+// import { getApplyCount } from '@api/myApplications'
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb'
 import type { TRoutes } from '../../router'
 
@@ -111,7 +111,10 @@ const AppLayout = () => {
   const highLightMenuItem = (menu: TMenuItem[]) => {
     menu.forEach(item => {
       if (!item.children) {
-        if (pathname.includes(item.key)) setPath(item.key)
+        console.log('key', item.key)
+        if (pathname.includes(item.key)) {
+          setPath(item.key)
+        }
       } else highLightMenuItem(item.children)
     })
   }

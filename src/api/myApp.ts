@@ -118,7 +118,7 @@ export type TGetAppInfoByEnv = {
  * 获取能力信息
  */
 const getAppInfoByEnv = (params: {
-  appId: string
+  clientId: string
   appEnv: TGetAppInfoResponse['appEnv']
 }): Promise<TResponse<TGetAppInfoByEnv[]>> => {
   return request.post('/access/getAppInfoByEnv', params)
@@ -128,7 +128,7 @@ const getAppInfoByEnv = (params: {
  * 申请启用
  */
 const applyStartApp = (params: {
-  clientId: string
+  appId: string
   describe: string
 }): Promise<TResponse<TResponse>> => {
   return request.post('/access/applyStartApp', params)
@@ -138,14 +138,14 @@ const applyStartApp = (params: {
  * 申请停用
  */
 const applyStopApp = (params: {
-  clientId: string
+  appId: string
   describe: string
 }): Promise<TResponse<TResponse>> => {
   return request.post('/access/applyStopApp', params)
 }
 
 export type TApplyExtensionParams = {
-  appId: string
+  clientId: string
   capabilityId: number
   env: TEnv
   type: 0 | 1 // 是否延长有效期：0-否；1-是
@@ -161,7 +161,7 @@ const applyExtension = (params: TApplyExtensionParams): Promise<TResponse> => {
 
 type TApiConfigParams = {
   apiId: number // 能力id
-  appId: string // 应用id
+  clientId: string // 应用id
   errorNum: number // 报错次数预警值
   proportion: number // 调用量预警值
   timeoutNum: number // 调用超时预警值

@@ -13,14 +13,14 @@ const UploadForm = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    const appId = myAppStore.appId || searchParams.get('appId')
-    if (!appId) return navigate('..')
+    const clientId = myAppStore.clientId || searchParams.get('clientId')
+    if (!clientId) return navigate('..')
 
-    if (!myAppStore.appId && appId) {
-      myAppStore.setAppId(appId)
-    } else if (myAppStore.appId && !searchParams.get('appId')) {
+    if (!myAppStore.clientId && clientId) {
+      myAppStore.setClientId(clientId)
+    } else if (myAppStore.clientId && !searchParams.get('clientId')) {
       // 针对点击面包屑导航跳转到该页面的情况，需要补充url query
-      navigate(`../appInfo?appId=${appId}`, { replace: true })
+      navigate(`../appInfo?clientId=${clientId}`, { replace: true })
     }
   }, [])
 

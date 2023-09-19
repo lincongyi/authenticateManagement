@@ -28,7 +28,7 @@ const DelayModal = ({
   open: boolean
   setOpen: Function
 }) => {
-  const { appId, env } = useContext(appInfoContext)!
+  const { clientId, env } = useContext(appInfoContext)!
   const { capability, fetchAppInfoByEnv } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
@@ -76,7 +76,7 @@ const DelayModal = ({
     values: Pick<TApplyExtensionParams, 'type' | 'describe'>
   ) => {
     await applyExtension({
-      appId,
+      clientId,
       capabilityId: capability!.capabilityId,
       env,
       ...values

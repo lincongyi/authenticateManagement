@@ -122,9 +122,9 @@ const Index = () => {
   /**
    * 查看
    */
-  const onCheck = (id: TDataType['appId']) => {
-    myAppStore.setAppId(id)
-    navigate(`./appInfo?appId=${id}`)
+  const onCheck = (id: TDataType['clientId']) => {
+    myAppStore.setClientId(id)
+    navigate(`./appInfo?clientId=${id}`)
   }
 
   const [open, setOpen] = useState(false) // 控制启用or停用Modal显示隐藏
@@ -176,6 +176,15 @@ const Index = () => {
       title: '应用名称',
       dataIndex: 'appName',
       ellipsis: true
+      // onCell: (_, index) => {
+      //   if (index === 3) {
+      //     return { rowSpan: 2 }
+      //   }
+      //   if (index === 4) {
+      //     return { rowSpan: 0 }
+      //   }
+      //   return {}
+      // }
     },
     {
       title: '接入环境',
@@ -230,7 +239,7 @@ const Index = () => {
       width: 250,
       render: (values: TDataType) => (
         <>
-          <Button type='link' onClick={() => onCheck(values.appId)}>
+          <Button type='link' onClick={() => onCheck(values.clientId)}>
             查看详情
           </Button>
           <Button type='link' onClick={() => onEnable(values)}>
@@ -383,7 +392,7 @@ const Index = () => {
       <Row>
         <Col span={24}>
           <Table
-            rowKey='appId'
+            rowKey='clientId'
             columns={columns}
             dataSource={dataSource}
             pagination={pagination}

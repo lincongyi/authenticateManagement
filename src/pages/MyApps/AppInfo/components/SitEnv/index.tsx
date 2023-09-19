@@ -16,7 +16,7 @@ const sitEnvContext = React.createContext<{
 })
 
 const SitEnv = () => {
-  const { appId, env, isEnable } = useContext(appInfoContext)!
+  const { clientId, env, isEnable } = useContext(appInfoContext)!
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
 
@@ -29,7 +29,7 @@ const SitEnv = () => {
    */
   const fetchAppInfoByEnv = async (capability?: TGetAppInfoByEnv) => {
     const { data } = await getAppInfoByEnv({
-      appId,
+      clientId,
       appEnv: env
     })
     if (!data) return
@@ -73,7 +73,7 @@ const SitEnv = () => {
    */
   const toUploadForm = () => {
     if (!isEnable) return
-    navigate(`./uploadForm?appId=${appId}`)
+    navigate(`./uploadForm?clientId=${clientId}`)
   }
 
   return (

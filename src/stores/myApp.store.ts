@@ -3,9 +3,9 @@ import { makeAutoObservable } from 'mobx'
 
 const MyAppStore = () => {
   return makeAutoObservable({
-    appId: '', // 应用id
-    setAppId (id: string) {
-      this.appId = id
+    clientId: '', // 应用id
+    setClientId (id: string) {
+      this.clientId = id
     }
   })
 }

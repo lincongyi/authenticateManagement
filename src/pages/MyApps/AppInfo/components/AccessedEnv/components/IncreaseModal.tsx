@@ -26,7 +26,7 @@ const IncreaseModal = ({
   setOpen: Function
   callback: Function
 }) => {
-  const { appId, env } = useContext(appInfoContext)!
+  const { clientId, env } = useContext(appInfoContext)!
 
   const { capability, fetchAppInfoByEnv } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
@@ -63,12 +63,12 @@ const IncreaseModal = ({
     console.log('values', {
       ...values,
       apiId: Number(id),
-      appId
+      clientId
     })
     // await xxxxxx({
     //   ...values,
     //   apiId: Number(id),
-    //   appId
+    //   clientId
     // })
     messageApi.success({
       content: '申请成功',

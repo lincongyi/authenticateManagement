@@ -21,7 +21,7 @@ const { Paragraph } = Typography
 
 const appInfoContext = React.createContext<
   | {
-      appId: string
+      clientId: string
       env: TEnv
       isEnable: Boolean
     }
@@ -39,23 +39,23 @@ const AppInfo = () => {
 
   const navigate = useNavigate()
 
-  const appId = myAppStore.appId || searchParams.get('appId')
+  const clientId = myAppStore.clientId || searchParams.get('clientId')
 
   /**
    * 初始化应用详情
    */
   useEffect(() => {
-    if (!appId) return navigate('..')
+    if (!clientId) return navigate('..')
 
-    if (!myAppStore.appId && searchParams.get('appId')) {
-      myAppStore.setAppId(appId)
-    } else if (myAppStore.appId && !searchParams.get('appId')) {
+    if (!myAppStore.clientId && searchParams.get('clientId')) {
+      myAppStore.setClientId(clientId)
+    } else if (myAppStore.clientId && !searchParams.get('clientId')) {
       // 针对点击面包屑导航跳转到该页面的情况，需要补充url query
-      navigate(`../appInfo?appId=${appId}`, { replace: true })
+      navigate(`../appInfo?clientId=${clientId}`, { replace: true })
     }
 
     ;(async () => {
-      const { data } = await getAppInfo({ id: appId })
+      const { data } = await getAppInfo({ id: clientId })
       if (!data) return
       setAppInfo(data)
     })()
@@ -65,7 +65,7 @@ const AppInfo = () => {
    * 编辑应用详情
    */
   const onEdit = () => {
-    navigate(`../appForm?appId=${appId}`)
+    navigate(`../appForm?clientId=${clientId}`)
   }
 
   const [env, setEnv] = useState<TEnv>('sit') // 当前active标签
@@ -85,10 +85,10 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {!!appId && (
+          {!!clientId && (
             <appInfoContext.Provider
               value={{
-                appId,
+                clientId,
                 env: 'sit',
                 isEnable: appInfo?.state !== 3
               }}
@@ -113,10 +113,10 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {!!appId && (
+          {!!clientId && (
             <appInfoContext.Provider
               value={{
-                appId,
+                clientId,
                 env: 'sit',
                 isEnable: appInfo?.state !== 3
               }}
@@ -142,15 +142,6 @@ const AppInfo = () => {
         <div className={style.primary}>
           <Space>
             <p className={style.name}>{appInfo?.appName}</p>
-            {appInfo && (
-              <Tag
-                color={
-                  ['default', 'processing'][Number(appInfo.appEnv !== 'sit')]
-                }
-              >
-                <>{['测试', '正式'][Number(appInfo.appEnv !== 'sit')]}环境</>
-              </Tag>
-            )}
             {appInfo && (
               <Tag
                 color={

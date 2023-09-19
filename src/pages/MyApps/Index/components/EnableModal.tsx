@@ -58,8 +58,8 @@ const EnableModal = ({
    * 提交数据
    */
   const onFinish = async ({ describe }: { describe: string }) => {
-    if (isEnable) await applyStartApp({ clientId: item.clientId, describe })
-    else await applyStopApp({ clientId: item.clientId, describe })
+    if (isEnable) await applyStartApp({ appId: item.appId, describe })
+    else await applyStopApp({ appId: item.appId, describe })
     messageApi.success({
       content: `已成功${isEnable ? '启用' : '停用'}`
     })
