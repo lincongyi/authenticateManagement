@@ -57,35 +57,35 @@ const Index = () => {
     })()
   }, [])
 
-  const [dataSource, setDataSource] = useState<TDataType[]>()
+  type TDataSource = TDataType & { rowSpan: number }
+
+  const [dataSource, setDataSource] = useState<TDataSource[]>()
 
   /**
-   * 获取我的应用列表
+   * 格式化表格数据
    */
-  useEffect(() => {
-    ;(async () => {
-      const { data } = await getAppList(pagination)
-      if (!data) return
-      const { list, pageNum, pageSize, total } = data
-      setDataSource(list)
-      setPagination({ pageNum, pageSize, total })
-    })()
-  }, [])
-
-  const [form] = Form.useForm()
-
-  /**
-   * 重置
-   */
-  const onReset = () => {
-    form.resetFields()
+  const formatData = (
+    list: TDataType[]
+  ): (TDataType & { rowSpan: number })[] => {
+    const result = []
+    for (let i = 0; i < list.length; i++) {
+      const prev = { ...list[i] }
+      const next = { ...list[i + 1] }
+      if (prev.appId === next.appId) {
+        result.push({ ...prev, rowSpan: 2 }, { ...next, rowSpan: 0 })
+        ++i
+      } else {
+        result.push({ ...prev, rowSpan: 1 })
+      }
+    }
+    return result
   }
 
   /**
-   * 查询
+   * 获取我的应用表格数据
    */
-  const onFinish = async (values: TFormData) => {
-    const { dateRange, ...rest } = values
+  const fetchAppList = async () => {
+    const { dateRange, ...rest } = form.getFieldsValue()
     const params = {
       ...rest
     }
@@ -100,8 +100,49 @@ const Index = () => {
     })
     if (!data) return
     const { list, pageNum, pageSize, total } = data
-    setDataSource(list)
+    const source = formatData(list)
+    setDataSource(source)
     setPagination({ pageNum, pageSize, total })
+  }
+
+  /**
+   * 表格分页参数
+   */
+  const [pagination, setPagination] = useState({
+    pageNum: 1,
+    pageSize: 10,
+    total: 0
+  })
+
+  /**
+   * 分页、排序、筛选变化时触发
+   */
+  const onTableChange = (tablePagination: TablePaginationConfig) => {
+    const pageNum = tablePagination.current || 1
+    setPagination({ ...pagination, pageNum })
+  }
+
+  /**
+   * 初始化表格数据 && 监听表格翻页事件
+   */
+  useEffect(() => {
+    fetchAppList()
+  }, [pagination.pageNum])
+
+  const [form] = Form.useForm()
+
+  /**
+   * 重置
+   */
+  const onReset = () => {
+    form.resetFields()
+  }
+
+  /**
+   * 查询
+   */
+  const onFinish = async (values: TFormData) => {
+    fetchAppList()
   }
 
   const onFinishFailed = (errorInfo: any) => {
@@ -140,22 +181,6 @@ const Index = () => {
   }
 
   /**
-   * 表格分页参数
-   */
-  const [pagination, setPagination] = useState({
-    pageNum: 1,
-    pageSize: 10,
-    total: 0
-  })
-
-  /**
-   * 分页、排序、筛选变化时触发
-   */
-  const onTableChange = (tablePagination: TablePaginationConfig) => {
-    setPagination({ ...pagination, ...tablePagination })
-  }
-
-  /**
    * 根据id返回基础能力
    */
   const getAccessCapability = (accessCapability: string) => {
@@ -171,20 +196,12 @@ const Index = () => {
     return capabilityToString.join(',')
   }
 
-  const columns: ColumnsType<TDataType> = [
+  const columns: ColumnsType<TDataSource> = [
     {
       title: '应用名称',
       dataIndex: 'appName',
-      ellipsis: true
-      // onCell: (_, index) => {
-      //   if (index === 3) {
-      //     return { rowSpan: 2 }
-      //   }
-      //   if (index === 4) {
-      //     return { rowSpan: 0 }
-      //   }
-      //   return {}
-      // }
+      ellipsis: true,
+      onCell: item => ({ rowSpan: item.rowSpan })
     },
     {
       title: '接入环境',
@@ -237,6 +254,7 @@ const Index = () => {
       title: '操作',
       key: 'action',
       width: 250,
+      onCell: item => ({ rowSpan: item.rowSpan }),
       render: (values: TDataType) => (
         <>
           <Button type='link' onClick={() => onCheck(values.clientId)}>

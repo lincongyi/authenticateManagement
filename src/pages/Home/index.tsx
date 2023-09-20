@@ -101,7 +101,7 @@ const Home = () => {
           <div className={style.logo}>
             <img src={Logo} />
           </div>
-          <p className={style.title}>认证服务接入平台</p>
+          <p className={style.title}>微警开放平台</p>
         </div>
         <div className={style['right-side']}>
           <ul className={style['nav-list']}>
@@ -122,7 +122,7 @@ const Home = () => {
       </div>
       <div className={style.content}>
         <div className={style.banner}>
-          <div className={style.title}>【微警开放平台】认证服务接入平台</div>
+          <div className={style.title}>【微警开放平台】</div>
           <div className={style.divider}></div>
           <div className={style['sub-title']}>
             开发、共享、合作、共赢 互联网
@@ -147,7 +147,7 @@ const Home = () => {
                 时代一站式能力提供平台
               </div>
               <p className={style.description}>
-                【微警开放平台】认证服务接入平台为主动满足广大群众对于网上办事特别是掌上服务的迫切需求，按照我省“数字政府”创新政务服务的要求，广东省政务服务数据管理局依托广州市公安局南沙区分局
+                【微警开放平台】微警开放平台为主动满足广大群众对于网上办事特别是掌上服务的迫切需求，按照我省“数字政府”创新政务服务的要求，广东省政务服务数据管理局依托广州市公安局南沙区分局
                 “互联网+公安政务服务”，通过“可信身份认证服务平台”示范基地，为群众办事提供一个成熟、可靠的身份认证基础能力开放互联的合作平台，签约用户可以通过调用开放服务，专注自身业务，以达到场景生态提升，实现生态链条的延伸对服务质量大幅度的提高。目前合作客户已有多家机构接入，有认证服务需求的单位可申请。
               </p>
             </div>
@@ -207,7 +207,7 @@ const Home = () => {
         </div>
 
         <div className={style.guide}>
-          <p className={style.title}>【微警开放平台】认证服务接入平台</p>
+          <p className={style.title}>【微警开放平台】</p>
           <div className={style['guide-btn']} onClick={toApply}>
             立即申请
           </div>

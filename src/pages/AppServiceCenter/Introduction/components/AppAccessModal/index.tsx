@@ -36,6 +36,7 @@ const AppAccessModal = ({
     if (!selectedIndex) return messageApi.warning('请选择接入应用')
     console.log(appList[selectedIndex])
     // navigate('./access')
+    return messageApi.warning('暂未开放')
   }
 
   return (

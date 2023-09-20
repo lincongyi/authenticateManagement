@@ -83,7 +83,7 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
           <div className={style.logo}>
             <img src={Logo} />
           </div>
-          <p className={style.title}>认证服务接入平台</p>
+          <p className={style.title}>微警开放平台</p>
         </div>
         <div className={style['right-side']}>
           {isLogin ? (
