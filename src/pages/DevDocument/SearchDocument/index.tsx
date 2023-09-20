@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Divider, Input, Tabs, message } from 'antd'
+import { Empty, Input, Tabs, message } from 'antd'
 import { devfileSearch, getDirectory } from '@/api/devDocument'
 import type {
   TGetDirectoryResponse,
@@ -57,10 +57,14 @@ const SearchDocument = () => {
           searchStr
         })
         if (!data) setResultList([])
-        setResultList(onReplaceHtml(data!))
+        else setResultList(onReplaceHtml(data!))
       })()
     }
   }, [activeDirectoryId, searchStr])
+
+  useEffect(() => {
+    console.log(resultList)
+  }, [resultList])
 
   const { themeStore } = useStore()
   /**
@@ -123,7 +127,7 @@ const SearchDocument = () => {
           })}
         />
       )}
-      {resultList && !!resultList.length ? (
+      {resultList ? (
         <>
           <div className={style['result-amount']}>
             搜索到{' '}
@@ -132,10 +136,9 @@ const SearchDocument = () => {
             </span>{' '}
             条结果
           </div>
-          <Divider />
-          <div className={style['result-list']}>
-            {resultList &&
-              resultList.map((item, index) => (
+          {resultList.length ? (
+            <div className={style['result-list']}>
+              {resultList.map((item, index) => (
                 <div
                   className={style['result-item']}
                   key={index}
@@ -151,7 +154,10 @@ const SearchDocument = () => {
                   />
                 </div>
               ))}
-          </div>
+            </div>
+          ) : (
+            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          )}
         </>
       ) : (
         '暂无数据'
