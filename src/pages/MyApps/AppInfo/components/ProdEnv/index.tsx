@@ -10,8 +10,13 @@ import { useStore } from '@/stores'
 
 const prodEnvContext = React.createContext<{
   capability: TGetAppInfoByEnv | undefined
+  clientId: string | undefined
   fetchAppInfoByEnv: Function | undefined
-}>({ capability: undefined, fetchAppInfoByEnv: undefined })
+}>({
+  capability: undefined,
+  clientId: undefined,
+  fetchAppInfoByEnv: undefined
+})
 
 const ProdEnv = () => {
   const { appId, env, isEnable } = useContext(appInfoContext)!
@@ -109,6 +114,7 @@ const ProdEnv = () => {
                 <prodEnvContext.Provider
                   value={{
                     capability: activeCapability,
+                    clientId: myAppStore.clientId.sit,
                     fetchAppInfoByEnv
                   }}
                 >

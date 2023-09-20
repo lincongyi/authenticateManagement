@@ -201,6 +201,11 @@
   border: 1px solid $border-color;
   border-radius: 4px;
 
+  &.flex-column {
+    display: flex;
+    flex-direction: column;
+  }
+
   .title {
     position: relative;
     display: flex;

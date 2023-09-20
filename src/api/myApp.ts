@@ -189,6 +189,47 @@ const apiConfig = (params: TApiConfigParams): Promise<TResponse> => {
   return request.post('/access/apiConfig', params)
 }
 
+type TGetCallDataParams = {
+  capabilityId: number
+  clientId: string
+  startTime: string
+  endTime: string
+}
+
+export type TGetCallDataResponse = {
+  dateList: string[]
+  numList: number[]
+  total: number
+}
+
+/**
+ * 获取能力调用数据
+ */
+const getCallData = (
+  params: TGetCallDataParams
+): Promise<TResponse<TGetCallDataResponse>> => {
+  return request.post('/access/getCallData', params)
+}
+
+export type TGetApiDataResponse = {
+  name: string // 接口名称
+  path: string // 接口访问路径
+  concurrency: number // 每秒并发数（正式环境）
+  dateNum: number // 日用量限额（测试环境）
+  reqTotal: number // 请求总次数
+  errorNum: number // 请求失败次数
+}
+
+/**
+ * 获取能力接口数据
+ */
+const getApiData = (params: {
+  capabilityId: number
+  clientId: string
+}): Promise<TResponse<TGetApiDataResponse>> => {
+  return request.post('/access/getApiData', params)
+}
+
 export {
   getAppCount,
   getMyAppList,
@@ -201,5 +242,7 @@ export {
   applyStartApp,
   applyStopApp,
   applyExtension,
-  apiConfig
+  apiConfig,
+  getCallData,
+  getApiData
 }

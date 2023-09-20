@@ -12,7 +12,7 @@ import {
   Tabs,
   Form,
   Typography,
-  Divider
+  Empty
 } from 'antd'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
@@ -25,9 +25,8 @@ import {
   EyeInvisibleOutlined
 } from '@ant-design/icons'
 import { dateFormat, disabledDate, rangePresets } from '@utils/date'
-import { getStatistics } from '@mock/index'
 import LineChart from './components/LineChart'
-import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
+import { ColumnsType } from 'antd/es/table'
 import IncreaseModal from './components/IncreaseModal'
 import WarningModal from './components/WarningModal'
 import DelayModal from './components/DelayModal'
@@ -35,14 +34,19 @@ import { appInfoContext } from '../..'
 import { sitEnvContext } from '../SitEnv'
 import { prodEnvContext } from '../ProdEnv'
 import type { Tab } from 'rc-tabs/lib/interface.d.ts'
-import { TFormItem } from '@/api/myApp'
+import {
+  TFormItem,
+  TGetCallDataResponse,
+  getApiData,
+  getCallData
+} from '@/api/myApp'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
 
 const AccessedEnv = () => {
   const { env } = useContext(appInfoContext)!
-  const { capability } = useContext(
+  const { capability, clientId } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
 
@@ -76,55 +80,44 @@ const AccessedEnv = () => {
     if (!open) renderChart()
   }
 
-  const amount = 100000 // 今日能力调用量
   /**
-   * 图表数据
+   * 能力调用数据
    */
-  const [chartData, setChartData] = useState<TLineChart>()
+  const [callData, setCallData] = useState<TGetCallDataResponse>()
 
   /**
    * 渲染图表
    */
-  const renderChart = async (startTime = '', endTime = '') => {
-    const { data } = await getStatistics({
-      startTime,
-      endTime
+  const renderChart = async () => {
+    if (!capability || !clientId) return
+
+    const { data } = await getCallData({
+      capabilityId: capability.capabilityId,
+      clientId,
+      startTime: dateRange[0],
+      endTime: dateRange[1]
     })
-    setChartData(data)
+    setCallData(data)
   }
 
   useEffect(() => {
     renderChart()
   }, [])
 
-  const [dataSource, setDataSource] = useState<any>()
+  const [dataSource, setDataSource] = useState<any>() // 能力接口表格数据
 
   /**
-   * 渲染表格
+   * 渲染能力接口表格数据
    */
   useEffect(() => {
-    setDataSource([
-      {
-        id: '1',
-        apiName: '获取人像接口',
-        isAccessed: 1,
-        apiState: 1,
-        apiPath: 'xxx:x234354353/ospaids',
-        apiLimitPerDay: 100,
-        totalRequest: 20,
-        errorRequest: 5
-      },
-      {
-        id: '2',
-        apiName: '1：1认证接口',
-        isAccessed: 0,
-        apiState: 0,
-        apiPath: 'xxx:x234354353/ospaids',
-        apiLimitPerDay: 10,
-        totalRequest: 100,
-        errorRequest: 90
-      }
-    ])
+    ;(async () => {
+      if (!capability || !clientId) return
+      const { data } = await getApiData({
+        capabilityId: capability.capabilityId,
+        clientId
+      })
+      setDataSource(data)
+    })()
   }, [])
 
   /**
@@ -163,76 +156,30 @@ const AccessedEnv = () => {
     setWarningModalOpen(true)
   }
 
-  /**
-   * 表格分页参数
-   */
-  const [pagination, setPagination] = useState({
-    pageNum: 1,
-    pageSize: 10,
-    total: 0
-  })
-
-  /**
-   * 分页、排序、筛选变化时触发
-   */
-  const onTableChange = (tablePagination: TablePaginationConfig) => {
-    setPagination({ ...pagination, ...tablePagination })
-  }
-
   const columns: ColumnsType<any> = [
     {
       title: '接口名称',
-      dataIndex: 'apiName',
+      dataIndex: 'name',
       ellipsis: true
-    },
-    {
-      title: '接口状态',
-      render: value => (
-        <>
-          {value.isAccessed ? (
-            <>
-              <i className={`${style.dot} ${style['accessed-dot']}`} />
-              已接入
-            </>
-          ) : (
-            <>
-              <i className={`${style.dot} ${style['unaccessed-dot']}`} />
-              未接入
-            </>
-          )}
-        </>
-      )
-    },
-    {
-      title: '调用状态',
-      render: value => (
-        <>
-          {value.apiState ? (
-            <Tag color='success'>正常</Tag>
-          ) : (
-            <Tag color='error'>异常</Tag>
-          )}
-        </>
-      )
     },
     {
       title: '接口访问路径',
-      dataIndex: 'apiPath',
+      dataIndex: 'path',
       ellipsis: true
     },
     {
-      title: '日用量限额',
-      dataIndex: 'apiLimitPerDay',
+      title: env === 'sit' ? '日用量限额' : '每秒并发数',
+      dataIndex: env === 'sit' ? 'dateNum' : 'concurrency',
       ellipsis: true
     },
     {
       title: '请求总次数',
-      dataIndex: 'totalRequest',
+      dataIndex: 'reqTotal',
       ellipsis: true
     },
     {
       title: '请求失败次数',
-      dataIndex: 'errorRequest',
+      dataIndex: 'errorNum',
       ellipsis: true
     },
     {
@@ -379,7 +326,7 @@ const AccessedEnv = () => {
         </Col>
 
         <Col span={14}>
-          <div className={style.panel}>
+          <div className={`${style.panel} ${style['flex-column']}`}>
             <div className={style.title}>
               能力调用数据
               <RangePicker
@@ -393,18 +340,31 @@ const AccessedEnv = () => {
                 onOpenChange={onOpenChange}
               />
             </div>
-            <Alert
-              style={{ margin: '10px 0' }}
-              message={
-                <>
-                  今日能力调用量
-                  <span className={style.amount}>{amount}</span>
-                </>
-              }
-              type='info'
-              showIcon
-            />
-            {chartData && <LineChart chartData={chartData} />}
+            {callData && callData.total ? (
+              <>
+                <Alert
+                  style={{ margin: '10px 0' }}
+                  message={
+                    <>
+                      能力调用总量
+                      <span className={style.amount}>{callData?.total}</span>
+                    </>
+                  }
+                  type='info'
+                  showIcon
+                />
+                <LineChart
+                  chartData={{
+                    xAxis: callData.dateList,
+                    yAxis: callData.numList
+                  }}
+                />
+              </>
+            ) : (
+              <div className='flex-center' style={{ flex: 1 }}>
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              </div>
+            )}
           </div>
         </Col>
 
@@ -417,13 +377,7 @@ const AccessedEnv = () => {
               type='info'
               showIcon
             />
-            <Table
-              rowKey='id'
-              columns={columns}
-              dataSource={dataSource}
-              pagination={pagination}
-              onChange={onTableChange}
-            />
+            <Table rowKey='id' columns={columns} dataSource={dataSource} />
           </div>
         </Col>
 
@@ -473,10 +427,7 @@ const AccessedEnv = () => {
                 </Form>
               </>
             ) : (
-              <>
-                <Divider />
-                暂无数据
-              </>
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}
           </div>
         </Col>

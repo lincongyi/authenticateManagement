@@ -10,9 +10,11 @@ import { useStore } from '@/stores'
 
 const sitEnvContext = React.createContext<{
   capability: TGetAppInfoByEnv | undefined
+  clientId: string | undefined
   fetchAppInfoByEnv: Function | undefined
 }>({
   capability: undefined,
+  clientId: undefined,
   fetchAppInfoByEnv: undefined
 })
 
@@ -124,7 +126,11 @@ const SitEnv = () => {
             <>
               {activeCapability && (
                 <sitEnvContext.Provider
-                  value={{ capability: activeCapability, fetchAppInfoByEnv }}
+                  value={{
+                    capability: activeCapability,
+                    clientId: myAppStore.clientId.sit,
+                    fetchAppInfoByEnv
+                  }}
                 >
                   <AccessedEnv />
                 </sitEnvContext.Provider>
