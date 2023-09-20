@@ -55,4 +55,14 @@ const getAccessList = (params: {
   return request.post('/access/getAccessList', params)
 }
 
-export { getCapabilityList, getCapability, getAccessList }
+/**
+ * 获取应用能力配置表单
+ */
+const getAppCapabilityForm = (params: {
+  capabilityId: string // 基础能力id
+  clientId: string
+}): Promise<TResponse> => {
+  return request.post('/access/getAppCapabilityForm', params)
+}
+
+export { getCapabilityList, getCapability, getAccessList, getAppCapabilityForm }

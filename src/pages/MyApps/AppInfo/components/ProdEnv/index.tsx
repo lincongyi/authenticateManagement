@@ -6,6 +6,7 @@ import { TGetAppInfoByEnv, getAppInfoByEnv } from '@/api/myApp'
 import AccessedEnv from '../AccessedEnv'
 import { appInfoContext } from '../..'
 import { useNavigate } from 'react-router-dom'
+import { useStore } from '@/stores'
 
 const prodEnvContext = React.createContext<{
   capability: TGetAppInfoByEnv | undefined
@@ -13,7 +14,7 @@ const prodEnvContext = React.createContext<{
 }>({ capability: undefined, fetchAppInfoByEnv: undefined })
 
 const ProdEnv = () => {
-  const { clientId, env, isEnable } = useContext(appInfoContext)!
+  const { appId, env, isEnable } = useContext(appInfoContext)!
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
 
@@ -26,7 +27,7 @@ const ProdEnv = () => {
    */
   const fetchAppInfoByEnv = async (capability?: TGetAppInfoByEnv) => {
     const { data } = await getAppInfoByEnv({
-      clientId,
+      appId,
       appEnv: env
     })
     if (!data) return
@@ -63,12 +64,16 @@ const ProdEnv = () => {
     setActiveCapability(item)
   }
 
+  const { myAppStore } = useStore()
+
   const navigate = useNavigate()
 
   /**
    * 申请接入正式环境
    */
   const toApplyForProdEnv = () => {
+    if (!isEnable) return
+    const clientId = myAppStore.clientId.sit
     navigate(`./applyForProdEnv?clientId=${clientId}`)
   }
 

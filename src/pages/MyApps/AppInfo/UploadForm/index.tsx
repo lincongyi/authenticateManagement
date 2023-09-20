@@ -24,7 +24,7 @@ const UploadForm = () => {
     }
   }, [])
 
-  const capability = '身份认证V2版本'
+  const capabilityName = '身份认证V2版本'
 
   const [form] = Form.useForm()
 
@@ -77,7 +77,7 @@ const UploadForm = () => {
   return (
     <>
       <div className={style.header}>
-        <div className={style.title}>上传申请表 - {capability}</div>
+        <div className={style.title}>上传申请表 - {capabilityName}</div>
         <Button type='primary' onClick={onSubmit}>
           提交
         </Button>

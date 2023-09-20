@@ -58,15 +58,15 @@ const AppForm = () => {
 
   const [form] = Form.useForm()
 
-  const clientId = searchParams.get('clientId')
+  const appId = searchParams.get('appId')
 
   /**
    * 编辑情况下获取表单初始值
    */
   useEffect(() => {
-    if (!clientId) return
+    if (!appId) return
     ;(async () => {
-      const { data } = await getAppInfo({ id: clientId })
+      const { data } = await getAppInfo({ id: appId })
       if (!data) return
       form.setFieldsValue(data)
     })()
@@ -77,12 +77,12 @@ const AppForm = () => {
   /**
    * 提交
    */
-  const onFinish = async (values: TAppParams) => {
-    if (clientId) {
+  const onFinish = async (values: Omit<TAppParams, 'appId'>) => {
+    if (appId) {
       // 编辑
       await updateApp({
+        appId,
         ...values,
-        ...{ clientId: form.getFieldValue('clientId') },
         ...{ companyId: companyInfo!.companyId }
       })
     } else {
@@ -93,7 +93,7 @@ const AppForm = () => {
       })
     }
 
-    messageApi.success(`${clientId ? '编辑' : '添加'}成功`)
+    messageApi.success(`${appId ? '编辑' : '添加'}成功`)
     navigate(-1)
   }
 

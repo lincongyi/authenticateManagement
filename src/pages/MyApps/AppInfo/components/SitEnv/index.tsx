@@ -6,6 +6,7 @@ import { CheckCircleOutlined } from '@ant-design/icons'
 import AccessedEnv from '../AccessedEnv'
 import { useNavigate } from 'react-router-dom'
 import { appInfoContext } from '../..'
+import { useStore } from '@/stores'
 
 const sitEnvContext = React.createContext<{
   capability: TGetAppInfoByEnv | undefined
@@ -16,7 +17,7 @@ const sitEnvContext = React.createContext<{
 })
 
 const SitEnv = () => {
-  const { clientId, env, isEnable } = useContext(appInfoContext)!
+  const { appId, env, isEnable } = useContext(appInfoContext)!
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
 
@@ -29,7 +30,7 @@ const SitEnv = () => {
    */
   const fetchAppInfoByEnv = async (capability?: TGetAppInfoByEnv) => {
     const { data } = await getAppInfoByEnv({
-      clientId,
+      appId,
       appEnv: env
     })
     if (!data) return
@@ -66,13 +67,27 @@ const SitEnv = () => {
     setActiveCapability(item)
   }
 
+  const { myAppStore } = useStore()
+
   const navigate = useNavigate()
+
+  /**
+   * 添加接入基础能力
+   */
+  const toAccess = () => {
+    // if (!isEnable) return
+    const clientId = myAppStore.clientId.sit
+    // console.log(activeCapability)
+    // const { capabilityId } = activeCapability
+    navigate(`./access?clientId=${clientId}&capabilityId=24`)
+  }
 
   /**
    * 上传盖章申请表
    */
   const toUploadForm = () => {
     if (!isEnable) return
+    const clientId = myAppStore.clientId.sit
     navigate(`./uploadForm?clientId=${clientId}`)
   }
 
@@ -137,7 +152,7 @@ const SitEnv = () => {
                           {/* <i className={style['done-icon']} /> */}
                           添加接入基础能力
                         </div>
-                        <div className={style.btn}>
+                        <div className={style.btn} onClick={toAccess}>
                           <i
                             className={`${style['btn-icon']} ${style.step01}`}
                           />

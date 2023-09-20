@@ -26,7 +26,6 @@ import { getAppList, getAppCount } from '@api/myApp'
 import { fieldNames } from '@utils/index'
 import EnableModal from './components/EnableModal'
 import { useGetDictionaryLabel } from '@/hooks'
-import { useStore } from '@/stores'
 
 const { RangePicker } = DatePicker
 
@@ -158,14 +157,11 @@ const Index = () => {
     navigate('./appForm')
   }
 
-  const { myAppStore } = useStore()
-
   /**
    * 查看
    */
-  const onCheck = (id: TDataType['clientId']) => {
-    myAppStore.setClientId(id)
-    navigate(`./appInfo?clientId=${id}`)
+  const onCheck = (id: TDataType['appId']) => {
+    navigate(`./appInfo?appId=${id}`)
   }
 
   const [open, setOpen] = useState(false) // 控制启用or停用Modal显示隐藏

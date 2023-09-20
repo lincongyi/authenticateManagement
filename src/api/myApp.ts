@@ -45,6 +45,7 @@ const getAppList = (
 }
 
 export type TAppParams = {
+  appId: string
   appName: string
   appType: string
   managerEmail: string | undefined
@@ -59,7 +60,7 @@ export type TAppParams = {
 /**
  * 添加应用
  */
-const addApp = (params: TAppParams): Promise<TResponse> => {
+const addApp = (params: Omit<TAppParams, 'appId'>): Promise<TResponse> => {
   return request.post('/access/addApp', params)
 }
 
@@ -71,11 +72,25 @@ export type TGetAppInfoResponse = {
   clientSecret?: string
 } & TAppParams
 
+export type TClientId = {
+  sit: string // 测试环境
+  prod?: string // 正式环境
+}
+
 /**
- * 根据id获取应用详情
+ * 根据appId获取clientId
+ */
+const getClientId = (params: {
+  id: string
+}): Promise<TResponse<{ clientId: TClientId }>> => {
+  return request.post('/access/getClientId', params)
+}
+
+/**
+ * 根据clientId获取应用详情
  */
 const getAppInfo = (params: {
-  id: string
+  id: string // clientId
 }): Promise<TResponse<TGetAppInfoResponse>> => {
   return request.post('/access/getAppInfo', params)
 }
@@ -118,7 +133,7 @@ export type TGetAppInfoByEnv = {
  * 获取能力信息
  */
 const getAppInfoByEnv = (params: {
-  clientId: string
+  appId: string
   appEnv: TGetAppInfoResponse['appEnv']
 }): Promise<TResponse<TGetAppInfoByEnv[]>> => {
   return request.post('/access/getAppInfoByEnv', params)
@@ -179,6 +194,7 @@ export {
   getMyAppList,
   getAppList,
   addApp,
+  getClientId,
   getAppInfo,
   updateApp,
   getAppInfoByEnv,

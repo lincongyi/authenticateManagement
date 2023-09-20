@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { TGetAppInfoResponse, getAppInfo } from '@api/myApp'
+import { TGetAppInfoResponse, getAppInfo, getClientId } from '@api/myApp'
 import {
   Alert,
   Descriptions,
@@ -21,7 +21,7 @@ const { Paragraph } = Typography
 
 const appInfoContext = React.createContext<
   | {
-      clientId: string
+      appId: string
       env: TEnv
       isEnable: Boolean
     }
@@ -37,27 +37,30 @@ const AppInfo = () => {
 
   const [searchParams] = useSearchParams()
 
+  const appId = searchParams.get('appId') || myAppStore.appId
   const navigate = useNavigate()
-
-  const clientId = myAppStore.clientId || searchParams.get('clientId')
 
   /**
    * 初始化应用详情
    */
   useEffect(() => {
-    if (!clientId) return navigate('..')
-
-    if (!myAppStore.clientId && searchParams.get('clientId')) {
-      myAppStore.setClientId(clientId)
-    } else if (myAppStore.clientId && !searchParams.get('clientId')) {
-      // 针对点击面包屑导航跳转到该页面的情况，需要补充url query
-      navigate(`../appInfo?clientId=${clientId}`, { replace: true })
+    if (!appId) return navigate('..')
+    if (appId) {
+      myAppStore.setAppId(appId)
+      if (!searchParams.get('appId')) {
+        navigate(`../appInfo?appId=${appId}`, { replace: true })
+      }
     }
-
     ;(async () => {
-      const { data } = await getAppInfo({ id: clientId })
+      const { data } = await getClientId({ id: appId })
       if (!data) return
-      setAppInfo(data)
+      const { clientId } = data
+
+      myAppStore.setClientId(clientId)
+
+      const info = await getAppInfo({ id: clientId.sit })
+      if (!info.data) return
+      setAppInfo(info.data)
     })()
   }, [])
 
@@ -65,7 +68,7 @@ const AppInfo = () => {
    * 编辑应用详情
    */
   const onEdit = () => {
-    navigate(`../appForm?clientId=${clientId}`)
+    navigate(`../appForm?appId=${appId}`)
   }
 
   const [env, setEnv] = useState<TEnv>('sit') // 当前active标签
@@ -85,10 +88,10 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {!!clientId && (
+          {appId && appInfo && (
             <appInfoContext.Provider
               value={{
-                clientId,
+                appId,
                 env: 'sit',
                 isEnable: appInfo?.state !== 3
               }}
@@ -113,11 +116,11 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {!!clientId && (
+          {appId && appInfo && (
             <appInfoContext.Provider
               value={{
-                clientId,
-                env: 'sit',
+                appId,
+                env: 'prod',
                 isEnable: appInfo?.state !== 3
               }}
             >

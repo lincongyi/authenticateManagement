@@ -211,17 +211,17 @@ const routes: TRoutes[] = [
                 meta: {
                   breadcrumb: '申请接入正式环境'
                 }
+              },
+              {
+                path: 'access',
+                element: lazyLoad('MyApps/AppInfo/Access'),
+                meta: {
+                  breadcrumb: '接入基础能力'
+                }
               }
             ],
             meta: {
               breadcrumb: '查看应用详情'
-            }
-          },
-          {
-            path: 'access',
-            element: lazyLoad('MyApps/Access'),
-            meta: {
-              breadcrumb: '查看or数据变更'
             }
           }
         ],

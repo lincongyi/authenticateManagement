@@ -15,7 +15,6 @@ import {
   PlusOutlined,
   InfoCircleOutlined
 } from '@ant-design/icons'
-import { useStore } from '@/stores'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { getBase64, imgBeforeUpload } from '@/utils'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
@@ -24,25 +23,16 @@ import { RcFile } from 'antd/es/upload'
 const { TextArea } = Input
 
 const ApplyForProdEnv = () => {
-  const { myAppStore } = useStore()
-
   const [searchParams] = useSearchParams()
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    const clientId = myAppStore.clientId || searchParams.get('clientId')
+    const clientId = searchParams.get('clientId')
     if (!clientId) return navigate('..')
-
-    if (!myAppStore.clientId && clientId) {
-      myAppStore.setClientId(clientId)
-    } else if (myAppStore.clientId && !searchParams.get('clientId')) {
-      // 针对点击面包屑导航跳转到该页面的情况，需要补充url query
-      navigate(`../appInfo?clientId=${clientId}`, { replace: true })
-    }
   }, [])
 
-  const capability = '身份认证V2版本'
+  const capabilityName = '身份认证V2版本'
 
   const [form] = Form.useForm()
 
@@ -143,7 +133,7 @@ const ApplyForProdEnv = () => {
   return (
     <>
       <div className={style.header}>
-        <div className={style.title}>接入正式环境 - {capability}</div>
+        <div className={style.title}>接入正式环境 - {capabilityName}</div>
         <Space>
           <Button type='primary' onClick={onSave}>
             保存草稿
