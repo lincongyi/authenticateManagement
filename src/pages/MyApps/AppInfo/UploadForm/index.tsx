@@ -2,26 +2,16 @@ import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
 import { Button, Divider, Form, Upload, UploadFile, UploadProps } from 'antd'
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
-import { useStore } from '@/stores'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 const UploadForm = () => {
-  const { myAppStore } = useStore()
-
   const [searchParams] = useSearchParams()
 
   const navigate = useNavigate()
 
   useEffect(() => {
-    const clientId = myAppStore.clientId || searchParams.get('clientId')
+    const clientId = searchParams.get('clientId')
     if (!clientId) return navigate('..')
-
-    if (!myAppStore.clientId && clientId) {
-      myAppStore.setClientId(clientId)
-    } else if (myAppStore.clientId && !searchParams.get('clientId')) {
-      // 针对点击面包屑导航跳转到该页面的情况，需要补充url query
-      navigate(`../appInfo?clientId=${clientId}`, { replace: true })
-    }
   }, [])
 
   const capabilityName = '身份认证V2版本'
