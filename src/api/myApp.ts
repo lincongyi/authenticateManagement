@@ -159,6 +159,17 @@ const applyStopApp = (params: {
   return request.post('/access/applyStopApp', params)
 }
 
+/**
+ * 申请增加用量
+ */
+const applyDateNum = (params: {
+  apiId: string
+  clientId: string
+  num: number
+}): Promise<TResponse> => {
+  return request.post('/access/applyDateNum', params)
+}
+
 export type TApplyExtensionParams = {
   clientId: string
   capabilityId: number
@@ -241,6 +252,7 @@ export {
   getAppInfoByEnv,
   applyStartApp,
   applyStopApp,
+  applyDateNum,
   applyExtension,
   apiConfig,
   getCallData,

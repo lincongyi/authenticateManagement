@@ -129,7 +129,7 @@ const AccessedEnv = () => {
 
   const [increaseModalOpen, setIncreaseModalOpen] = useState(false) // 控制申请增加用量Modal显示隐藏
 
-  const [activeId, setActiveId] = useState<string | undefined>() // 能力API接入情况，当前需要操作的接口id
+  const [activeId, setActiveId] = useState<string>() // 能力API接入情况，当前需要操作的接口id
 
   /**
    * 申请增加用量
@@ -139,11 +139,6 @@ const AccessedEnv = () => {
     setActiveId(id)
     setIncreaseModalOpen(true)
   }
-
-  /**
-   * 申请增加用量回调函数
-   */
-  const increaseUsageCallback = () => {}
 
   const [warningModalOpen, setWarningModalOpen] = useState(false) // 控制预警设置Modal显示隐藏
 
@@ -432,20 +427,24 @@ const AccessedEnv = () => {
           </div>
         </Col>
       </Row>
-      {env === 'sit' ? (
-        <IncreaseModal
-          id={activeId}
-          open={increaseModalOpen}
-          setOpen={setIncreaseModalOpen}
-          callback={increaseUsageCallback}
-        />
-      ) : (
-        <WarningModal
-          id={activeId}
-          open={warningModalOpen}
-          setOpen={setWarningModalOpen}
-        />
+      {activeId && (
+        <>
+          {env === 'sit' ? (
+            <IncreaseModal
+              id={activeId}
+              open={increaseModalOpen}
+              setOpen={setIncreaseModalOpen}
+            />
+          ) : (
+            <WarningModal
+              id={activeId}
+              open={warningModalOpen}
+              setOpen={setWarningModalOpen}
+            />
+          )}
+        </>
       )}
+
       <DelayModal open={delayModalOpen} setOpen={setDelayModalOpen} />
     </>
   )

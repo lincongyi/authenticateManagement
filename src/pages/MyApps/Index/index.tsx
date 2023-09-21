@@ -253,7 +253,7 @@ const Index = () => {
       onCell: item => ({ rowSpan: item.rowSpan }),
       render: (values: TDataType) => (
         <>
-          <Button type='link' onClick={() => onCheck(values.clientId)}>
+          <Button type='link' onClick={() => onCheck(values.appId)}>
             查看详情
           </Button>
           <Button type='link' onClick={() => onEnable(values)}>

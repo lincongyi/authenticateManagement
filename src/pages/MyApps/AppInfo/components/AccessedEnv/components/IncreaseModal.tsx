@@ -14,21 +14,20 @@ import {
 import { appInfoContext } from '../../..'
 import { sitEnvContext } from '../../SitEnv'
 import { prodEnvContext } from '../../ProdEnv'
+import { applyDateNum } from '@/api/myApp'
 
 const IncreaseModal = ({
   id,
   open,
-  setOpen,
-  callback
+  setOpen
 }: {
-  id: string | undefined // 申请增加用量接口id
+  id: string // 申请增加用量接口id
   open: boolean
   setOpen: Function
-  callback: Function
 }) => {
-  const { clientId, env } = useContext(appInfoContext)!
+  const { env } = useContext(appInfoContext)!
 
-  const { capability, fetchAppInfoByEnv } = useContext(
+  const { capability, clientId, fetchAppInfoByEnv } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
 
@@ -59,17 +58,12 @@ const IncreaseModal = ({
   /**
    * 提交数据
    */
-  const onFinish = async (values: any) => {
-    console.log('values', {
+  const onFinish = async (values: { num: number }) => {
+    await applyDateNum({
       ...values,
-      apiId: Number(id),
-      clientId
+      apiId: id,
+      clientId: clientId!
     })
-    // await xxxxxx({
-    //   ...values,
-    //   apiId: Number(id),
-    //   clientId
-    // })
     messageApi.success({
       content: '申请成功',
       duration: 2
@@ -106,7 +100,7 @@ const IncreaseModal = ({
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
-          <Form.Item label='增加用量' name='name' rules={[{ required: true }]}>
+          <Form.Item label='增加用量' name='num' rules={[{ required: true }]}>
             <InputNumber
               placeholder='请输入增加用量值'
               addonAfter='次'
