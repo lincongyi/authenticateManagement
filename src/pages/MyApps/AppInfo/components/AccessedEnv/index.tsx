@@ -215,12 +215,12 @@ const AccessedEnv = () => {
   useEffect(() => {
     const { form } = capability!
     if (form) {
-      const tabs = form.formsList.map(item => ({
+      const tabs = form.formList.map(item => ({
         label: item.formName,
         key: item.sort.toString()
       }))
       setFormTabs(tabs)
-      setFormItems(capability?.form.formsList[0].form)
+      setFormItems(capability?.form.formList[0].form)
     }
   }, [capability])
 
@@ -228,7 +228,7 @@ const AccessedEnv = () => {
    * 切换能力配置信息表单内容
    */
   const onChange = (activeKey: string) => {
-    const item = capability?.form.formsList.find(
+    const item = capability?.form.formList.find(
       item => item.sort === Number(activeKey)
     )
     if (!item) return

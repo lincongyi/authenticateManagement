@@ -79,9 +79,8 @@ const SitEnv = () => {
   const toAccess = () => {
     // if (!isEnable) return
     const clientId = myAppStore.clientId.sit
-    // console.log(activeCapability)
-    // const { capabilityId } = activeCapability
-    navigate(`./access?clientId=${clientId}&capabilityId=24`)
+    const { capabilityId } = activeCapability!
+    navigate(`./access?clientId=${clientId}&capabilityId=${capabilityId}`)
   }
 
   /**

@@ -1,5 +1,8 @@
 import { message } from 'antd'
-import type { RcFile } from 'antd/es/upload/interface'
+import type { RcFile, UploadFile } from 'antd/es/upload/interface'
+import dayjs from 'dayjs'
+import type { TFormItemType } from '@/api/ability'
+
 /**
  * 获取当前环境
  */
@@ -94,15 +97,55 @@ const formatDictionary = (array: TDictList[] | TDictValue[]) => {
 /**
  * 上传前校验文件
  */
-const imgBeforeUpload = (file: RcFile) => {
+const imgBeforeUpload = (file: RcFile, maxSize: number = 2) => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
   if (!isJpgOrPng) message.error('上传图片只允许JPG/PNG格式')
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) message.error('图片文件大小<2MB')
-  return isJpgOrPng && isLt2M
+  const isExceeded = file.size / 1024 / 1024 < maxSize
+  if (!isExceeded) message.error(`图片文件大小<${maxSize}MB`)
+  return isJpgOrPng && isExceeded
 }
 
 export const fieldNames = { label: 'dictName', value: 'dictValue' }
+
+/**
+ * 创建txt文件并下载
+ * @param {string} content 内容
+ * @param {string} fileName 文件名
+ * @param {string} fileType 文件类型
+ */
+
+const saveAsFile = (
+  content: string,
+  fileName: string,
+  fileType: string = 'text/plain'
+) => {
+  // 提供文本和文件类型用于创建一个Blob对象
+  const blob = new Blob([content], { type: fileType }) // 创建一个 a 元素
+  const download = document.createElement('a') // 指定下载过程中显示的文件名
+  download.download = fileName
+
+  download.href = window.URL.createObjectURL(blob)
+  download.style.display = 'none'
+  document.body.appendChild(download) // 模式鼠标左键单击事件
+
+  download.click()
+}
+
+/**
+ * 预处理部分动态表单数据
+ */
+const formatFormItemValue = (type: TFormItemType, value: any) => {
+  if (type === 'dateTime') {
+    return value && dayjs(value).isValid()
+      ? dayjs(value).format('YYYY-MM-DD')
+      : value
+  } else if (type === 'fileUpload' && value) {
+    const list: UploadFile[] = value.filter(
+      (item: UploadFile) => item.status === 'done'
+    )
+    return list.length ? list : undefined
+  } else return value
+}
 
 export {
   loadEnv,
@@ -114,5 +157,7 @@ export {
   getBase64,
   reverseArray,
   formatDictionary,
-  imgBeforeUpload
+  imgBeforeUpload,
+  saveAsFile,
+  formatFormItemValue
 }

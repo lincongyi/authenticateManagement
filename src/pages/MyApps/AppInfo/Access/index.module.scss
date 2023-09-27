@@ -1,0 +1,16 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .name {
+    @include font-primary-color;
+
+    font-weight: bold;
+    font-size: 18px;
+  }
+}
+
+.form-tabs {
+  margin-bottom: 20px;
+}

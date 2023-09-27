@@ -35,7 +35,7 @@ export type TGetCapabilityResponse = {
  * 获取能力详情
  */
 const getCapability = (params: {
-  id: string // 基础能力id
+  id: number // 基础能力id
 }): Promise<TResponse<TGetCapabilityResponse>> => {
   return request.post('/access/getCapability', params)
 }
@@ -56,13 +56,103 @@ const getAccessList = (params: {
 }
 
 /**
+ * 表单项类型
+ */
+export type TFormItemType =
+  | 'text'
+  | 'textarea'
+  | 'dateTime'
+  | 'radio'
+  | 'checkbox'
+  | 'select'
+  | 'selectMultiple'
+  | 'switch'
+  | 'imageUpload'
+  | 'fileUpload'
+  | 'privateKey'
+
+/**
+ * 上传文件限制类型
+ */
+export type TRuleList =
+  | 'doc'
+  | 'docx'
+  | 'xlsx'
+  | 'ppt'
+  | 'pptx'
+  | 'pdf'
+  | 'markdown'
+  | 'avi'
+  | 'mp4'
+  | 'wmv'
+  | 'mpeg4'
+  | 'rm'
+
+export type TFormContent = {
+  type: TFormItemType
+  dataType: 'string' | 'number' // 数据类型
+  cnName: string // 表单项cnName
+  label: string // 表单项label
+  field: string // 表单项key值
+  required: boolean
+  options?: { label: string; value: number | string }[]
+  maxLength?: number // 字数限制
+  placeholder: string
+  switchText: string // 选中时or非选中时的内容
+  fileSize: number // 支持图片文件大小(Mb)
+  multiple: number // 支持上传图片数量
+  value?: any // 表单默认值（编辑的时候有用）
+  validateMessage: string
+  ruleList: TRuleList[]
+}
+
+export type TFormItem = {
+  cnName: string // 表单项label
+  dataType: string // 数据类型
+  type: TFormItemType
+  field: string // 表单项key值
+  value: any
+}
+
+export type TFormList = {
+  form?: TFormItem[]
+  formId: number
+  formName: string
+  formContent: string // JSON.stringify()表单内容TFormContent[]
+}
+
+export type TAddAppCapabilityFormParams = {
+  appId: string
+  clientId: string
+  capabilityId: number
+  formList: TFormList[]
+  type?: 0 | 1 // 0-保存草稿；1-提交审核
+}
+
+/**
+ * 添加能力配置表单信息
+ */
+const addAppCapabilityForm = (
+  params: TAddAppCapabilityFormParams
+): Promise<TResponse> => {
+  return request.post('/access/addAppCapabilityForm', params)
+}
+
+/**
  * 获取应用能力配置表单
  */
 const getAppCapabilityForm = (params: {
-  capabilityId: string // 基础能力id
+  appId: string
   clientId: string
-}): Promise<TResponse> => {
+  capabilityId: number
+}): Promise<TResponse<TAddAppCapabilityFormParams>> => {
   return request.post('/access/getAppCapabilityForm', params)
 }
 
-export { getCapabilityList, getCapability, getAccessList, getAppCapabilityForm }
+export {
+  getCapabilityList,
+  getCapability,
+  getAccessList,
+  addAppCapabilityForm,
+  getAppCapabilityForm
+}

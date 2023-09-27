@@ -75,6 +75,22 @@ const getdictionary = (
   return request.post('/getdictionary', params)
 }
 
+/**
+ * 获取密钥对
+ */
+const getSecretKey = (): Promise<
+  TResponse<{ publicKey: string; privateKey: string }>
+> => {
+  return request.get('/getSecretKey')
+}
+
+/**
+ * 上传文件
+ */
+const upload = (params: FormData): Promise<TResponse> => {
+  return request.post('/upload', params)
+}
+
 export {
   logout,
   getAreacodes,
@@ -83,5 +99,7 @@ export {
   verifyCaptcha,
   getProcessByKey,
   getQrcode,
-  getdictionary
+  getdictionary,
+  getSecretKey,
+  upload
 }

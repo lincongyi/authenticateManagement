@@ -60,7 +60,9 @@ const ApplyForProdEnv = () => {
         resolve(url)
       })
     }).then(url => {
-      const imageBase64: string = url.substring(url.indexOf('base64,') + 7)
+      const imageBase64: string = url.substring(
+        url.indexOf('base64,') + 'base64,'.length
+      )
       setScreenShot(url)
       form.setFieldValue('screenShot', imageBase64)
     })
@@ -171,7 +173,7 @@ const ApplyForProdEnv = () => {
               listType='picture-card'
               maxCount={1}
               showUploadList={false}
-              beforeUpload={imgBeforeUpload}
+              beforeUpload={file => imgBeforeUpload(file)}
               customRequest={customRequest}
             >
               {screenShot ? (

@@ -112,7 +112,7 @@ const AccountInfo = React.forwardRef<
             <Upload
               listType='picture-card'
               fileList={fileList}
-              beforeUpload={imgBeforeUpload}
+              beforeUpload={file => imgBeforeUpload(file)}
               customRequest={customRequest}
             >
               {fileList.length >= 5 ? null : uploadButton}
@@ -148,7 +148,7 @@ const AccountInfo = React.forwardRef<
                           listType='picture-card'
                           maxCount={1}
                           showUploadList={false}
-                          beforeUpload={imgBeforeUpload}
+                          beforeUpload={file => imgBeforeUpload(file)}
                           customRequest={customRequest}
                         >
                           {imgNotice ? (

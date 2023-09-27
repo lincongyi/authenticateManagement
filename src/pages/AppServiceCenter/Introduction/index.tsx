@@ -22,7 +22,7 @@ const Introduction = () => {
    */
   const [searchParams] = useSearchParams()
   useEffect(() => {
-    const id = searchParams.get('id')
+    const id = Number(searchParams.get('id'))
     if (!id) return navigate(-1)
     ;(async () => {
       const { data } = await getCapability({ id })

@@ -87,6 +87,15 @@ const getClientId = (params: {
 }
 
 /**
+ * 根据clientId获取appId
+ */
+const getAppId = (params: {
+  id: string
+}): Promise<TResponse<{ appId: string }>> => {
+  return request.post('/access/getAppId', params)
+}
+
+/**
  * 根据clientId获取应用详情
  */
 const getAppInfo = (params: {
@@ -108,7 +117,7 @@ export type TFormItem = {
   value: string // Form.Item value
 }
 
-type TFormsList = {
+type TFormList = {
   form: TFormItem[]
   formName: string
   sort: number
@@ -125,7 +134,7 @@ export type TGetAppInfoByEnv = {
   capabilityExpireTime: string // 有效期止
   applystate: boolean // true-未申请延期；false-已申请延期
   form: {
-    formsList: TFormsList[]
+    formList: TFormList[]
   }
 }
 
@@ -247,6 +256,7 @@ export {
   getAppList,
   addApp,
   getClientId,
+  getAppId,
   getAppInfo,
   updateApp,
   getAppInfoByEnv,

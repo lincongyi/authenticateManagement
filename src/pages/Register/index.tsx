@@ -63,7 +63,9 @@ const Register = () => {
         resolve(url)
       })
     }).then(url => {
-      const imageBase64: string = url.substring(url.indexOf('base64,') + 7)
+      const imageBase64: string = url.substring(
+        url.indexOf('base64,') + 'base64,'.length
+      )
       setCertificateFile(url)
       form.setFieldValue('certificateFile', imageBase64)
     })
@@ -295,7 +297,7 @@ const Register = () => {
                   listType='picture-card'
                   maxCount={1}
                   showUploadList={false}
-                  beforeUpload={imgBeforeUpload}
+                  beforeUpload={file => imgBeforeUpload(file)}
                   customRequest={customRequest}
                 >
                   {certificateFile ? (

@@ -39,25 +39,23 @@ const Area = ({
       const { data } = await getAreacodes({ areaLevel: 'l1' })
       setProvinceList(data as TAreaItem[])
       if (currentList.length) {
-        ;(async () => {
-          for (let i = 0; i < currentList.length - 1; i++) {
-            if (i === 0) {
-              // 获取城市列表
-              const { data } = await getAreacodes({
-                areaLevel: 'l2',
-                areaParentCode: currentList[i].code
-              })
-              setCityList(data)
-            } else if (i === 1) {
-              // 获取地区列表
-              const { data } = await getAreacodes({
-                areaLevel: 'l3',
-                areaParentCode: currentList[i].code
-              })
-              setAreaList(data)
-            }
+        for (let i = 0; i < currentList.length - 1; i++) {
+          if (i === 0) {
+            // 获取城市列表
+            const { data } = await getAreacodes({
+              areaLevel: 'l2',
+              areaParentCode: currentList[i].code
+            })
+            setCityList(data)
+          } else if (i === 1) {
+            // 获取地区列表
+            const { data } = await getAreacodes({
+              areaLevel: 'l3',
+              areaParentCode: currentList[i].code
+            })
+            setAreaList(data)
           }
-        })()
+        }
       }
     })()
   }, [])

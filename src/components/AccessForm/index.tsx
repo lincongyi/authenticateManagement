@@ -223,10 +223,10 @@ const AccessForm = () => {
           />
           {formState !== 2 && (
             <Space>
+              <Button onClick={() => onSave()}>保存草稿</Button>
               <Button type='primary' onClick={onSubmit}>
                 提交审核
               </Button>
-              <Button onClick={() => onSave()}>保存草稿</Button>
             </Space>
           )}
         </div>
