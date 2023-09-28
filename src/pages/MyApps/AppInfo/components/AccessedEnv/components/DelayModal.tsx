@@ -34,6 +34,30 @@ const DelayModal = ({
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
 
+  const { addTime, capabilityExpireTime, applyState } = capability!
+
+  type TExpiration = 0 | 1 | 2
+  const [expiration, setExpiration] = useState<TExpiration>(0) // 0-未过期；1-即将过期；2-已过期
+
+  /**
+   * 获取应用接入能力配置信息是否过期
+   */
+  const getExpiration = (time: string): TExpiration => {
+    const reg = /^(\d{4})-(\d{2})-(\d{2})$/
+    if (!reg.test(time)) return 0
+    const now = new Date().getTime()
+    const expireTime = new Date(capabilityExpireTime).getTime()
+    const difference = expireTime - now
+    const timestamp = 30 * 24 * 60 * 60 * 1000 // 默认少于30天就是即将过期
+    if (difference < 0) return 2
+    else if (difference < timestamp) return 1
+    else return 0
+  }
+
+  useEffect(() => {
+    setExpiration(getExpiration(capabilityExpireTime))
+  }, [])
+
   const [form] = Form.useForm()
 
   /* eslint-disable no-template-curly-in-string */
@@ -47,12 +71,6 @@ const DelayModal = ({
     validateMessages,
     autoComplete: 'off'
   }
-
-  const [info, setInfo] = useState<{ state: number; expiration: number }>() //
-
-  useEffect(() => {
-    setInfo({ state: 0, expiration: 1 })
-  }, [])
 
   /**
    * 关闭
@@ -113,7 +131,7 @@ const DelayModal = ({
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
-          {!!info?.state && (
+          {!applyState && (
             <Alert
               message='您已提交延期申请，可前往【我的申请】查看审批进度。'
               type='info'
@@ -121,10 +139,10 @@ const DelayModal = ({
               style={{ marginBottom: 20 }}
             />
           )}
-          <Form.Item label='基础服务接入时间'>2022-04-01 23:12:13</Form.Item>
+          <Form.Item label='基础服务接入时间'>{addTime}</Form.Item>
           <Form.Item label='有效期止'>
-            2022-04-01 23:12:13
-            {!!info &&
+            {capabilityExpireTime}
+            {
               [
                 undefined,
                 <Tag color='error' key={1} style={{ marginLeft: 10 }}>
@@ -133,14 +151,15 @@ const DelayModal = ({
                 <Tag color='warning' key={2} style={{ marginLeft: 10 }}>
                   即将过期
                 </Tag>
-              ][info.expiration]}
+              ][expiration]
+            }
           </Form.Item>
           <Form.Item
             label='是否延长有效期:'
             name='type'
             rules={[{ required: true }]}
           >
-            {info?.state ? (
+            {!applyState ? (
               <>是</>
             ) : (
               <Radio.Group onChange={onChange} value={type}>
@@ -161,12 +180,12 @@ const DelayModal = ({
               </Radio.Group>
             )}
           </Form.Item>
-          {!!info?.state && (
+          {!applyState && (
             <Form.Item label='延长有效期至'>2024-04-01</Form.Item>
           )}
 
           <Form.Item label='备注说明' name='describe'>
-            {info?.state ? (
+            {!applyState ? (
               '备注说明备注说明备注说明'
             ) : (
               <TextArea
@@ -177,7 +196,7 @@ const DelayModal = ({
               />
             )}
           </Form.Item>
-          {!!info?.state && (
+          {!applyState && (
             <Form.Item label='提交申请延期时间:'>2023-04-01</Form.Item>
           )}
           <Divider />
@@ -187,7 +206,7 @@ const DelayModal = ({
                 <Space>
                   <Button onClick={onCancel}>取消</Button>,
                   <Button type='primary' htmlType='submit'>
-                    {info?.state ? '查看审批进度' : type ? '提交申请' : '确定'}
+                    {!applyState ? '查看审批进度' : type ? '提交申请' : '确定'}
                   </Button>
                 </Space>
               </Col>

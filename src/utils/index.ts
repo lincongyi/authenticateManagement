@@ -1,7 +1,5 @@
 import { message } from 'antd'
-import type { RcFile, UploadFile } from 'antd/es/upload/interface'
-import dayjs from 'dayjs'
-import type { TFormItemType } from '@/api/ability'
+import type { RcFile } from 'antd/es/upload/interface'
 
 /**
  * 获取当前环境
@@ -131,22 +129,6 @@ const saveAsFile = (
   download.click()
 }
 
-/**
- * 预处理部分动态表单数据
- */
-const formatFormItemValue = (type: TFormItemType, value: any) => {
-  if (type === 'dateTime') {
-    return value && dayjs(value).isValid()
-      ? dayjs(value).format('YYYY-MM-DD')
-      : value
-  } else if (type === 'fileUpload' && value) {
-    const list: UploadFile[] = value.filter(
-      (item: UploadFile) => item.status === 'done'
-    )
-    return list.length ? list : undefined
-  } else return value
-}
-
 export {
   loadEnv,
   phonePattern,
@@ -158,6 +140,5 @@ export {
   reverseArray,
   formatDictionary,
   imgBeforeUpload,
-  saveAsFile,
-  formatFormItemValue
+  saveAsFile
 }

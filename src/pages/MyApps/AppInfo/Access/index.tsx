@@ -12,6 +12,7 @@ import {
   Space,
   message
 } from 'antd'
+import type { UploadFile } from 'antd'
 import {
   addAppCapabilityForm,
   getAppCapabilityForm,
@@ -20,12 +21,13 @@ import {
 import type {
   TAddAppCapabilityFormParams,
   TFormContent,
+  TFormItemType,
   TFormList,
   TGetCapabilityResponse
 } from '@/api/ability'
 import DynamicForm from '@/components/DynamicForm'
 import { getAppId } from '@/api/myApp'
-import { formatFormItemValue } from '@/utils'
+import dayjs from 'dayjs'
 
 const Access = () => {
   const [searchParams] = useSearchParams()
@@ -87,6 +89,22 @@ const Access = () => {
   const [modal, contextHolder] = Modal.useModal()
 
   const [messageApi, messageApiHolder] = message.useMessage()
+
+  /**
+   * 预处理部分动态表单数据
+   */
+  const formatFormItemValue = (type: TFormItemType, value: any) => {
+    if (type === 'dateTime') {
+      return value && dayjs(value).isValid()
+        ? dayjs(value).format('YYYY-MM-DD')
+        : value
+    } else if (type === 'fileUpload' && value) {
+      const list: UploadFile[] = value.filter(
+        (item: UploadFile) => item.status === 'done'
+      )
+      return list.length ? list : undefined
+    } else return value
+  }
 
   /**
    * 保存草稿 or 提交审核

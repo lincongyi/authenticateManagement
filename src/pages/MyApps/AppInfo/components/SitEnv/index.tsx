@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { TGetAppInfoByEnv, getAppInfoByEnv } from '@api/myApp'
 import style from '../index.module.scss'
-import { Col, Row, Tabs } from 'antd'
+import { Col, Row, Tabs, message } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'
 import AccessedEnv from '../AccessedEnv'
 import { useNavigate } from 'react-router-dom'
@@ -23,7 +23,7 @@ const SitEnv = () => {
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
 
-  const [isAccessed, setIsAccessed] = useState(false) // 应用是否已经接入当前active基础能力
+  const [state, setState] = useState<TGetAppInfoByEnv['state']>(1) // 步骤
 
   const [activeCapability, setActiveCapability] = useState<TGetAppInfoByEnv>() // 当前active基础能力
 
@@ -49,8 +49,8 @@ const SitEnv = () => {
     setActiveCapability(data[index])
 
     const state = data[index].state
-    setIsAccessed(!!state)
-    if (state) {
+    setState(state)
+    if (state >= 5) {
       // 该应用已经接入第一个基础能力，需要请求获取详细信息
     }
   }
@@ -66,18 +66,25 @@ const SitEnv = () => {
     const item = appInfoByEnv?.find(
       item => item.capabilityId === Number(activeKey)
     )
+    if (!item) return
     setActiveCapability(item)
+    setState(item.state)
+    if (item.state >= 5) {
+      // 该应用已经接入第一个基础能力，需要请求获取详细信息
+    }
   }
 
   const { myAppStore } = useStore()
 
   const navigate = useNavigate()
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 添加接入基础能力
    */
   const toAccess = () => {
-    // if (!isEnable) return
+    if (!isEnable) return messageApi.warning('该应用已停用')
     const clientId = myAppStore.clientId.sit
     const { capabilityId } = activeCapability!
     navigate(`./access?clientId=${clientId}&capabilityId=${capabilityId}`)
@@ -87,13 +94,15 @@ const SitEnv = () => {
    * 上传盖章申请表
    */
   const toUploadForm = () => {
-    if (!isEnable) return
+    if (!isEnable) return messageApi.warning('该应用已停用')
     const clientId = myAppStore.clientId.sit
-    navigate(`./uploadForm?clientId=${clientId}`)
+    const { capabilityId } = activeCapability!
+    navigate(`./uploadForm?clientId=${clientId}&capabilityId=${capabilityId}`)
   }
 
   return (
     <>
+      {contextHolder}
       {appInfoByEnv ? (
         <Tabs
           activeKey={
@@ -120,7 +129,7 @@ const SitEnv = () => {
       )}
       {appInfoByEnv && !!appInfoByEnv.length ? (
         <>
-          {isEnable && isAccessed ? (
+          {isEnable && state >= 5 ? (
             // 启用状态 && 已接入
             <>
               {activeCapability && (
@@ -148,56 +157,86 @@ const SitEnv = () => {
                   </div>
                   <Row>
                     <Col span={6} className={style.flex}>
-                      {/* ${style.active} ${style.done} */}
-                      <div className={`${style.step}`}>
+                      <div
+                        className={`${style.step} ${style.active} ${
+                          state !== 1 && style.done
+                        }`}
+                      >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>1</i>
                         </div>
                         <div className={style.name}>
-                          {/* <i className={style['done-icon']} /> */}
+                          <i className={style['done-icon']} />
                           添加接入基础能力
                         </div>
-                        <div className={style.btn} onClick={toAccess}>
-                          <i
-                            className={`${style['btn-icon']} ${style.step01}`}
-                          />
-                          添加接入基础能力
-                        </div>
+                        {state === 1 && (
+                          <div className={style.btn} onClick={toAccess}>
+                            <i
+                              className={`${style['btn-icon']} ${style.step01}`}
+                            />
+                            添加接入基础能力
+                          </div>
+                        )}
                       </div>
                       <div className={style.dashed}></div>
                     </Col>
                     <Col span={6} className={style.flex}>
-                      <div className={`${style.step}`}>
+                      {/* <div
+                        className={`${style.step} ${
+                          state > 2 && style.active
+                        } ${state > 2 && style.done}`}
+                      > */}
+                      <div
+                        className={`${style.step} ${
+                          state >= 2 ? style.active : ''
+                        } ${state > 2 ? style.done : ''}`}
+                      >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>2</i>
                         </div>
-                        <div className={style.name}>等待审批</div>
-                        <div className={style.btn}>
-                          <i
-                            className={`${style['btn-icon']} ${style.step02}`}
-                          />
-                          查看审批单
+                        <div className={style.name}>
+                          <i className={style['done-icon']} />
+                          等待审批
                         </div>
+                        {state <= 2 && (
+                          <div className={style.btn}>
+                            <i
+                              className={`${style['btn-icon']} ${style.step02}`}
+                            />
+                            查看审批单
+                          </div>
+                        )}
                       </div>
-                      {/* ${style.active} */}
-                      <div className={`${style.dashed}`}>审批通过</div>
+                      {/*  */}
+                      <div
+                        className={`${style.dashed} ${
+                          state > 2 ? style.active : ''
+                        }`}
+                      >
+                        审批通过
+                      </div>
                     </Col>
                     <Col span={6} className={style.flex}>
-                      {/* ${style.active} ${style.done} */}
-                      <div className={`${style.step}`}>
+                      <div
+                        className={`${style.step} ${
+                          state >= 3 ? style.active : ''
+                        } ${state > 3 ? style.done : ''}`}
+                      >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>3</i>
                         </div>
                         <div className={style.name}>
-                          {/* <i className={style['done-icon']} /> */}
+                          <i className={style['done-icon']} />
                           上传盖章申请表
                         </div>
-                        <div className={style.btn} onClick={toUploadForm}>
-                          <i
-                            className={`${style['btn-icon']} ${style.step01}`}
-                          />
-                          上传盖章申请表
-                        </div>
+                        {state <= 3 && (
+                          <div className={style.btn} onClick={toUploadForm}>
+                            <i
+                              className={`${style['btn-icon']} ${style.step01}`}
+                            />
+                            上传盖章申请表
+                          </div>
+                        )}
                       </div>
                       <div className={style.dashed}></div>
                     </Col>

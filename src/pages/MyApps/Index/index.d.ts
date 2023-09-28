@@ -14,7 +14,7 @@ export type TDataType = {
   appType: string // 应用类型
   startTime: string // 创建时间
   endTime: string // 创建时间
-  state: 0 | 1 | 2 | 3 // 状态：0-正常启用；1-即将过期；2-过期；3-停用；
+  state: 0 | 3 // 状态：0-正常启用；3-停用；
 }
 
 export type TFormData = {

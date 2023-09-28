@@ -34,12 +34,9 @@ import { appInfoContext } from '../..'
 import { sitEnvContext } from '../SitEnv'
 import { prodEnvContext } from '../ProdEnv'
 import type { Tab } from 'rc-tabs/lib/interface.d.ts'
-import {
-  TFormItem,
-  TGetCallDataResponse,
-  getApiData,
-  getCallData
-} from '@/api/myApp'
+import { getApiData, getCallData } from '@/api/myApp'
+import type { TGetCallDataResponse } from '@/api/myApp'
+import type { TFormItem } from '@/api/ability'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
@@ -212,15 +209,28 @@ const AccessedEnv = () => {
   const [formTabs, setFormTabs] = useState<Tab[]>() // 能力配置信息Tabs
   const [formItems, setFormItems] = useState<TFormItem[]>() // 表单展示的数据
 
+  /**
+   * 预处理部分动态表单数据
+   */
+  const formatFormItemValue = (list: TFormItem[]) => {
+    const result = list.map(item => {
+      // if(item.type === '')
+      return item
+    })
+    return result
+  }
+
   useEffect(() => {
-    const { form } = capability!
+    if (!capability) return
+    const { form } = capability
     if (form) {
       const tabs = form.formList.map(item => ({
         label: item.formName,
-        key: item.sort.toString()
+        key: item.formId.toString()
       }))
       setFormTabs(tabs)
-      setFormItems(capability?.form.formList[0].form)
+      console.log(capability.form.formList[0].form)
+      setFormItems(capability.form.formList[0].form)
     }
   }, [capability])
 
@@ -229,7 +239,7 @@ const AccessedEnv = () => {
    */
   const onChange = (activeKey: string) => {
     const item = capability?.form.formList.find(
-      item => item.sort === Number(activeKey)
+      item => item.formId === Number(activeKey)
     )
     if (!item) return
     setFormItems(item.form)
@@ -412,14 +422,16 @@ const AccessedEnv = () => {
             {formTabs?.length ? (
               <>
                 <Tabs onChange={onChange} items={formTabs} />
-                <Form name='accessedForm' {...formProps}>
-                  {/* 动态生成form表单内容 */}
-                  {formItems?.map((item, index) => (
-                    <Form.Item label={item.cnName} key={index}>
-                      {item.value}
-                    </Form.Item>
-                  ))}
-                </Form>
+                {/* 动态生成form表单内容 */}
+                {formItems && !!formItems.length && (
+                  <Form name='accessedForm' {...formProps}>
+                    {formItems.map((item, index) => (
+                      <Form.Item label={item.cnName} key={index}>
+                        {/* {item.value} */}
+                      </Form.Item>
+                    ))}
+                  </Form>
+                )}
               </>
             ) : (
               <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />

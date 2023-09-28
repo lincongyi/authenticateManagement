@@ -149,6 +149,12 @@
     }
   }
 
+  .done-icon {
+    width: 24px;
+    height: 24px;
+    background-image: url('@/assets/myApp-done-icon.png');
+  }
+
   &.done {
     .name {
       display: flex;
@@ -156,23 +162,20 @@
       align-items: center;
       margin: 0;
       line-height: 90px;
+
+      .done-icon {
+        margin-right: 8px;
+      }
     }
   }
-}
-
-.done-icon {
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-  background-image: url('@/assets/myApp-done-icon.png');
 }
 
 .dashed {
   position: relative;
   flex: 1;
+  padding-top: 44px;
   color: #9a9da4;
   font-size: 12px;
-  line-height: 100px;
   text-align: center;
 
   &::after {

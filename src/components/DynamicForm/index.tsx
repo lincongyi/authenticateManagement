@@ -404,11 +404,15 @@ const DynamicForm = React.forwardRef<
                             fileCustomRequest(options, item.field)
                           }
                         >
-                          {/* {(!fileList[item.field] ||
-                            item.multiple > fileList[item.field].length) && (
-                            <Button icon={<UploadOutlined />}>上传文件</Button>
-                            )} */}
-                          <Button icon={<UploadOutlined />}>上传文件</Button>
+                          <Button
+                            icon={<UploadOutlined />}
+                            disabled={
+                              !fileList[item.field] ||
+                              item.multiple > fileList[item.field].length
+                            }
+                          >
+                            上传文件
+                          </Button>
                         </Upload>
                       </Form.Item>
                       <Row>

@@ -1,20 +1,34 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Button, Divider, Form, Upload, UploadFile, UploadProps } from 'antd'
+import { Button, Divider, Form, Upload, UploadFile, message } from 'antd'
 import { DownloadOutlined, UploadOutlined } from '@ant-design/icons'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { getCapability } from '@/api/ability'
+import type { TGetCapabilityResponse } from '@/api/ability'
+import { RcFile } from 'antd/es/upload'
+import { UploadRequestOption } from 'rc-upload/lib/interface'
+import { upload } from '@/api'
+import { uploadApplyFile } from '@/api/myApp'
+import type { TUploadApplyFileParams } from '@/api/myApp'
 
 const UploadForm = () => {
   const [searchParams] = useSearchParams()
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    const clientId = searchParams.get('clientId')
-    if (!clientId) return navigate('..')
-  }, [])
+  const clientId = searchParams.get('clientId')
+  const capabilityId = Number(searchParams.get('capabilityId'))
 
-  const capabilityName = '身份认证V2版本'
+  const [capability, setCapability] = useState<TGetCapabilityResponse>()
+
+  if (!clientId || !capabilityId) navigate(-1)
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await getCapability({ id: capabilityId })
+      if (!data) return
+      setCapability(data)
+    })()
+  }, [])
 
   const [form] = Form.useForm()
 
@@ -24,50 +38,85 @@ const UploadForm = () => {
     autoComplete: 'off'
   }
 
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: '-1',
-      name: 'xxx.png',
-      status: 'done',
-      url: 'http://www.baidu.com/xxx.png'
-    }
-  ])
+  const [file1, setFileL1] = useState<UploadFile[]>() // 申请表
+  const [file2, setFileL2] = useState<UploadFile[]>() // 申请函
 
-  const handleChange: UploadProps['onChange'] = info => {
-    let newFileList = [...info.fileList]
+  const [messageApi, contextHolder] = message.useMessage()
 
-    // 1. Limit the number of uploaded files
-    // Only to show two recent uploaded files, and old ones will be replaced by the new
-    newFileList = newFileList.slice(-2)
-
-    // 2. Read from response and show file link
-    newFileList = newFileList.map(file => {
-      if (file.response) {
-        // Component will show file.url as link
-        file.url = file.response.url
-      }
-      return file
-    })
-
-    setFileList(newFileList)
+  /**
+   * 上传前校验文件
+   */
+  const fileBeforeUpload = (file: RcFile) => {
+    const { name } = file
+    const fileType = name.substring(name.lastIndexOf('.') + 1)
+    const isMatched = ['doc', 'docx', 'pdf', 'png', 'jpg'].includes(fileType)
+    if (!isMatched) messageApi.error(`不支持上传${fileType}格式文件`)
+    return isMatched || Upload.LIST_IGNORE
   }
 
-  const props = {
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    onChange: handleChange
+  let fileItem: UploadFile
+  /**
+   * 覆盖默认的文件上传行为
+   */
+  const fileCustomRequest = async (
+    options: UploadRequestOption,
+    index: 0 | 1 // 0-申请表；1-申请函
+  ) => {
+    const formData = new FormData()
+    const { file } = options
+    formData.append('file', file)
+    try {
+      const { data } = await upload(formData)
+      const { fileName: name, url } = data
+      fileItem = {
+        uid: (options.file as RcFile).uid,
+        name,
+        status: 'done',
+        url
+      }
+    } catch (error) {
+      console.log('error', error)
+      fileItem = {
+        uid: (options.file as RcFile).uid,
+        name: (options.file as RcFile).name,
+        status: 'error',
+        url: ''
+      }
+    } finally {
+      if (!index) setFileL1([fileItem])
+      else setFileL2([fileItem])
+      form.setFieldValue(!index ? 'applyFile' : 'applyLetter', fileItem.url)
+    }
   }
 
   /**
    * 提交
    */
-  const onSubmit = () => {
-    console.log('onSubmit')
+  const onSubmit = async () => {
+    try {
+      await form.validateFields()
+      const params: TUploadApplyFileParams = {
+        ...form.getFieldsValue(),
+        applyFileName: file1![0].name,
+        applyLetterName: file2![0].name,
+        capabilityId,
+        clientId: clientId!
+      }
+      await uploadApplyFile(params)
+      messageApi.success({
+        content: '提交成功',
+        onClose: () => navigate(-1)
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <>
+      {contextHolder}
       <div className={style.header}>
-        <div className={style.title}>上传申请表 - {capabilityName}</div>
+        <div className={style.title}>上传申请表 - {capability?.name}</div>
         <Button type='primary' onClick={onSubmit}>
           提交
         </Button>
@@ -97,7 +146,7 @@ const UploadForm = () => {
       <div className={style.section}>
         <Form form={form} name='uploadForm' {...formProps}>
           <Form.Item label='申请表下载：'>
-            <div className={style['form-value']}>
+            <div className='flex'>
               《基础能力接入申请表.pdf》
               <div className={style.download}>
                 <DownloadOutlined />
@@ -106,7 +155,7 @@ const UploadForm = () => {
             </div>
           </Form.Item>
           <Form.Item label='申请函下载：'>
-            <div className={style['form-value']}>
+            <div className='flex'>
               《基础能力接入申请函.pdf》
               <div className={style.download}>
                 <DownloadOutlined />
@@ -114,26 +163,32 @@ const UploadForm = () => {
               </div>
             </div>
           </Form.Item>
-          <Form.Item label='（附印章）基础能力接入申请表：' required>
-            <Upload {...props} fileList={fileList}>
+          <Form.Item
+            name='applyFile'
+            label='（附印章）基础能力接入申请表：'
+            rules={[{ required: true, message: '请上传申请表' }]}
+          >
+            <Upload
+              maxCount={1}
+              fileList={file1}
+              beforeUpload={file => fileBeforeUpload(file)}
+              customRequest={options => fileCustomRequest(options, 0)}
+            >
               <Button icon={<UploadOutlined />}>上传文件</Button>
-              <p
-                className='font-secondary-color'
-                onClick={e => e.stopPropagation()}
-              >
-                支持文件格式：doc\docx\pdf\jpg
-              </p>
             </Upload>
           </Form.Item>
-          <Form.Item label='（附印章）基础能力接入申请函：' required>
-            <Upload {...props} fileList={fileList}>
+          <Form.Item
+            name='applyLetter'
+            label='（附印章）基础能力接入申请函：'
+            rules={[{ required: true, message: '请上传申请表' }]}
+          >
+            <Upload
+              maxCount={1}
+              fileList={file2}
+              beforeUpload={file => fileBeforeUpload(file)}
+              customRequest={options => fileCustomRequest(options, 1)}
+            >
               <Button icon={<UploadOutlined />}>上传文件</Button>
-              <p
-                className='font-secondary-color'
-                onClick={e => e.stopPropagation()}
-              >
-                支持文件格式：doc\docx\pdf\jpg
-              </p>
             </Upload>
           </Form.Item>
         </Form>

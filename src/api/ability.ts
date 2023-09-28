@@ -109,8 +109,9 @@ export type TFormContent = {
 export type TFormItem = {
   cnName: string // 表单项label
   dataType: string // 数据类型
-  type: TFormItemType
+  type: TFormItemType // 表单类型
   field: string // 表单项key值
+  label?: any[] // 用于渲染多选表单项的值
   value: any
 }
 

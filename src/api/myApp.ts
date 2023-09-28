@@ -1,5 +1,6 @@
-import { TAppCount, TDataType } from '@pages/MyApps/Index/index.d'
 import { request } from '@utils/request'
+import type { TAppCount, TDataType } from '@pages/MyApps/Index/index.d'
+import type { TFormItem } from './ability'
 
 /**
  * 获取应用数量
@@ -111,16 +112,10 @@ const updateApp = (params: TAppParams): Promise<TResponse> => {
   return request.post('/access/updateApp', params)
 }
 
-export type TFormItem = {
-  cnName: string // Form.Item label
-  dataType: string // 数据类型
-  value: string // Form.Item value
-}
-
 type TFormList = {
   form: TFormItem[]
   formName: string
-  sort: number
+  formId: number
 }
 
 export type TGetAppInfoByEnv = {
@@ -130,9 +125,9 @@ export type TGetAppInfoByEnv = {
   path: string // 能力访问路径
   addTime: string // 接入时间
   updateTime: string // 配置更新时间
-  state: 0 | 1 // 0-未接入该能力；1-已接入该能力
+  state: 1 | 2 | 3 | 4 | 5 | 6 | 7 // 1-添加基础能力；2-等待审批；3-上传盖章申请表；4-等待审批；5-申请接入正式环境；6-等待审批；7-正式环境接入能力
   capabilityExpireTime: string // 有效期止
-  applystate: boolean // true-未申请延期；false-已申请延期
+  applyState: boolean // true-未申请延期；false-已申请延期
   form: {
     formList: TFormList[]
   }
@@ -250,6 +245,24 @@ const getApiData = (params: {
   return request.post('/access/getApiData', params)
 }
 
+export type TUploadApplyFileParams = {
+  applyFile: string // 申请表地址
+  applyFileName: string // 申请表名字
+  applyLetter: string // 申请函地址
+  applyLetterName: string // 申请函名字
+  capabilityId: number
+  clientId: string
+}
+
+/**
+ * 提交申请表
+ */
+const uploadApplyFile = (
+  params: TUploadApplyFileParams
+): Promise<TResponse> => {
+  return request.post('/access/uploadApplyFile', params)
+}
+
 export {
   getAppCount,
   getMyAppList,
@@ -266,5 +279,6 @@ export {
   applyExtension,
   apiConfig,
   getCallData,
-  getApiData
+  getApiData,
+  uploadApplyFile
 }
