@@ -40,6 +40,8 @@ const AppInfo = () => {
   const appId = searchParams.get('appId') || myAppStore.appId
   const navigate = useNavigate()
 
+  const [clientId, setClientId] = useState<string>()
+
   /**
    * 初始化应用详情
    */
@@ -55,8 +57,8 @@ const AppInfo = () => {
       const { data } = await getClientId({ id: appId })
       if (!data) return
       const { clientId } = data
-
       myAppStore.setClientId(clientId)
+      setClientId(clientId.sit)
 
       const info = await getAppInfo({ id: clientId.sit })
       if (!info.data) return
@@ -68,7 +70,7 @@ const AppInfo = () => {
    * 编辑应用详情
    */
   const onEdit = () => {
-    navigate(`../appForm?appId=${appId}`)
+    navigate(`../appForm?clientId=${clientId}`)
   }
 
   const [env, setEnv] = useState<TEnv>('sit') // 当前active标签

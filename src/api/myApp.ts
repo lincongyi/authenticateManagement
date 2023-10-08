@@ -46,7 +46,7 @@ const getAppList = (
 }
 
 export type TAppParams = {
-  appId: string
+  clientId: string
   appName: string
   appType: string
   managerEmail: string | undefined
@@ -61,7 +61,7 @@ export type TAppParams = {
 /**
  * 添加应用
  */
-const addApp = (params: Omit<TAppParams, 'appId'>): Promise<TResponse> => {
+const addApp = (params: Omit<TAppParams, 'clientId'>): Promise<TResponse> => {
   return request.post('/access/addApp', params)
 }
 

@@ -2,31 +2,33 @@ import React, { useState } from 'react'
 import { Col, Modal, Row, Divider, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import style from './index.module.scss'
-import { TgetAccessListResponse } from '@api/ability'
+import { TGetAccessListResponse } from '@api/ability'
 import { CheckCircleOutlined } from '@ant-design/icons'
 
 const AppAccessModal = ({
   open,
   setOpen,
+  id,
   appList
 }: {
   open: boolean
   setOpen: Function
-  appList: TgetAccessListResponse[] | undefined
+  id: number
+  appList: TGetAccessListResponse[] | undefined
 }) => {
-  const navigate = useNavigate()
-
   const [selectedIndex, setSelectedIndex] = useState<number>() // 当前选中应用的index
 
   /**
    * 选择应用
    */
-  const onSelect = (item: TgetAccessListResponse, index: number) => {
+  const onSelect = (item: TGetAccessListResponse, index: number) => {
     if (item.accessType) return
     setSelectedIndex(index)
   }
 
   const [messageApi, contextHolder] = message.useMessage()
+
+  const navigate = useNavigate()
 
   /**
    * 申请接入
@@ -34,9 +36,8 @@ const AppAccessModal = ({
   const onOk = () => {
     if (!appList) return
     if (!selectedIndex) return messageApi.warning('请选择接入应用')
-    console.log(appList[selectedIndex])
-    // navigate('./access')
-    return messageApi.warning('暂未开放')
+    const { appId } = appList[selectedIndex]
+    navigate(`/app/myApps/appInfo/access?appId=${appId}&capabilityId=${id}`)
   }
 
   return (
@@ -55,11 +56,7 @@ const AppAccessModal = ({
           {appList &&
             appList.map((item, index) => {
               return (
-                <Col
-                  span={8}
-                  key={item.clientId}
-                  onClick={() => onSelect(item, index)}
-                >
+                <Col span={8} key={index} onClick={() => onSelect(item, index)}>
                   <div
                     className={`${style['app-box']} ${
                       item.accessType && style['is-accessed']

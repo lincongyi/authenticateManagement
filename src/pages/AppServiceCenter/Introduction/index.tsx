@@ -9,7 +9,7 @@ import AppAccessModal from './components/AppAccessModal'
 import { getAccessList, getCapability } from '@api/ability'
 import type {
   TGetCapabilityResponse,
-  TgetAccessListResponse
+  TGetAccessListResponse
 } from '@api/ability'
 
 const { Title } = Typography
@@ -21,8 +21,8 @@ const Introduction = () => {
    * 初始化基础能力介绍
    */
   const [searchParams] = useSearchParams()
+  const id = Number(searchParams.get('id'))
   useEffect(() => {
-    const id = Number(searchParams.get('id'))
     if (!id) return navigate(-1)
     ;(async () => {
       const { data } = await getCapability({ id })
@@ -49,7 +49,7 @@ const Introduction = () => {
 
   const navigate = useNavigate()
 
-  const [appList, setAppList] = useState<TgetAccessListResponse[]>()
+  const [appList, setAppList] = useState<TGetAccessListResponse[]>()
   /**
    * 申请接入
    */
@@ -64,7 +64,7 @@ const Introduction = () => {
           '暂无可接入此基础能力的应用，去【我的应用】创建新应用后再添加此基础能力吧~',
         okText: '确定',
         onOk: () => {
-          navigate('../access')
+          navigate('/app/myApps')
         }
       })
     } else {
@@ -95,7 +95,7 @@ const Introduction = () => {
       </div>
 
       <AbilityContent html={html} />
-      <AppAccessModal open={open} setOpen={setOpen} appList={appList} />
+      <AppAccessModal open={open} setOpen={setOpen} appList={appList} id={id} />
     </>
   )
 }

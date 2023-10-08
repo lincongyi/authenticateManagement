@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import style from '../index.module.scss'
-import { Col, Row, Tabs } from 'antd'
+import { Col, Row, Tabs, message } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'
 import { TGetAppInfoByEnv, getAppInfoByEnv } from '@/api/myApp'
 import AccessedEnv from '../AccessedEnv'
@@ -23,7 +23,7 @@ const ProdEnv = () => {
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
 
-  const [isAccessed, setIsAccessed] = useState(false) // 应用是否已经接入当前active基础能力
+  const [state, setState] = useState<TGetAppInfoByEnv['state']>(1) // 步骤
 
   const [activeCapability, setActiveCapability] = useState<TGetAppInfoByEnv>() // 当前active基础能力
 
@@ -49,7 +49,7 @@ const ProdEnv = () => {
     setActiveCapability(data[index])
 
     const state = data[index].state
-    setIsAccessed(!!state)
+    setState(state)
   }
 
   useEffect(() => {
@@ -63,9 +63,12 @@ const ProdEnv = () => {
     const item = appInfoByEnv?.find(item => item.capabilityId === +activeKey)
     if (!item) return
     setActiveCapability(item)
+    setState(item.state)
   }
 
   const { myAppStore } = useStore()
+
+  const [messageApi, contextHolder] = message.useMessage()
 
   const navigate = useNavigate()
 
@@ -73,13 +76,16 @@ const ProdEnv = () => {
    * 申请接入正式环境
    */
   const toApplyForProdEnv = () => {
-    if (!isEnable) return
-    const clientId = myAppStore.clientId.sit
-    navigate(`./applyForProdEnv?clientId=${clientId}`)
+    if (!isEnable || !activeCapability) return
+    if (state < 5) return messageApi.warning('请接入测试环境基础能力')
+    navigate(
+      `./access?appId=${appId}&capabilityId=${activeCapability.capabilityId}`
+    )
   }
 
   return (
     <>
+      {contextHolder}
       {appInfoByEnv ? (
         <Tabs
           onChange={onChange}
@@ -103,7 +109,7 @@ const ProdEnv = () => {
       )}
       {appInfoByEnv && !!appInfoByEnv.length ? (
         <>
-          {isEnable && isAccessed ? (
+          {isEnable && state > 6 ? (
             // 启用状态 && 已接入
             <>
               {activeCapability && (
@@ -135,21 +141,29 @@ const ProdEnv = () => {
                   </div>
                   <Row>
                     <Col span={6} className={style.flex}>
-                      {/* ${style.active} ${style.done} */}
-                      <div className={`${style.step}`}>
+                      <div
+                        className={`${style.step} ${
+                          state >= 5 ? style.active : ''
+                        } ${state > 5 ? style.done : ''}`}
+                      >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>5</i>
                         </div>
                         <div className={style.name}>
-                          {/* <i className={style['done-icon']} /> */}
+                          <i className={style['done-icon']} />
                           添加接入基础能力
                         </div>
-                        <div className={style.btn} onClick={toApplyForProdEnv}>
-                          <i
-                            className={`${style['btn-icon']} ${style.step05}`}
-                          />
-                          申请接入正式环境
-                        </div>
+                        {state <= 5 && (
+                          <div
+                            className={style.btn}
+                            onClick={toApplyForProdEnv}
+                          >
+                            <i
+                              className={`${style['btn-icon']} ${style.step05}`}
+                            />
+                            申请接入正式环境
+                          </div>
+                        )}
                       </div>
                       <div className={style.dashed}></div>
                     </Col>
@@ -166,8 +180,13 @@ const ProdEnv = () => {
                           查看审批单
                         </div>
                       </div>
-                      {/* ${style.active} */}
-                      <div className={`${style.dashed}`}>审批通过</div>
+                      <div
+                        className={`${style.dashed} ${
+                          state > 6 ? style.active : ''
+                        }`}
+                      >
+                        审批通过
+                      </div>
                     </Col>
                   </Row>
                 </div>

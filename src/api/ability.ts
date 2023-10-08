@@ -41,8 +41,8 @@ const getCapability = (params: {
   return request.post('/access/getCapability', params)
 }
 
-export type TgetAccessListResponse = {
-  clientId: string
+export type TGetAccessListResponse = {
+  appId: string
   appName: string
   accessType: boolean // 应用是否已经接入基础能力
 }
@@ -52,7 +52,7 @@ export type TgetAccessListResponse = {
  */
 const getAccessList = (params: {
   id: string // 基础能力id
-}): Promise<TResponse<TgetAccessListResponse[]>> => {
+}): Promise<TResponse<TGetAccessListResponse[]>> => {
   return request.post('/access/getAccessList', params)
 }
 
@@ -136,10 +136,10 @@ export type TFormList = {
 
 export type TAddAppCapabilityFormParams = {
   appId: string
-  clientId: string
   capabilityId: number
   formList: TFormList[]
-  type?: 0 | 1 // 0-保存草稿；1-提交审核
+  type: 0 | 1 // 0-保存草稿；1-提交审核
+  env: TEnv
 }
 
 /**
@@ -156,10 +156,20 @@ const addAppCapabilityForm = (
  */
 const getAppCapabilityForm = (params: {
   appId: string
-  clientId: string
   capabilityId: number
+  env: 'sit' | 'prod'
 }): Promise<TResponse<TAddAppCapabilityFormParams>> => {
   return request.post('/access/getAppCapabilityForm', params)
+}
+
+/**
+ * 获取应用能力配置表单环境
+ */
+const getAppCapabilityFormEnv = (params: {
+  appId: string
+  capabilityId: number
+}): Promise<TResponse<{ env: 'sit' | 'prod' }>> => {
+  return request.post('/access/getAppCapabilityFormEnv', params)
 }
 
 export {
@@ -167,5 +177,6 @@ export {
   getCapability,
   getAccessList,
   addAppCapabilityForm,
-  getAppCapabilityForm
+  getAppCapabilityForm,
+  getAppCapabilityFormEnv
 }

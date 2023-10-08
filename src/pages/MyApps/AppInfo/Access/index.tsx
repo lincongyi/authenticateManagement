@@ -16,6 +16,7 @@ import type { UploadFile } from 'antd'
 import {
   addAppCapabilityForm,
   getAppCapabilityForm,
+  getAppCapabilityFormEnv,
   getCapability
 } from '@/api/ability'
 import type {
@@ -26,18 +27,22 @@ import type {
   TGetCapabilityResponse
 } from '@/api/ability'
 import DynamicForm from '@/components/DynamicForm'
-import { getAppId } from '@/api/myApp'
 import dayjs from 'dayjs'
+import { useStore } from '@/stores'
 
 const Access = () => {
   const [searchParams] = useSearchParams()
 
   const navigate = useNavigate()
 
-  const clientId = searchParams.get('clientId')
+  const appId = searchParams.get('appId')
   const capabilityId = Number(searchParams.get('capabilityId'))
 
-  if (!clientId || !capabilityId) return navigate(-1)
+  if (!appId || !capabilityId) return navigate(-1)
+
+  const { myAppStore } = useStore()
+
+  myAppStore.setAppId(appId)
 
   const [capability, setCapability] = useState<TGetCapabilityResponse>() // 基础能力信息
 
@@ -48,7 +53,7 @@ const Access = () => {
 
   const defaultFormRef = useRef<FormInstance>()
 
-  const [appId, setAppId] = useState<string>()
+  const [env, setEnv] = useState<TEnv>()
 
   /**
    * 初始化动态表单内容
@@ -59,14 +64,18 @@ const Access = () => {
       setCapability(data)
     })()
     ;(async () => {
-      const { data } = await getAppId({ id: clientId })
+      const { data } = await getAppCapabilityFormEnv({
+        appId,
+        capabilityId
+      })
+
       if (!data) return navigate(-1)
-      setAppId(data.appId)
+      setEnv(data.env)
 
       const formInfo = await getAppCapabilityForm({
-        appId: data.appId,
-        clientId,
-        capabilityId
+        appId,
+        capabilityId,
+        env: data.env
       })
       if (!formInfo.data) return navigate(-1)
 
@@ -273,10 +282,10 @@ const Access = () => {
 
     const params: TAddAppCapabilityFormParams = {
       appId: appId!,
-      clientId,
       capabilityId,
       formList,
-      type
+      type,
+      env: env!
     }
 
     await addAppCapabilityForm(params)
@@ -328,7 +337,7 @@ const Access = () => {
       </div>
 
       {appId &&
-        clientId &&
+        env &&
         capabilityId &&
         capabilityFormList &&
         !!capabilityFormList.length &&

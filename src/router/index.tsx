@@ -206,13 +206,6 @@ const routes: TRoutes[] = [
                 }
               },
               {
-                path: 'applyForProdEnv',
-                element: lazyLoad('MyApps/AppInfo/ApplyForProdEnv'),
-                meta: {
-                  breadcrumb: '申请接入正式环境'
-                }
-              },
-              {
                 path: 'access',
                 element: lazyLoad('MyApps/AppInfo/Access'),
                 meta: {
