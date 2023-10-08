@@ -21,7 +21,7 @@ const IncreaseModal = ({
   open,
   setOpen
 }: {
-  id: string // 申请增加用量接口id
+  id: number // 申请增加用量接口id
   open: boolean
   setOpen: Function
 }) => {

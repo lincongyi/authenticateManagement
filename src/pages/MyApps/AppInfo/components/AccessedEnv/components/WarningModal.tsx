@@ -21,7 +21,7 @@ const WarningModal = ({
   open,
   setOpen
 }: {
-  id: string // 预警设置接口id
+  id: number // 预警设置接口id
   open: boolean
   setOpen: Function
 }) => {

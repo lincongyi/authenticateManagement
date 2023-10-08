@@ -7,7 +7,6 @@ export interface TDirectory extends DataNode {
   leafDirectory?: TDirectory[]
   name: string
   parentId: number
-  projectId: number
   sort: number
   type: string
   icon?: JSX.Element
@@ -16,7 +15,6 @@ export interface TDirectory extends DataNode {
 export type TGetDirectoryResponse = {
   component: 'DEV_FILE_LIST' // 开发文档字段标识
   directoryList: TDirectory[]
-  projectId: number
   capabilityId: number
   projectName: string
 }
@@ -56,7 +54,7 @@ const queryDocument = (
 }
 
 export type TDevfileSearchResponse = {
-  projectId: number // 项目id
+  capabilityId: number // 能力id
   directoryId: number // 目录id
   name: string // 标题
   content: string // 内容

@@ -24,21 +24,46 @@ const DevDocument = () => {
     useState<TGetDirectoryResponse['directoryList']>() // 当前文档目录
 
   /**
-   * 初始化时选中的第一个node
+   * 返回active node。如果不存在directoryId，就默认返回第一个node
    */
-  const getDefaultNode = (arr: TDirectory[]): TDirectory | undefined => {
+  const getDefaultNode = (
+    arr: TDirectory[],
+    directoryId?: number
+  ): TDirectory | undefined => {
     if (!Array.isArray(arr)) return undefined
-    if (arr[0].leafDirectory?.length) {
-      return getDefaultNode(arr[0].leafDirectory)
-    } else return arr[0]
+    if (directoryId) {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].leafDirectory && arr[i].leafDirectory?.length) {
+          const node = getDefaultNode(arr[i].leafDirectory!, directoryId)
+          if (node) return node
+        } else if (arr[i].id === directoryId) {
+          return arr[i]
+        }
+      }
+    } else {
+      if (arr[0].leafDirectory?.length) {
+        return getDefaultNode(arr[0].leafDirectory)
+      } else return arr[0]
+    }
   }
 
   /**
    * 初始化or切换项目时重置选中的node
    */
-  const initNode = async (data: TGetDirectoryResponse) => {
+  const initNode = async (
+    data: TGetDirectoryResponse,
+    directoryId?: number
+  ) => {
     const { directoryList } = data
-    const defaultNode = getDefaultNode(directoryList)
+    console.log(directoryList)
+    let defaultNode: TDirectory | undefined
+    if (directoryId) {
+      defaultNode = getDefaultNode(directoryList, directoryId)
+    } else {
+      defaultNode = getDefaultNode(directoryList)
+    }
+    console.log('defaultNode', defaultNode)
+
     if (defaultNode) {
       setSelectedNode(defaultNode)
       try {
@@ -109,11 +134,16 @@ const DevDocument = () => {
       setDirectoryList(data)
       let directoryItem = data[0]
       if (searchParams.size) {
-        const projectId = +searchParams.get('projectId')!
-        directoryItem = data.find(item => item.projectId === projectId)!
+        const capabilityId = +searchParams.get('capabilityId')!
+        directoryItem = data.find(item => item.capabilityId === capabilityId)!
       }
-      setDefaultActiveKey(directoryItem.projectId.toString())
-      initNode(directoryItem)
+      const directoryId = Number(searchParams.get('directoryId'))
+      if (directoryId) {
+        initNode(directoryItem, directoryId)
+      } else {
+        initNode(directoryItem)
+      }
+      setDefaultActiveKey(directoryItem.capabilityId.toString())
       const { directoryList } = directoryItem
       setExpandedKeys(getExpandedKeys(directoryList))
 
@@ -126,7 +156,7 @@ const DevDocument = () => {
    *  切换项目
    */
   const onChange = (value: string) => {
-    const item = directoryList?.find(item => item.projectId === +value)
+    const item = directoryList?.find(item => item.capabilityId === +value)
     if (!item) return false
     initNode(item)
     setExpandedKeys(getExpandedKeys(item.directoryList))
@@ -187,7 +217,7 @@ const DevDocument = () => {
                   items={directoryList.map(item => {
                     return {
                       label: item.projectName,
-                      key: item.projectId!.toString()
+                      key: item.capabilityId.toString()
                     }
                   })}
                 />

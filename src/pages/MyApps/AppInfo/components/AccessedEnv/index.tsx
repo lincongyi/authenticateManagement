@@ -37,7 +37,7 @@ import { sitEnvContext } from '../SitEnv'
 import { prodEnvContext } from '../ProdEnv'
 import type { Tab } from 'rc-tabs/lib/interface.d.ts'
 import { getApiData, getCallData } from '@/api/myApp'
-import type { TGetCallDataResponse } from '@/api/myApp'
+import type { TGetApiDataResponse, TGetCallDataResponse } from '@/api/myApp'
 import type { TFormItem, TFormTabledataSource } from '@/api/ability'
 import { useNavigate } from 'react-router-dom'
 
@@ -123,18 +123,21 @@ const AccessedEnv = () => {
   /**
    * 开发文档
    */
-  const toDevDocument = () => {
-    console.log('开发文档')
+  const toDevDocument = (id?: number) => {
+    if (!capability) return
+    let url = `../../devDocument?capabilityId=${capability.capabilityId}`
+    if (id) url += `&directoryId=${id}`
+    navigate(url)
   }
 
   const [increaseModalOpen, setIncreaseModalOpen] = useState(false) // 控制申请增加用量Modal显示隐藏
 
-  const [activeId, setActiveId] = useState<string>() // 能力API接入情况，当前需要操作的接口id
+  const [activeId, setActiveId] = useState<number>() // 能力API接入情况，当前需要操作的接口id
 
   /**
    * 申请增加用量
    */
-  const onIncreaseUsage = (id: string) => {
+  const onIncreaseUsage = (id: number) => {
     setActiveId(id)
     setIncreaseModalOpen(true)
   }
@@ -144,8 +147,7 @@ const AccessedEnv = () => {
   /**
    * 预警设置
    */
-  const onWarningSetting = (id: string) => {
-    console.log(id)
+  const onWarningSetting = (id: number) => {
     setActiveId(id)
     setWarningModalOpen(true)
   }
@@ -180,9 +182,9 @@ const AccessedEnv = () => {
       title: '操作',
       key: 'action',
       width: 250,
-      render: values => (
+      render: (values: TGetApiDataResponse) => (
         <>
-          <Button type='link' onClick={toDevDocument}>
+          <Button type='link' onClick={() => toDevDocument(values.directoryId)}>
             开发文档
           </Button>
           {env === 'sit' ? (
@@ -470,7 +472,7 @@ const AccessedEnv = () => {
                   type='primary'
                   icon={<FileTextOutlined />}
                   ghost
-                  onClick={toDevDocument}
+                  onClick={() => toDevDocument()}
                   disabled={!formItems || !formItems?.length}
                 >
                   开发文档

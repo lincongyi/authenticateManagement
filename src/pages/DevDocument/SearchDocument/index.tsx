@@ -39,7 +39,6 @@ const SearchDocument = () => {
       if (!data) return
       const all = {
         capabilityId: 0,
-        projectId: 0,
         projectName: '全部'
       }
       setDirectoryList([all as TGetDirectoryResponse, ...data])
@@ -57,7 +56,7 @@ const SearchDocument = () => {
     if (!searchStr) return
     ;(async () => {
       const { data } = await devfileSearch({
-        capabilityId: activeDirectoryId,
+        capabilityId: activeDirectoryId || undefined,
         searchStr
       })
       if (!data) setResultList([])
@@ -99,9 +98,9 @@ const SearchDocument = () => {
    * 跳转到开发文档
    */
   const toDevDocument = (item: TDevfileSearchResponse) => {
-    const { projectId, directoryId } = item
+    const { capabilityId, directoryId } = item
     navigate(
-      `../../devDocument?projectId=${projectId}&directoryId=${directoryId}`
+      `../../devDocument?capabilityId=${capabilityId}&directoryId=${directoryId}`
     )
   }
 

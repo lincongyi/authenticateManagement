@@ -14,7 +14,11 @@ import {
   message
 } from 'antd'
 import type { RadioChangeEvent } from 'antd'
-import { TApplyExtensionParams, applyExtension } from '@/api/myApp'
+import { applyExtension, applyExtensionInfo } from '@/api/myApp'
+import type {
+  TApplyExtensionInfoResponse,
+  TApplyExtensionParams
+} from '@/api/myApp'
 import { appInfoContext } from '../../..'
 import { sitEnvContext } from '../../SitEnv'
 import { prodEnvContext } from '../../ProdEnv'
@@ -30,7 +34,7 @@ const DelayModal = ({
 }) => {
   const { env } = useContext(appInfoContext)!
 
-  const { capability, clientId } = useContext(
+  const { capability, clientId, fetchAppInfoByEnv } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
 
@@ -54,8 +58,21 @@ const DelayModal = ({
     else return 0
   }
 
+  const [delayInfo, setDelayInfo] = useState<TApplyExtensionInfoResponse>()
+
   useEffect(() => {
     setExpiration(getExpiration(capabilityExpireTime))
+
+    if (!capability || !clientId) return
+    if (!applyState) {
+      ;(async () => {
+        const { data } = await applyExtensionInfo({
+          capabilityId: capability.capabilityId,
+          clientId
+        })
+        setDelayInfo(data)
+      })()
+    }
   }, [])
 
   const [form] = Form.useForm()
@@ -102,7 +119,10 @@ const DelayModal = ({
     })
     messageApi.success({
       content: '已成功提交申请',
-      duration: 2
+      duration: 2,
+      onClose () {
+        fetchAppInfoByEnv && fetchAppInfoByEnv()
+      }
     })
     onCancel()
   }
@@ -155,11 +175,11 @@ const DelayModal = ({
           </Form.Item>
           <Form.Item
             label='是否延长有效期:'
-            name='type'
+            name={applyState ? 'type' : undefined}
             rules={[{ required: true }]}
           >
             {!applyState ? (
-              <>是</>
+              <>{delayInfo && ['否', '是'][delayInfo!.type]}</>
             ) : (
               <Radio.Group onChange={onChange} value={type}>
                 <Space direction='vertical' style={{ margin: '6px 0' }}>
@@ -180,12 +200,17 @@ const DelayModal = ({
             )}
           </Form.Item>
           {!applyState && (
-            <Form.Item label='延长有效期至'>2024-04-01</Form.Item>
+            <Form.Item label='延长有效期至'>
+              {delayInfo && delayInfo.newExpireTime}
+            </Form.Item>
           )}
 
-          <Form.Item label='备注说明' name='describe'>
+          <Form.Item
+            label='备注说明'
+            name={applyState ? 'describe' : undefined}
+          >
             {!applyState ? (
-              '备注说明备注说明备注说明'
+              <>{delayInfo && delayInfo.describe}</>
             ) : (
               <TextArea
                 showCount
@@ -196,7 +221,9 @@ const DelayModal = ({
             )}
           </Form.Item>
           {!applyState && (
-            <Form.Item label='提交申请延期时间:'>2023-04-01</Form.Item>
+            <Form.Item label='提交申请延期时间:'>
+              {delayInfo && delayInfo.applyTime}
+            </Form.Item>
           )}
           <Divider />
           <Form.Item noStyle wrapperCol={{ span: 24 }}>
