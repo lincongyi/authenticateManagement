@@ -37,8 +37,12 @@ const SearchDocument = () => {
     ;(async () => {
       const { data } = await getDirectory()
       if (!data) return
-      setDirectoryList(data)
-      setActiveDirectoryId(data[0].projectId)
+      const all = {
+        capabilityId: 0,
+        projectId: 0,
+        projectName: '全部'
+      }
+      setDirectoryList([all as TGetDirectoryResponse, ...data])
     })()
   }, [])
 
@@ -46,25 +50,20 @@ const SearchDocument = () => {
    *  切换项目
    */
   const onChange = (value: string) => {
-    setActiveDirectoryId(Number(value))
+    setActiveDirectoryId(+value)
   }
 
   useEffect(() => {
-    if (activeDirectoryId && searchStr) {
-      ;(async () => {
-        const { data } = await devfileSearch({
-          projectId: activeDirectoryId,
-          searchStr
-        })
-        if (!data) setResultList([])
-        else setResultList(onReplaceHtml(data!))
-      })()
-    }
+    if (!searchStr) return
+    ;(async () => {
+      const { data } = await devfileSearch({
+        capabilityId: activeDirectoryId,
+        searchStr
+      })
+      if (!data) setResultList([])
+      else setResultList(onReplaceHtml(data!))
+    })()
   }, [activeDirectoryId, searchStr])
-
-  useEffect(() => {
-    console.log(resultList)
-  }, [resultList])
 
   const { themeStore } = useStore()
   /**
@@ -122,7 +121,7 @@ const SearchDocument = () => {
           items={directoryList.map(item => {
             return {
               label: item.projectName,
-              key: item.projectId.toString()
+              key: item.capabilityId?.toString() || '0'
             }
           })}
         />
@@ -160,7 +159,7 @@ const SearchDocument = () => {
           )}
         </>
       ) : (
-        '暂无数据'
+        <div style={{ margin: '20px 0' }}>暂无数据</div>
       )}
     </>
   )

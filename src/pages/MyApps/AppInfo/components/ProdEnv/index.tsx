@@ -50,9 +50,6 @@ const ProdEnv = () => {
 
     const state = data[index].state
     setIsAccessed(!!state)
-    if (state) {
-      // 该应用已经接入第一个基础能力，需要请求获取详细信息
-    }
   }
 
   useEffect(() => {
@@ -63,9 +60,8 @@ const ProdEnv = () => {
    * 切换基础能力标签
    */
   const onChange = (activeKey: string) => {
-    const item = appInfoByEnv?.find(
-      item => item.capabilityId === Number(activeKey)
-    )
+    const item = appInfoByEnv?.find(item => item.capabilityId === +activeKey)
+    if (!item) return
     setActiveCapability(item)
   }
 

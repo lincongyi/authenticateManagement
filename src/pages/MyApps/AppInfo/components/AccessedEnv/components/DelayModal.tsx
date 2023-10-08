@@ -30,7 +30,7 @@ const DelayModal = ({
 }) => {
   const { env } = useContext(appInfoContext)!
 
-  const { capability, clientId, fetchAppInfoByEnv } = useContext(
+  const { capability, clientId } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
 
@@ -104,7 +104,6 @@ const DelayModal = ({
       content: '已成功提交申请',
       duration: 2
     })
-    fetchAppInfoByEnv!(capability)
     onCancel()
   }
 

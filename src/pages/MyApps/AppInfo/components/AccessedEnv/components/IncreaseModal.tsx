@@ -27,7 +27,7 @@ const IncreaseModal = ({
 }) => {
   const { env } = useContext(appInfoContext)!
 
-  const { capability, clientId, fetchAppInfoByEnv } = useContext(
+  const { clientId } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
 
@@ -68,7 +68,6 @@ const IncreaseModal = ({
       content: '申请成功',
       duration: 2
     })
-    fetchAppInfoByEnv!(capability)
     onCancel()
   }
 
@@ -112,7 +111,7 @@ const IncreaseModal = ({
             <Row>
               <Col span={24} className='tr'>
                 <Space>
-                  <Button onClick={onCancel}>取消</Button>,
+                  <Button onClick={onCancel}>取消</Button>
                   <Button type='primary' htmlType='submit'>
                     确定
                   </Button>

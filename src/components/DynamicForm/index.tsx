@@ -12,6 +12,7 @@ import {
   Select,
   Space,
   Switch,
+  Table,
   Typography,
   Upload,
   message
@@ -25,11 +26,12 @@ import { getBase64, imgBeforeUpload, saveAsFile } from '@/utils'
 import { RcFile, UploadFile } from 'antd/es/upload'
 import type { TFormContent, TRuleList } from '@/api/ability'
 import { getSecretKey, upload } from '@/api'
+import type { DefaultOptionType } from 'antd/es/select'
 
 const DynamicForm = React.forwardRef<
   FormInstance,
   {
-    formId: number
+    formId: number | 'defaultForm'
     formList: TFormContent[]
   }
 >(({ formId, formList }, ref) => {
@@ -195,6 +197,22 @@ const DynamicForm = React.forwardRef<
     }
   }
 
+  /**
+   * 删除上传文件
+   */
+  const onFileRemove = (file: UploadFile, field: string) => {
+    const { uid } = file
+
+    form.setFieldValue(
+      field,
+      fileList[field].filter(item => item.uid !== uid)
+    )
+    setFileList({
+      ...fileList,
+      [field]: fileList[field].filter(item => item.uid !== uid)
+    })
+  }
+
   const [keyPair, setKeyPair] =
     useState<Record<string, { publicKey: string; privateKey?: string }>>() // 密钥对
 
@@ -210,6 +228,71 @@ const DynamicForm = React.forwardRef<
     form.setFieldValue(field, publicKey)
     saveAsFile(privateKey, '密钥对')
   }
+
+  type TDataSource = {
+    id: number
+    key: string
+    value: string | undefined
+    options: DefaultOptionType[] | undefined
+  }
+  const [dataSource, setDataSource] = useState<TDataSource[]>()
+
+  useEffect(() => {
+    const item = formList.find(__item => __item.type === 'table')
+    if (!item) return
+
+    const source: TDataSource[] = item.tableOptions!.map((__item, index) => {
+      const defaultValueItem = item.value && item.value[index]
+      return {
+        ...__item,
+        value: defaultValueItem?.value
+      }
+    })
+    setDataSource(source as TDataSource[])
+  }, [])
+
+  /**
+   * 选择调用并发上限（每秒并发）
+   */
+  const onChange = (value: string, values: TDataSource) => {
+    const { id } = values
+    const item = {
+      id,
+      value
+    }
+    const index = dataSource!.findIndex(item => item.id === id)
+    if (index === -1) return
+    const upEndTime = form.getFieldValue('upEndTime')
+    if (!upEndTime) {
+      const limit = Array(dataSource?.length)
+      limit[index] = item
+      form.setFieldValue('upEndTime', limit)
+    } else {
+      upEndTime[index] = item
+      form.setFieldValue('upEndTime', upEndTime)
+    }
+  }
+
+  const columns = [
+    {
+      title: '接口名称',
+      width: 200,
+      dataIndex: 'key'
+    },
+    {
+      title: '调用并发上限（每秒并发）',
+      render: (values: TDataSource) => (
+        <>
+          <Select
+            defaultValue={values.value}
+            placeholder='请选择调用并发上限（每秒并发）'
+            options={values.options}
+            onChange={value => onChange(value, values)}
+          />
+        </>
+      )
+    }
+  ]
 
   return (
     <>
@@ -235,11 +318,28 @@ const DynamicForm = React.forwardRef<
                       'radio',
                       'checkbox',
                       'select',
-                      'selectMultiple'
+                      'selectMultiple',
+                      'table'
                     ].includes(item.type)
                       ? '请选择'
                       : '请输入'
                   }${item.cnName}`
+                },
+                {
+                  validator (
+                    _,
+                    value: ({ id: string; value: string } | null)[]
+                  ) {
+                    if (item.type === 'table' && value) {
+                      const existNull = value.some(item => !item)
+                      if (existNull) {
+                        return Promise.reject(
+                          new Error('请录入所有调用并发上限')
+                        )
+                      }
+                    }
+                    return Promise.resolve()
+                  }
                 }
               ],
               valuePropName: ['switch', 'checkbox'].includes(item.type)
@@ -352,7 +452,7 @@ const DynamicForm = React.forwardRef<
                             item.multiple > imageList[item.field].length) && (
                             <>
                               <PlusOutlined />
-                              <div style={{ marginTop: 8 }}>选择图片</div>
+                              选择图片
                             </>
                           )}
                         </Upload>
@@ -403,12 +503,13 @@ const DynamicForm = React.forwardRef<
                           customRequest={options =>
                             fileCustomRequest(options, item.field)
                           }
+                          onRemove={file => onFileRemove(file, item.field)}
                         >
                           <Button
                             icon={<UploadOutlined />}
                             disabled={
-                              !fileList[item.field] ||
-                              item.multiple > fileList[item.field].length
+                              fileList[item.field] &&
+                              item.multiple <= fileList[item.field].length
                             }
                           >
                             上传文件
@@ -465,6 +566,18 @@ const DynamicForm = React.forwardRef<
                         </>
                       )}
                     </Space>
+                  )
+                case 'table':
+                  return (
+                    <>
+                      <Table
+                        rowKey='id'
+                        bordered
+                        dataSource={dataSource}
+                        columns={columns}
+                        pagination={false}
+                      />
+                    </>
                   )
 
                 default:

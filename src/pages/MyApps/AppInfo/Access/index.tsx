@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { Ref, useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import style from './index.module.scss'
 import {
@@ -44,10 +44,14 @@ const Access = () => {
   const [capabilityFormList, setCapabilityFormList] =
     useState<TAddAppCapabilityFormParams['formList']>()
 
+  const [defaultForm, setDefaultForm] = useState<TFormContent[]>()
+
+  const defaultFormRef = useRef<FormInstance>()
+
   const [appId, setAppId] = useState<string>()
 
   /**
-   * 初始换动态表单内容
+   * 初始化动态表单内容
    */
   useEffect(() => {
     ;(async () => {
@@ -67,6 +71,11 @@ const Access = () => {
       if (!formInfo.data) return navigate(-1)
 
       setCapabilityFormList(formInfo.data.formList)
+      setDefaultForm(
+        JSON.parse(
+          formInfo.data.formList[0].defaultFormContent!
+        ) as TFormContent[]
+      )
       setActiveFormId(formInfo.data.formList[0].formId)
     })()
   }, [])
@@ -91,7 +100,48 @@ const Access = () => {
   const [messageApi, messageApiHolder] = message.useMessage()
 
   /**
+   * 预处理选择器、上传图片、上传文件，在表单展示时候的值
+   * @param {TFormItemType} type 表单项类型
+   * @param {any} value 初始表单项value
+   * @returns {any} 处理过的表单项value
+   */
+  const formatFormLabelValue = (item: TFormContent, value: any) => {
+    const { type } = item
+    if (['radio', 'select'].includes(type)) {
+      const { options } = item
+      if (!options) return undefined
+      const optionItem = options.find(__item => __item.value === value)
+      return optionItem?.label
+    } else if (['checkbox', 'selectMultiple'].includes(type)) {
+      const { options } = item
+      if (!options) return undefined
+      const labelValueList =
+        value?.reduce((prev: any[], next: any) => {
+          const optionItem = options?.find(__item => __item.value === next)
+          const label = optionItem ? optionItem.label : undefined
+          return [...prev, label]
+        }, []) || undefined
+      return labelValueList ? labelValueList.toString() : undefined
+    } else if (['dateTime'].includes(type) && value) {
+      return dayjs(value).isValid() && dayjs(value).format('YYYY-MM-DD')
+    } else if (['switch'].includes(type)) {
+      const { switchText } = item
+      if (!switchText) return undefined
+      const content = switchText?.split('/')
+      return content[+!value]
+    } else if (['table'].includes(type)) {
+      return item.tableOptions!.map((__item, index) => ({
+        label: __item.key,
+        value: value[index].value
+      }))
+    } else return value
+  }
+
+  /**
    * 预处理部分动态表单数据
+   * @param {TFormItemType} type 表单项类型
+   * @param {any} value 初始表单项value
+   * @returns {any} 处理过的表单项value
    */
   const formatFormItemValue = (type: TFormItemType, value: any) => {
     if (type === 'dateTime') {
@@ -113,6 +163,7 @@ const Access = () => {
     if (!capabilityFormList) return
     if (type) {
       try {
+        await defaultFormRef.current!.validateFields()
         for (let i = 0; i < accessRefs.current.length; i++) {
           await accessRefs.current[i].validateFields()
         }
@@ -129,17 +180,39 @@ const Access = () => {
         capabilityFormList[i].formContent
       )
 
-      const formContent = content.map(item => ({
-        ...item,
-        value: formatFormItemValue(
-          item.type,
-          accessRefs.current[i].getFieldValue(item.field)
-        )
-      }))
+      const formContent = content.map(item => {
+        return {
+          ...item,
+          value: formatFormItemValue(
+            item.type,
+            accessRefs.current[i].getFieldValue(item.field)
+          )
+        }
+      })
       let item: TFormList = {
         formContent: JSON.stringify(formContent),
         formId: capabilityFormList[i].formId,
         formName: capabilityFormList[i].formName
+      }
+      // 基础能力信息表单有一块专属的默认表单内容
+      if (i === 0) {
+        const content: TFormContent[] = JSON.parse(
+          capabilityFormList[0].defaultFormContent!
+        )
+        const defaultFormContent = content.map(item => {
+          return {
+            ...item,
+            labelValue: formatFormLabelValue(
+              item,
+              defaultFormRef.current!.getFieldValue(item.field)
+            ),
+            value: formatFormItemValue(
+              item.type,
+              defaultFormRef.current!.getFieldValue(item.field)
+            )
+          }
+        })
+        item.defaultFormContent = JSON.stringify(defaultFormContent)
       }
       // 保存草稿不需要传form，提交审核需要传form
       if (type) {
@@ -150,12 +223,39 @@ const Access = () => {
             dataType,
             type,
             field,
+            labelValue: formatFormLabelValue(
+              item,
+              accessRefs.current[i].getFieldValue(item.field)
+            ),
             value: formatFormItemValue(
               item.type,
               accessRefs.current[i].getFieldValue(item.field)
             )
           }
         })
+        if (i === 0) {
+          const defaultFormContent: TFormContent[] = JSON.parse(
+            capabilityFormList[0].defaultFormContent!
+          )
+          const defaultFormList = defaultFormContent.map(item => {
+            const { cnName, dataType, type, field } = item
+            return {
+              cnName,
+              dataType,
+              type,
+              field,
+              labelValue: formatFormLabelValue(
+                item,
+                defaultFormRef.current!.getFieldValue(item.field)
+              ),
+              value: formatFormItemValue(
+                item.type,
+                defaultFormRef.current!.getFieldValue(item.field)
+              )
+            }
+          })
+          item.defaultFormList = defaultFormList
+        }
         item = { ...item, form }
       }
       formList.push(item)
@@ -237,6 +337,13 @@ const Access = () => {
             key={item.formId}
             style={{ display: activeFormId === item.formId ? 'block' : 'none' }}
           >
+            {!index && defaultForm && (
+              <DynamicForm
+                ref={defaultFormRef as Ref<FormInstance>}
+                formId='defaultForm'
+                formList={defaultForm}
+              />
+            )}
             <DynamicForm
               ref={(el: FormInstance) => (accessRefs.current[index] = el)}
               formId={item.formId}

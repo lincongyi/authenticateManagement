@@ -148,7 +148,7 @@ const Captcha = ({ type }: { type: 0 | 1 }) => {
             >
               <Input
                 placeholder={`请输入预留${!type ? '手机号' : '邮箱'}`}
-                maxLength={Number(`${!type ? 11 : 30}`)}
+                maxLength={!type ? 11 : 30}
                 showCount
               />
             </Form.Item>

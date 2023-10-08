@@ -50,9 +50,6 @@ const SitEnv = () => {
 
     const state = data[index].state
     setState(state)
-    if (state >= 5) {
-      // 该应用已经接入第一个基础能力，需要请求获取详细信息
-    }
   }
 
   useEffect(() => {
@@ -63,15 +60,10 @@ const SitEnv = () => {
    * 切换基础能力标签
    */
   const onChange = (activeKey: string) => {
-    const item = appInfoByEnv?.find(
-      item => item.capabilityId === Number(activeKey)
-    )
+    const item = appInfoByEnv?.find(item => item.capabilityId === +activeKey)
     if (!item) return
     setActiveCapability(item)
     setState(item.state)
-    if (item.state >= 5) {
-      // 该应用已经接入第一个基础能力，需要请求获取详细信息
-    }
   }
 
   const { myAppStore } = useStore()
@@ -95,6 +87,7 @@ const SitEnv = () => {
    */
   const toUploadForm = () => {
     if (!isEnable) return messageApi.warning('该应用已停用')
+    if (state < 3) return
     const clientId = myAppStore.clientId.sit
     const { capabilityId } = activeCapability!
     navigate(`./uploadForm?clientId=${clientId}&capabilityId=${capabilityId}`)
@@ -181,11 +174,6 @@ const SitEnv = () => {
                       <div className={style.dashed}></div>
                     </Col>
                     <Col span={6} className={style.flex}>
-                      {/* <div
-                        className={`${style.step} ${
-                          state > 2 && style.active
-                        } ${state > 2 && style.done}`}
-                      > */}
                       <div
                         className={`${style.step} ${
                           state >= 2 ? style.active : ''
@@ -207,7 +195,6 @@ const SitEnv = () => {
                           </div>
                         )}
                       </div>
-                      {/*  */}
                       <div
                         className={`${style.dashed} ${
                           state > 2 ? style.active : ''
@@ -241,20 +228,31 @@ const SitEnv = () => {
                       <div className={style.dashed}></div>
                     </Col>
                     <Col span={6} className={style.flex}>
-                      <div className={`${style.step}`}>
+                      <div
+                        className={`${style.step} ${
+                          state >= 4 ? style.active : ''
+                        } ${state > 4 ? style.done : ''}`}
+                      >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>4</i>
                         </div>
                         <div className={style.name}>等待审批</div>
-                        <div className={style.btn}>
-                          <i
-                            className={`${style['btn-icon']} ${style.step02}`}
-                          />
-                          查看审批单
-                        </div>
+                        {state <= 4 && (
+                          <div className={style.btn}>
+                            <i
+                              className={`${style['btn-icon']} ${style.step02}`}
+                            />
+                            查看审批单
+                          </div>
+                        )}
                       </div>
-                      {/* ${style.active} */}
-                      <div className={`${style.dashed}`}>审批通过</div>
+                      <div
+                        className={`${style.dashed} ${
+                          state > 4 ? style.active : ''
+                        }`}
+                      >
+                        审批通过
+                      </div>
                     </Col>
                   </Row>
                   <div className={style.title}>接入正式环境流程</div>

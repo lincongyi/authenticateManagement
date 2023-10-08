@@ -12,8 +12,10 @@ import {
   Tabs,
   Form,
   Typography,
-  Empty
+  Empty,
+  Image
 } from 'antd'
+import type { UploadFile } from 'antd'
 import dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 import {
@@ -36,7 +38,8 @@ import { prodEnvContext } from '../ProdEnv'
 import type { Tab } from 'rc-tabs/lib/interface.d.ts'
 import { getApiData, getCallData } from '@/api/myApp'
 import type { TGetCallDataResponse } from '@/api/myApp'
-import type { TFormItem } from '@/api/ability'
+import type { TFormItem, TFormTabledataSource } from '@/api/ability'
+import { useNavigate } from 'react-router-dom'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
@@ -132,7 +135,6 @@ const AccessedEnv = () => {
    * 申请增加用量
    */
   const onIncreaseUsage = (id: string) => {
-    console.log(id)
     setActiveId(id)
     setIncreaseModalOpen(true)
   }
@@ -212,12 +214,48 @@ const AccessedEnv = () => {
   /**
    * 预处理部分动态表单数据
    */
-  const formatFormItemValue = (list: TFormItem[]) => {
-    const result = list.map(item => {
-      // if(item.type === '')
-      return item
-    })
-    return result
+  const formatFormItemValue = (item: TFormItem) => {
+    if (item.type === 'imageUpload') {
+      return (
+        <>
+          {(item.labelValue as UploadFile[]).map(__item => (
+            <Image width={200} height={200} src={__item.url} key={__item.uid} />
+          ))}
+        </>
+      )
+    } else if (item.type === 'fileUpload') {
+      return (
+        <>
+          {(item.labelValue as UploadFile[]).map(__item => (
+            <Typography.Link href={__item.url} target='_blank' key={__item.uid}>
+              {__item.name}
+            </Typography.Link>
+          ))}
+        </>
+      )
+    } else if (item.type === 'table') {
+      const defaultFormColumns = [
+        {
+          title: '接口名称',
+          width: 200,
+          dataIndex: 'label'
+        },
+        {
+          title: '调用并发上限（每秒并发）',
+          dataIndex: 'value'
+        }
+      ]
+      return (
+        <Table
+          rowKey='label'
+          bordered
+          dataSource={item.labelValue as TFormTabledataSource[]}
+          columns={defaultFormColumns}
+          pagination={false}
+        />
+      )
+    }
+    return item.labelValue as string
   }
 
   useEffect(() => {
@@ -229,8 +267,10 @@ const AccessedEnv = () => {
         key: item.formId.toString()
       }))
       setFormTabs(tabs)
-      console.log(capability.form.formList[0].form)
-      setFormItems(capability.form.formList[0].form)
+      setFormItems([
+        ...capability.form.formList[0].defaultFormList!,
+        ...capability.form.formList[0].form
+      ])
     }
   }, [capability])
 
@@ -239,10 +279,27 @@ const AccessedEnv = () => {
    */
   const onChange = (activeKey: string) => {
     const item = capability?.form.formList.find(
-      item => item.formId === Number(activeKey)
+      item => item.formId === +activeKey
     )
     if (!item) return
-    setFormItems(item.form)
+    const index = formTabs?.findIndex(__item => __item.key === activeKey)
+    if (!index) {
+      setFormItems([...item.defaultFormList!, ...item.form])
+    } else {
+      setFormItems(item.form)
+    }
+  }
+
+  const navigate = useNavigate()
+
+  /**
+   * 申请配置更改
+   */
+  const onEdit = () => {
+    if (!capability) return
+    navigate(
+      `./access?clientId=${clientId}&capabilityId=${capability.capabilityId}`
+    )
   }
 
   const [delayModalOpen, setDelayModalOpen] = useState(false) // 控制申请延期Modal显示隐藏
@@ -395,6 +452,7 @@ const AccessedEnv = () => {
                   type='primary'
                   icon={<EditOutlined />}
                   ghost
+                  onClick={onEdit}
                   disabled={!formItems || !formItems?.length}
                 >
                   申请配置更改
@@ -422,13 +480,14 @@ const AccessedEnv = () => {
             {formTabs?.length ? (
               <>
                 <Tabs onChange={onChange} items={formTabs} />
-                {/* 动态生成form表单内容 */}
                 {formItems && !!formItems.length && (
-                  <Form name='accessedForm' {...formProps}>
+                  <Form {...formProps}>
                     {formItems.map((item, index) => (
-                      <Form.Item label={item.cnName} key={index}>
-                        {/* {item.value} */}
-                      </Form.Item>
+                      <div key={item.field}>
+                        <Form.Item label={item.cnName}>
+                          {formatFormItemValue(item)}
+                        </Form.Item>
+                      </div>
                     ))}
                   </Form>
                 )}

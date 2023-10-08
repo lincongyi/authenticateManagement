@@ -21,13 +21,13 @@ const WarningModal = ({
   open,
   setOpen
 }: {
-  id: string | undefined // 预警设置接口id
+  id: string // 预警设置接口id
   open: boolean
   setOpen: Function
 }) => {
-  const { clientId, env } = useContext(appInfoContext)!
+  const { env } = useContext(appInfoContext)!
 
-  const { capability, fetchAppInfoByEnv } = useContext(
+  const { clientId } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
 
@@ -61,19 +61,18 @@ const WarningModal = ({
   const onFinish = async (values: any) => {
     console.log('values', {
       ...values,
-      apiId: Number(id),
+      apiId: +id,
       clientId
     })
     await apiConfig({
       ...values,
-      apiId: Number(id),
+      apiId: +id,
       clientId
     })
     messageApi.success({
       content: '预警设置成功',
       duration: 2
     })
-    fetchAppInfoByEnv!(capability)
     onCancel()
   }
 

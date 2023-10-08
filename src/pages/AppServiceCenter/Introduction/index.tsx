@@ -40,9 +40,7 @@ const Introduction = () => {
 
   const onChange = ({ target: { value } }: RadioChangeEvent) => {
     setValue(value)
-    setHtml(
-      [capability?.ableRemarkHtml, capability?.apiRemarkHtml][Number(value) - 1]
-    )
+    setHtml([capability?.ableRemarkHtml, capability?.apiRemarkHtml][+value - 1])
   }
 
   const [open, setOpen] = useState(false) // 控制选择接入应用Modal显示隐藏

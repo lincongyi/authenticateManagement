@@ -184,9 +184,7 @@ const Index = () => {
 
     const capability = accessCapability.split(',')
     const capabilityToString = capability.map(item => {
-      const result = capabilityList?.find(
-        __item => __item.value === Number(item)
-      )
+      const result = capabilityList?.find(__item => __item.value === +item)
       return result?.label || ''
     })
     return capabilityToString.join(',')

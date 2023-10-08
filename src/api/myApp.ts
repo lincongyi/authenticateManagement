@@ -114,6 +114,7 @@ const updateApp = (params: TAppParams): Promise<TResponse> => {
 
 type TFormList = {
   form: TFormItem[]
+  defaultFormList?: TFormItem[]
   formName: string
   formId: number
 }

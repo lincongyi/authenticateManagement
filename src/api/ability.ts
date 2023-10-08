@@ -1,4 +1,5 @@
 import { request } from '@utils/request'
+import type { UploadFile } from 'antd'
 
 export type TGetCapabilityListResponse = {
   id: number
@@ -70,6 +71,7 @@ export type TFormItemType =
   | 'imageUpload'
   | 'fileUpload'
   | 'privateKey'
+  | 'table'
 
 /**
  * 上传文件限制类型
@@ -101,9 +103,16 @@ export type TFormContent = {
   switchText: string // 选中时or非选中时的内容
   fileSize: number // 支持图片文件大小(Mb)
   multiple: number // 支持上传图片数量
+  labelValue?: string | string[] | undefined // 展示表单项value对应的label值
   value?: any // 表单默认值（编辑的时候有用）
   validateMessage: string
   ruleList: TRuleList[]
+  tableOptions?: { id: number; key: string; options: TFormContent['options'] }[]
+}
+
+export type TFormTabledataSource = {
+  label: string
+  value: number
 }
 
 export type TFormItem = {
@@ -112,14 +121,17 @@ export type TFormItem = {
   type: TFormItemType // 表单类型
   field: string // 表单项key值
   label?: any[] // 用于渲染多选表单项的值
+  labelValue?: string | UploadFile[] | TFormTabledataSource[] // 展示表单项value对应的label值
   value: any
 }
 
 export type TFormList = {
-  form?: TFormItem[]
   formId: number
   formName: string
   formContent: string // JSON.stringify()表单内容TFormContent[]
+  form?: TFormItem[]
+  defaultFormContent?: string // JSON.stringify()表单内容，默认第一个表单才有
+  defaultFormList?: TFormItem[]
 }
 
 export type TAddAppCapabilityFormParams = {

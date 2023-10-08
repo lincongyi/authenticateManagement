@@ -109,7 +109,7 @@ const DevDocument = () => {
       setDirectoryList(data)
       let directoryItem = data[0]
       if (searchParams.size) {
-        const projectId = Number(searchParams.get('projectId'))
+        const projectId = +searchParams.get('projectId')!
         directoryItem = data.find(item => item.projectId === projectId)!
       }
       setDefaultActiveKey(directoryItem.projectId.toString())
@@ -126,7 +126,7 @@ const DevDocument = () => {
    *  切换项目
    */
   const onChange = (value: string) => {
-    const item = directoryList?.find(item => item.projectId === Number(value))
+    const item = directoryList?.find(item => item.projectId === +value)
     if (!item) return false
     initNode(item)
     setExpandedKeys(getExpandedKeys(item.directoryList))
@@ -187,7 +187,7 @@ const DevDocument = () => {
                   items={directoryList.map(item => {
                     return {
                       label: item.projectName,
-                      key: item.projectId.toString()
+                      key: item.projectId!.toString()
                     }
                   })}
                 />
