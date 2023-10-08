@@ -8,7 +8,7 @@ export interface TDirectory extends DataNode {
   name: string
   parentId: number
   sort: number
-  type: string
+  type: 'Folder' | 'File' // 节点类型
   icon?: JSX.Element
 }
 

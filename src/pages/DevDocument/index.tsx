@@ -89,11 +89,7 @@ const DevDocument = () => {
         return {
           ...item,
           icon:
-            item.leafDirectory && item.leafDirectory?.length ? (
-              <FolderOpenOutlined />
-            ) : (
-              <FileOutlined />
-            )
+            item.type === 'Folder' ? <FolderOpenOutlined /> : <FileOutlined />
         }
       } else {
         const { leafDirectory, ...rest } = item
@@ -101,11 +97,7 @@ const DevDocument = () => {
           ...rest,
           leafDirectory: setCatalog(leafDirectory) as TDirectory[],
           icon:
-            item.leafDirectory && item.leafDirectory?.length ? (
-              <FolderOpenOutlined />
-            ) : (
-              <FileOutlined />
-            )
+            item.type === 'Folder' ? <FolderOpenOutlined /> : <FileOutlined />
         }
       }
     })
