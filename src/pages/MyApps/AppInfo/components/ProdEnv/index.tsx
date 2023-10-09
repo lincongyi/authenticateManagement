@@ -116,7 +116,7 @@ const ProdEnv = () => {
                 <prodEnvContext.Provider
                   value={{
                     capability: activeCapability,
-                    clientId: myAppStore.clientId.sit,
+                    clientId: myAppStore.clientId.prod,
                     fetchAppInfoByEnv
                   }}
                 >
@@ -168,17 +168,23 @@ const ProdEnv = () => {
                       <div className={style.dashed}></div>
                     </Col>
                     <Col span={6} className={style.flex}>
-                      <div className={`${style.step}`}>
+                      <div
+                        className={`${style.step} ${
+                          state >= 6 ? style.active : ''
+                        } ${state > 6 ? style.done : ''}`}
+                      >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>6</i>
                         </div>
                         <div className={style.name}>等待审批</div>
-                        <div className={style.btn}>
-                          <i
-                            className={`${style['btn-icon']} ${style.step02}`}
-                          />
-                          查看审批单
-                        </div>
+                        {state <= 6 && (
+                          <div className={style.btn}>
+                            <i
+                              className={`${style['btn-icon']} ${style.step02}`}
+                            />
+                            查看审批单
+                          </div>
+                        )}
                       </div>
                       <div
                         className={`${style.dashed} ${

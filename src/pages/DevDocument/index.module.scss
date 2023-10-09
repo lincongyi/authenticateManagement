@@ -51,6 +51,11 @@ $border: 1px solid rgb(232 233 234 / 100%);
 .catalog-content {
   height: calc(100vh - 326px);
   border-right: $border;
+
+  /* stylelint-disable-next-line selector-class-pattern */
+  :global(.ant-tree-iconEle) {
+    vertical-align: middle !important;
+  }
 }
 
 .doc-wrap {
@@ -87,5 +92,15 @@ $border: 1px solid rgb(232 233 234 / 100%);
     display: flex;
     justify-content: space-between;
     line-height: 2;
+  }
+}
+
+.doc-tabs {
+  :global(.ant-tabs-tab) {
+    padding: 12px;
+  }
+
+  :global(.ant-tabs-tab-active) {
+    background-color: #e6f0ff;
   }
 }

@@ -208,13 +208,26 @@ const applyExtensionInfo = (params: {
   return request.post('/access/applyExtensionInfo', params)
 }
 
+type TGetApiConfigResponse = {
+  errorNum: number // 报错次数预警阈值
+  proportion: number // 调用量预警阈值
+  timeoutNum: number // 调用超时预警阈值
+}
+
+/**
+ * 获取预警设置
+ */
+const getApiConfig = (params: {
+  apiId: number
+  clientId: string
+}): Promise<TResponse<TGetApiConfigResponse>> => {
+  return request.post('/access/getApiConfig', params)
+}
+
 type TApiConfigParams = {
   apiId: number // 能力id
   clientId: string // 应用id
-  errorNum: number // 报错次数预警值
-  proportion: number // 调用量预警值
-  timeoutNum: number // 调用超时预警值
-}
+} & TGetApiConfigResponse
 
 /**
  * 预警设置
@@ -299,6 +312,7 @@ export {
   applyDateNum,
   applyExtension,
   applyExtensionInfo,
+  getApiConfig,
   apiConfig,
   getCallData,
   getApiData,

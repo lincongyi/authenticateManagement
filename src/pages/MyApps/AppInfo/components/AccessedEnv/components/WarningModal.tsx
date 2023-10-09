@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
   Alert,
   Modal,
@@ -12,7 +12,7 @@ import {
   message
 } from 'antd'
 import { appInfoContext } from '../../..'
-import { apiConfig } from '@/api/myApp'
+import { apiConfig, getApiConfig } from '@/api/myApp'
 import { sitEnvContext } from '../../SitEnv'
 import { prodEnvContext } from '../../ProdEnv'
 
@@ -46,6 +46,20 @@ const WarningModal = ({
   }
 
   /**
+   * 初始化预警设置参数值
+   */
+  useEffect(() => {
+    ;(async () => {
+      if (!open) return
+      const { data } = await getApiConfig({
+        apiId: id,
+        clientId: clientId!
+      })
+      form.setFieldsValue(data)
+    })()
+  }, [open])
+
+  /**
    * 关闭
    */
   const onCancel = () => {
@@ -59,15 +73,10 @@ const WarningModal = ({
    * 提交数据
    */
   const onFinish = async (values: any) => {
-    console.log('values', {
-      ...values,
-      apiId: +id,
-      clientId
-    })
     await apiConfig({
       ...values,
       apiId: +id,
-      clientId
+      clientId: clientId!
     })
     messageApi.success({
       content: '预警设置成功',
@@ -101,7 +110,6 @@ const WarningModal = ({
           form={form}
           name='warning'
           {...formProps}
-          initialValues={{ proportion: 60, errorNum: 1, timeoutNum: 5000 }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
@@ -143,7 +151,7 @@ const WarningModal = ({
             <Row>
               <Col span={24} className='tr'>
                 <Space>
-                  <Button onClick={onCancel}>取消</Button>,
+                  <Button onClick={onCancel}>取消</Button>
                   <Button type='primary' htmlType='submit'>
                     确定
                   </Button>

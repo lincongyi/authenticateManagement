@@ -32,3 +32,13 @@
     }
   }
 }
+
+.doc-tabs {
+  :global(.ant-tabs-tab) {
+    padding: 12px;
+  }
+
+  :global(.ant-tabs-tab-active) {
+    background-color: #e6f0ff;
+  }
+}

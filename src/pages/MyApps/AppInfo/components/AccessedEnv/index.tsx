@@ -102,11 +102,12 @@ const AccessedEnv = () => {
   const [dataSource, setDataSource] = useState<any>() // 能力接口表格数据
 
   /**
-   * 渲染能力接口表格数据
+   * 初始化渲染能力接口表格数据
    */
   useEffect(() => {
     ;(async () => {
       if (!capability || !clientId) return
+
       const { data } = await getApiData({
         capabilityId: capability.capabilityId,
         clientId
@@ -127,13 +128,13 @@ const AccessedEnv = () => {
 
   const [increaseModalOpen, setIncreaseModalOpen] = useState(false) // 控制申请增加用量Modal显示隐藏
 
-  const [activeId, setActiveId] = useState<number>() // 能力API接入情况，当前需要操作的接口id
+  const [apiId, setApiId] = useState<number>() // 接口id
 
   /**
    * 申请增加用量
    */
   const onIncreaseUsage = (id: number) => {
-    setActiveId(id)
+    setApiId(id)
     setIncreaseModalOpen(true)
   }
 
@@ -143,7 +144,7 @@ const AccessedEnv = () => {
    * 预警设置
    */
   const onWarningSetting = (id: number) => {
-    setActiveId(id)
+    setApiId(id)
     setWarningModalOpen(true)
   }
 
@@ -383,17 +384,17 @@ const AccessedEnv = () => {
           </div>
         </Col>
       </Row>
-      {activeId && (
+      {apiId && (
         <>
           {env === 'sit' ? (
             <IncreaseModal
-              id={activeId}
+              id={apiId}
               open={increaseModalOpen}
               setOpen={setIncreaseModalOpen}
             />
           ) : (
             <WarningModal
-              id={activeId}
+              id={apiId}
               open={warningModalOpen}
               setOpen={setWarningModalOpen}
             />

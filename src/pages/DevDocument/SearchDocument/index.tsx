@@ -110,12 +110,15 @@ const SearchDocument = () => {
       <Search
         placeholder='请输入搜索关键字'
         size='large'
+        style={{ marginBottom: 20 }}
         onSearch={onSearch}
         enterButton
         allowClear
       />
       {directoryList && (
         <Tabs
+          tabBarGutter={0}
+          className={style['doc-tabs']}
           onChange={onChange}
           items={directoryList.map(item => {
             return {

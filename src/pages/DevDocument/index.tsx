@@ -11,11 +11,13 @@ import type {
 import {
   CloudDownloadOutlined,
   FileOutlined,
-  FolderOpenOutlined,
   DownloadOutlined,
   SearchOutlined
 } from '@ant-design/icons'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import devDocumentFile from '@/assets/devDocument-file.png'
+import devDocumentFolder from '@/assets/devDocument-folder.png'
+
 const { Link } = Typography
 
 const DevDocument = () => {
@@ -55,14 +57,13 @@ const DevDocument = () => {
     directoryId?: number
   ) => {
     const { directoryList } = data
-    console.log(directoryList)
     let defaultNode: TDirectory | undefined
+
     if (directoryId) {
       defaultNode = getDefaultNode(directoryList, directoryId)
     } else {
       defaultNode = getDefaultNode(directoryList)
     }
-    console.log('defaultNode', defaultNode)
 
     if (defaultNode) {
       setSelectedNode(defaultNode)
@@ -89,7 +90,11 @@ const DevDocument = () => {
         return {
           ...item,
           icon:
-            item.type === 'Folder' ? <FolderOpenOutlined /> : <FileOutlined />
+            item.type === 'Folder' ? (
+              <img src={devDocumentFolder} />
+            ) : (
+              <img src={devDocumentFile} />
+            )
         }
       } else {
         const { leafDirectory, ...rest } = item
@@ -97,7 +102,11 @@ const DevDocument = () => {
           ...rest,
           leafDirectory: setCatalog(leafDirectory) as TDirectory[],
           icon:
-            item.type === 'Folder' ? <FolderOpenOutlined /> : <FileOutlined />
+            item.type === 'Folder' ? (
+              <img src={devDocumentFolder} />
+            ) : (
+              <img src={devDocumentFile} />
+            )
         }
       }
     })
@@ -203,6 +212,8 @@ const DevDocument = () => {
               项目：
               {directoryList && (
                 <Tabs
+                  tabBarGutter={0}
+                  className={style['doc-tabs']}
                   defaultActiveKey={defaultActiveKey}
                   style={{ width: 'calc(100% - 80px)' }}
                   onChange={onChange}
@@ -228,7 +239,7 @@ const DevDocument = () => {
       </div>
       <Divider />
       <Row className={style.container}>
-        <Col span={6}>
+        <Col lg={6} xl={6} xxl={4}>
           <div className={`${style.title} ${style['catalog-title']}`}>目录</div>
           <div className={`${style.content} ${style['catalog-content']}`}>
             {activeDirectory && !!activeDirectory.length && selectedNode && (
@@ -238,6 +249,7 @@ const DevDocument = () => {
                   key: 'id',
                   children: 'leafDirectory'
                 }}
+                blockNode
                 showIcon
                 selectedKeys={[selectedNode.id]}
                 expandedKeys={expandedKeys}
@@ -248,7 +260,7 @@ const DevDocument = () => {
             )}
           </div>
         </Col>
-        <Col span={18}>
+        <Col lg={18} xl={18} xxl={20}>
           <div className={style.title}>
             {!selectedNode?.leafDirectory?.length && selectedNode?.name}
           </div>
