@@ -13,7 +13,7 @@ import {
 } from 'antd'
 import { FormOutlined } from '@ant-design/icons'
 import SitEnv from './components/SitEnv'
-import { useGetDictionaryLabel } from '@/hooks'
+import { useGetDictionary } from '@/hooks'
 import ProdEnv from './components/ProdEnv'
 import { useStore } from '@stores/index'
 
@@ -31,7 +31,7 @@ const appInfoContext = React.createContext<
 const AppInfo = () => {
   const [appInfo, setAppInfo] = useState<TGetAppInfoResponse>()
 
-  const { getDictionaryItemName } = useGetDictionaryLabel()
+  const { getDictionaryItemName } = useGetDictionary()
 
   const { myAppStore } = useStore()
 

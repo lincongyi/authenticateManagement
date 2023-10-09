@@ -17,7 +17,7 @@ import { currentCompanyInfo } from '@api/myAccount'
 import { addApp, getAppInfo, updateApp } from '@api/myApp'
 import type { TAppParams } from '@api/myApp'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useGetDictionaryLabel } from '@/hooks'
+import { useGetDictionary } from '@/hooks'
 
 const { Title } = Typography
 const { TextArea } = Input
@@ -37,7 +37,7 @@ export const formProps = {
 const defaultMaxLength = 20
 
 const AppForm = () => {
-  const { dictionaryStore } = useGetDictionaryLabel()
+  const { dictionaryStore } = useGetDictionary()
 
   /**
    * 当前单位信息

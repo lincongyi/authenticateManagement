@@ -20,7 +20,7 @@ const useUpdateEffect = (callback: Function, params: any[]) => {
  * @returns {object} Store 返回数据字典的store实例对象
  *                   Function 根据dictValue获取dictName
  */
-const useGetDictionaryLabel = () => {
+const useGetDictionary = () => {
   const { dictionaryStore } = useStore()
   useEffect(() => {
     if (!dictionaryStore.dictionary) {
@@ -52,4 +52,4 @@ const useGetDictionaryLabel = () => {
   }
 }
 
-export { useUpdateEffect, useGetDictionaryLabel }
+export { useUpdateEffect, useGetDictionary }

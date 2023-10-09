@@ -25,7 +25,7 @@ import { AppstoreAddOutlined } from '@ant-design/icons'
 import { getAppList, getAppCount } from '@api/myApp'
 import { fieldNames } from '@utils/index'
 import EnableModal from './components/EnableModal'
-import { useGetDictionaryLabel } from '@/hooks'
+import { useGetDictionary } from '@/hooks'
 
 const { RangePicker } = DatePicker
 
@@ -38,7 +38,7 @@ const Index = () => {
     })()
   }, [])
 
-  const { dictionaryStore, getDictionaryItemName } = useGetDictionaryLabel()
+  const { dictionaryStore, getDictionaryItemName } = useGetDictionary()
 
   const [capabilityList, setCapabilityList] = useState<DefaultOptionType[]>() // 基础能力列表
   /**
