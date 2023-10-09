@@ -1,0 +1,1 @@
+import{aJ as s}from"./index.0174d8c9.js";const p=()=>s.post("/access/getCapabilityList"),e=t=>s.post("/access/getCapability",t),i=t=>s.post("/access/getAccessList",t),c=t=>s.post("/access/addAppCapabilityForm",t),r=t=>s.post("/access/getAppCapabilityForm",t),o=t=>s.post("/access/getAppCapabilityFormEnv",t);export{e as a,i as b,o as c,r as d,c as e,p as g};
