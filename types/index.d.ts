@@ -116,3 +116,7 @@ type TLineChart = {
 }
 
 type TEnv = 'sit' | 'prod'
+
+interface URLSearchParams {
+  size: number
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Empty, Form, Table, Tabs, Image, Typography } from 'antd'
 import type { UploadFile } from 'antd'
-import type { Tab } from 'rc-tabs/lib/interface.d.ts'
+import { Tab } from 'rc-tabs/lib/interface.d'
 import type { TFormItem, TFormTabledataSource } from '@/api/ability'
 import type { TGetAppInfoByEnv } from '@/api/myApp'
 
