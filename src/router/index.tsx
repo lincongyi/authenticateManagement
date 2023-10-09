@@ -7,7 +7,7 @@ import AppLayout from '@pages/AppLayout'
 import Register from '@pages/Register'
 import {
   HomeOutlined,
-  ProfileOutlined,
+  RadarChartOutlined,
   AppstoreOutlined,
   SolutionOutlined,
   FileSearchOutlined
@@ -145,7 +145,7 @@ const routes: TRoutes[] = [
         ],
         meta: {
           isMenuItem: true,
-          icon: React.createElement(ProfileOutlined),
+          icon: React.createElement(RadarChartOutlined),
           breadcrumb: '基础能力中心'
         }
       },
