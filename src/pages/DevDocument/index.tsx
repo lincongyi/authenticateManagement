@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Row, Col, Tree, Divider, Typography, Tabs, Button } from 'antd'
+import {
+  Row,
+  Col,
+  Tree,
+  Divider,
+  Typography,
+  Tabs,
+  Button,
+  message
+} from 'antd'
 import type { EventDataNode, TreeProps } from 'antd/es/tree'
 import { getDirectory, queryDocument } from '@api/devDocument'
 import type {
@@ -125,6 +134,8 @@ const DevDocument = () => {
     }, [])
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
   /**
    * 获取所有项目目录
    */
@@ -132,6 +143,11 @@ const DevDocument = () => {
     ;(async () => {
       const { data } = await getDirectory()
       if (!data) return
+      if (!data.length) {
+        return messageApi.warning(
+          '应用需要至少接入一个基础能力才能查看开发文档内容'
+        )
+      }
       setDirectoryList(data)
       let directoryItem = data[0]
       if (searchParams.size) {
@@ -205,6 +221,7 @@ const DevDocument = () => {
 
   return (
     <>
+      {contextHolder}
       <div className={style.header}>
         <div className={style['left-side']}>
           {activeDirectory && (

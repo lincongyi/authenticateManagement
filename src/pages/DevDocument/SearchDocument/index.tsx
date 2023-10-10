@@ -37,6 +37,11 @@ const SearchDocument = () => {
     ;(async () => {
       const { data } = await getDirectory()
       if (!data) return
+      if (!data.length) {
+        return messageApi.warning(
+          '应用需要至少接入一个基础能力才能查看开发文档内容'
+        )
+      }
       const all = {
         capabilityId: 0,
         projectName: '全部'

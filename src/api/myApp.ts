@@ -37,7 +37,7 @@ type TGetAppListResponse = {
 }
 
 /**
- * 获取我的应用列表（我的应用）
+ * 获取我的应用列表
  */
 const getAppList = (
   params: TGetAppListParams

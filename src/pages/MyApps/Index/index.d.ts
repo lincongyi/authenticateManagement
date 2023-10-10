@@ -25,7 +25,7 @@ export type TFormData = {
   dateRange: [Dayjs, Dayjs] | undefined
   startTime?: string
   endTime?: string
-  state: 0 | 1 | 2 | 3 // 状态：0-正常启用；1-即将过期；2-过期；3-停用；
+  state: 0 | 3 // 状态：0-正常启用；3-停用；
   pageNum: number
   pageSize: number
   total: number
