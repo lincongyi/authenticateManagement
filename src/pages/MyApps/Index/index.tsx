@@ -68,13 +68,17 @@ const Index = () => {
   ): (TDataType & { rowSpan: number })[] => {
     const result = []
     for (let i = 0; i < list.length; i++) {
-      const prev = { ...list[i] }
-      const next = { ...list[i + 1] }
-      if (prev.appId === next.appId) {
-        result.push({ ...prev, rowSpan: 2 }, { ...next, rowSpan: 0 })
-        ++i
+      if (i === list.length - 1) {
+        result.push({ ...list[i], rowSpan: 1 })
       } else {
-        result.push({ ...prev, rowSpan: 1 })
+        const prev = { ...list[i] }
+        const next = { ...list[i + 1] }
+        if (prev.appId === next.appId) {
+          result.push({ ...prev, rowSpan: 2 }, { ...next, rowSpan: 0 })
+          ++i
+        } else {
+          result.push({ ...prev, rowSpan: 1 })
+        }
       }
     }
     return result
@@ -88,7 +92,6 @@ const Index = () => {
     const params = {
       ...rest
     }
-    // format日期格式
     if (dateRange) {
       params.startTime = dayjs(dateRange[0]).format(dateFormat)
       params.endTime = dayjs(dateRange[1]).format(dateFormat)
@@ -134,6 +137,7 @@ const Index = () => {
    * 重置
    */
   const onReset = () => {
+    setPagination({ ...pagination, pageNum: 1, pageSize: 10 })
     form.resetFields()
   }
 

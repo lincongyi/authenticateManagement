@@ -167,6 +167,7 @@ const MyApplications = () => {
    * 重置
    */
   const onReset = () => {
+    setPagination({ ...pagination, pageNum: 1, pageSize: 10 })
     form.resetFields()
   }
 
