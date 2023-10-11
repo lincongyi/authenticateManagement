@@ -46,7 +46,7 @@ const Index = () => {
    */
   useEffect(() => {
     ;(async () => {
-      const { data } = await getCapabilityList()
+      const { data } = await getCapabilityList({ type: 1 })
       if (!data) return
       const options: DefaultOptionType[] = data.map((item, indx) => ({
         label: item.baseInfo.name,
@@ -184,7 +184,7 @@ const Index = () => {
    * 根据id返回基础能力
    */
   const getAccessCapability = (accessCapability: string) => {
-    if (!accessCapability) return '-'
+    if (!accessCapability) return '暂未接入'
 
     const capability = accessCapability.split(',')
     const capabilityToString = capability.map(item => {

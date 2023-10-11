@@ -16,7 +16,7 @@ const AppServiceCenter = () => {
    */
   useEffect(() => {
     ;(async () => {
-      const { data } = await getCapabilityList()
+      const { data } = await getCapabilityList({ type: 0 })
       if (!data) return
       if (!data.length) return messageApi.warning('暂无可接入的基础能力')
       setCapabilityList(data)

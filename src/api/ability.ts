@@ -17,10 +17,10 @@ export type TGetCapabilityListResponse = {
 /**
  * 获取基础能力列表
  */
-const getCapabilityList = (): Promise<
-  TResponse<TGetCapabilityListResponse[]>
-> => {
-  return request.post('/access/getCapabilityList')
+const getCapabilityList = (params: {
+  type: 0 | 1 // 0-返回启用状态的基础能力；1-返回所有基础能力
+}): Promise<TResponse<TGetCapabilityListResponse[]>> => {
+  return request.post('/access/getCapabilityList', params)
 }
 
 export type TGetCapabilityResponse = {
@@ -44,7 +44,8 @@ const getCapability = (params: {
 export type TGetAccessListResponse = {
   appId: string
   appName: string
-  accessType: boolean // 应用是否已经接入基础能力
+  accessType: boolean // 应用是否已经接入基础能力\
+  appEnv: TEnv
 }
 
 /**

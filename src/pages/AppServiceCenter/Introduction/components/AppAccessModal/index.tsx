@@ -35,7 +35,7 @@ const AppAccessModal = ({
    */
   const onOk = () => {
     if (!appList) return
-    if (!selectedIndex) return messageApi.warning('请选择接入应用')
+    if (selectedIndex === undefined) return messageApi.warning('请选择接入应用')
     const { appId } = appList[selectedIndex]
     navigate(`/app/myApps/appInfo/access?appId=${appId}&capabilityId=${id}`)
   }
@@ -70,7 +70,7 @@ const AppAccessModal = ({
                     ) : (
                       <i className={style.icon}></i>
                     )}
-                    {item.appName}
+                    {item.appName}（{item.appEnv === 'prod' ? '正式' : '测试'}）
                   </div>
                 </Col>
               )
