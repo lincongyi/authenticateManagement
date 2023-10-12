@@ -47,14 +47,14 @@ const getAppList = (
 
 export type TAppParams = {
   clientId: string
-  appName: string
-  appType: string
+  appName: string // 应用名称
+  appType: string // 应用类型
   managerEmail: string | undefined
   managerPhone: string | undefined
   projectManager: string | undefined
-  remark: string
-  sysInternet: string
-  sysLevel: string
+  remark: string // 应用描述
+  sysInternet: string // 所属网域
+  sysLevel: string // 所属级别
   undertakeCompany: string
 }
 
@@ -71,6 +71,14 @@ export type TGetAppInfoResponse = {
   createTime: string
   clientId: string
   clientSecret?: string
+  companyName: string // 所属单位
+  contractor: string // 单位经办人
+  contractorPhone: string // 经办人手机号
+  contractorEmail: string // 经办人联系邮箱
+  undertakeCompany: string // 承建单位
+  projectManager: string // 项目负责人
+  managerPhone: string // 负责人联系电话
+  managerEmail: string // 负责人联系邮箱
 } & TAppParams
 
 export type TClientId = {

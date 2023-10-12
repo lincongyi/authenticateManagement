@@ -4,14 +4,20 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { TGetAppInfoResponse, getAppInfo, getClientId } from '@api/myApp'
 import {
   Alert,
+  Col,
   Descriptions,
+  Row,
   Space,
   Tabs,
   TabsProps,
   Tag,
   Typography
 } from 'antd'
-import { FormOutlined } from '@ant-design/icons'
+import {
+  FormOutlined,
+  DownCircleOutlined,
+  UpCircleOutlined
+} from '@ant-design/icons'
 import SitEnv from './components/SitEnv'
 import { useGetDictionary } from '@/hooks'
 import ProdEnv from './components/ProdEnv'
@@ -47,11 +53,9 @@ const AppInfo = () => {
    */
   useEffect(() => {
     if (!appId) return navigate('..')
-    if (appId) {
-      myAppStore.setAppId(appId)
-      if (!searchParams.get('appId')) {
-        navigate(`../appInfo?appId=${appId}`, { replace: true })
-      }
+    myAppStore.setAppId(appId)
+    if (!searchParams.get('appId')) {
+      navigate(`../appInfo?appId=${appId}`, { replace: true })
     }
     ;(async () => {
       const { data } = await getClientId({ id: appId })
@@ -72,6 +76,8 @@ const AppInfo = () => {
   const onEdit = () => {
     navigate(`../appForm?clientId=${clientId}`)
   }
+
+  const [isCollapsed, setIsCollapsed] = useState(true)
 
   const [env, setEnv] = useState<TEnv>('sit') // 当前active标签
 
@@ -148,12 +154,8 @@ const AppInfo = () => {
           <Space>
             <p className={style.name}>{appInfo?.appName}</p>
             {appInfo && (
-              <Tag
-                color={
-                  ['success', 'warning', 'default', 'error'][appInfo.state]
-                }
-              >
-                <>{['正常启用', '即将过期', '过期', '停用'][appInfo.state]}</>
+              <Tag color={appInfo.state === 3 ? 'default' : 'success'}>
+                <>{appInfo.state === 3 ? '停用' : '正常启用'}</>
               </Tag>
             )}
             <p>创建时间：{appInfo?.createTime}</p>
@@ -164,10 +166,10 @@ const AppInfo = () => {
           className={style.remark}
           banner
           showIcon={false}
-          message={appInfo?.remark}
+          message={appInfo?.remark || '暂无介绍'}
           type='info'
         />
-        <Descriptions column={4}>
+        <Descriptions column={3}>
           {/* 这里之后最好用id来判断 */}
           {appInfo?.appName === '身份认证V2版本' && (
             <Descriptions.Item label='Client Secret' span={4}>
@@ -175,10 +177,19 @@ const AppInfo = () => {
             </Descriptions.Item>
           )}
 
-          <Descriptions.Item label='Client Id'>
+          <Descriptions.Item label='测试 Client Id'>
             <Paragraph copyable style={{ marginBottom: 0 }}>
-              {appInfo?.clientId || '-'}
+              {myAppStore.clientId.sit || '-'}
             </Paragraph>
+          </Descriptions.Item>
+          <Descriptions.Item label='正式 Client Id'>
+            <Paragraph copyable style={{ marginBottom: 0 }}>
+              {myAppStore.clientId.prod || '-'}
+            </Paragraph>
+          </Descriptions.Item>
+          <Descriptions.Item label='应用状态'>
+            {(appInfo && getDictionaryItemName('appState', appInfo.state)) ||
+              '-'}
           </Descriptions.Item>
           <Descriptions.Item label='应用类型'>
             {(appInfo && getDictionaryItemName('appType', appInfo.appType)) ||
@@ -194,20 +205,97 @@ const AppInfo = () => {
               getDictionaryItemName('networkType', appInfo.sysInternet)) ||
               '-'}
           </Descriptions.Item>
-
-          <Descriptions.Item label='承建单位'>
-            {appInfo?.undertakeCompany || '-'}
-          </Descriptions.Item>
-          <Descriptions.Item label='项目负责人'>
-            {appInfo?.projectManager || '-'}
-          </Descriptions.Item>
-          <Descriptions.Item label='负责人联系电话'>
-            {appInfo?.managerPhone || '-'}
-          </Descriptions.Item>
-          <Descriptions.Item label='负责人联系邮箱'>
-            {appInfo?.managerEmail || '-'}
-          </Descriptions.Item>
         </Descriptions>
+        <Row>
+          <Col span={24} className='tr'>
+            <div
+              className={style.collapse}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              {isCollapsed ? (
+                <>
+                  <DownCircleOutlined style={{ marginRight: 4 }} />
+                  查看全部
+                </>
+              ) : (
+                <>
+                  <UpCircleOutlined style={{ marginRight: 4 }} />
+                  收起
+                </>
+              )}
+            </div>
+          </Col>
+        </Row>
+        {appInfo && (
+          <div hidden={isCollapsed}>
+            <div className={style.container}>
+              <div className={style.panel}>
+                <div className={style.title}>应用单位信息</div>
+                <div className={style.content}>
+                  <p className={style.item}>
+                    <span className='font-secondary-color'>所属单位：</span>
+                    <span className='font-primary-color'>
+                      {appInfo.companyName || '-'}
+                    </span>
+                  </p>
+                  <p className={style.item}>
+                    <span className='font-secondary-color'>单位经办人：</span>
+                    <span className='font-primary-color'>
+                      {appInfo.contractor || '-'}
+                    </span>
+                  </p>
+                  <p className={style.item}>
+                    <span className='font-secondary-color'>经办人手机号：</span>
+                    <span className='font-primary-color'>
+                      {appInfo.contractorPhone || '-'}
+                    </span>
+                  </p>
+                  <p className={style.item}>
+                    <span className='font-secondary-color'>
+                      经办人联系邮箱：
+                    </span>
+                    <span className='font-primary-color'>
+                      {appInfo.contractorEmail || '-'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+              <div className={style.panel}>
+                <div className={style.title}>承建单位信息</div>
+                <div className={style.content}>
+                  <p className={style.item}>
+                    <span className='font-secondary-color'>承建单位：</span>
+                    <span className='font-primary-color'>
+                      {appInfo.undertakeCompany || '-'}
+                    </span>
+                  </p>
+                  <p className={style.item}>
+                    <span className='font-secondary-color'>项目负责人：</span>
+                    <span className='font-primary-color'>
+                      {appInfo.projectManager || '-'}
+                    </span>
+                  </p>
+                  <p className={style.item}>
+                    <span className='font-secondary-color'>
+                      负责人联系电话：
+                    </span>
+                    <span className='font-primary-color'>
+                      {appInfo.managerPhone || '-'}
+                    </span>
+                  </p>
+                  <p className={style.item}>
+                    <span className='font-secondary-color'>
+                      负责人联系邮箱：
+                    </span>
+                    <span className='font-primary-color'>
+                      {appInfo.managerEmail || '-'}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className={`${style.section} ${style['env-info']}`}>
