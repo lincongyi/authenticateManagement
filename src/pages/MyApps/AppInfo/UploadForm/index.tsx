@@ -21,7 +21,7 @@ const UploadForm = () => {
 
   const [capability, setCapability] = useState<TGetCapabilityResponse>()
 
-  if (!clientId || !capabilityId) navigate(-1)
+  // if (!clientId || !capabilityId) navigate(-1)
   useEffect(() => {
     ;(async () => {
       const { data } = await getCapability({ id: capabilityId })
@@ -86,6 +86,19 @@ const UploadForm = () => {
       if (!index) setFileL1([fileItem])
       else setFileL2([fileItem])
       form.setFieldValue(!index ? 'applyFile' : 'applyLetter', fileItem.url)
+    }
+  }
+
+  /**
+   * 删除文件
+   */
+  const onImageRemove = (index: 0 | 1) => {
+    if (!index) {
+      setFileL1(undefined)
+      form.setFieldValue('applyFile', undefined)
+    } else {
+      setFileL2(undefined)
+      form.setFieldValue('applyLetter', undefined)
     }
   }
 
@@ -173,6 +186,7 @@ const UploadForm = () => {
               fileList={file1}
               beforeUpload={file => fileBeforeUpload(file)}
               customRequest={options => fileCustomRequest(options, 0)}
+              onRemove={() => onImageRemove(0)}
             >
               <Button icon={<UploadOutlined />}>上传文件</Button>
             </Upload>
@@ -187,6 +201,7 @@ const UploadForm = () => {
               fileList={file2}
               beforeUpload={file => fileBeforeUpload(file)}
               customRequest={options => fileCustomRequest(options, 1)}
+              onRemove={() => onImageRemove(1)}
             >
               <Button icon={<UploadOutlined />}>上传文件</Button>
             </Upload>

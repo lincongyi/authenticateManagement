@@ -110,7 +110,7 @@ const EnableModal = ({
             <Row>
               <Col span={24} className='tr'>
                 <Space>
-                  <Button onClick={onCancel}>取消</Button>,
+                  <Button onClick={onCancel}>取消</Button>
                   <Button type='primary' htmlType='submit'>
                     确定
                   </Button>
