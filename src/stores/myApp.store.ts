@@ -1,6 +1,6 @@
 // 身份认证能力表单功能模块
 import { makeAutoObservable } from 'mobx'
-import { TClientId } from '@/api/myApp'
+import { TEnvClientId } from '@/api/myApp'
 
 const MyAppStore = () => {
   return makeAutoObservable({
@@ -10,13 +10,13 @@ const MyAppStore = () => {
       this.appId = id
     },
 
-    clientId: {
+    envClientId: {
       sit: '',
       prod: ''
     }, // 分测试环境和正式环境（不唯一）
 
-    setClientId (clientId: TClientId) {
-      this.clientId = { ...this.clientId, ...clientId }
+    setEnvClientId (envClientId: TEnvClientId) {
+      this.envClientId = { ...this.envClientId, ...envClientId }
     }
   })
 }

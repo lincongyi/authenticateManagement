@@ -10,18 +10,20 @@ import { useStore } from '@/stores'
 
 const prodEnvContext = React.createContext<{
   capability: TGetAppInfoByEnv | undefined
-  clientId: string | undefined
   fetchAppInfoByEnv: Function | undefined
 }>({
   capability: undefined,
-  clientId: undefined,
   fetchAppInfoByEnv: undefined
 })
 
 const ProdEnv = () => {
-  const { appId, env, isEnable } = useContext(appInfoContext)!
+  const { env, isEnable } = useContext(appInfoContext)!
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
+
+  const { myAppStore } = useStore()
+
+  const appId = myAppStore.appId
 
   const [state, setState] = useState<TGetAppInfoByEnv['state']>(1) // 步骤
 
@@ -66,8 +68,6 @@ const ProdEnv = () => {
     setState(item.state)
   }
 
-  const { myAppStore } = useStore()
-
   const [messageApi, contextHolder] = message.useMessage()
 
   const navigate = useNavigate()
@@ -81,6 +81,13 @@ const ProdEnv = () => {
     navigate(
       `./access?appId=${appId}&capabilityId=${activeCapability.capabilityId}`
     )
+  }
+
+  /**
+   * 查看审批单
+   */
+  const onView = () => {
+    messageApi.info('暂未支持查看审批单')
   }
 
   return (
@@ -116,7 +123,6 @@ const ProdEnv = () => {
                 <prodEnvContext.Provider
                   value={{
                     capability: activeCapability,
-                    clientId: myAppStore.clientId.prod,
                     fetchAppInfoByEnv
                   }}
                 >
@@ -178,7 +184,7 @@ const ProdEnv = () => {
                         </div>
                         <div className={style.name}>等待审批</div>
                         {state <= 6 && (
-                          <div className={style.btn}>
+                          <div className={style.btn} onClick={onView}>
                             <i
                               className={`${style['btn-icon']} ${style.step02}`}
                             />

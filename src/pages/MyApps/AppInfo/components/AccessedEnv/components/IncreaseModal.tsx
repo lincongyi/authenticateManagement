@@ -12,9 +12,8 @@ import {
   message
 } from 'antd'
 import { appInfoContext } from '../../..'
-import { sitEnvContext } from '../../SitEnv'
-import { prodEnvContext } from '../../ProdEnv'
 import { applyDateNum } from '@/api/myApp'
+import { useStore } from '@/stores'
 
 const IncreaseModal = ({
   id,
@@ -27,9 +26,9 @@ const IncreaseModal = ({
 }) => {
   const { env } = useContext(appInfoContext)!
 
-  const { clientId } = useContext(
-    env === 'sit' ? sitEnvContext : prodEnvContext
-  )!
+  const { myAppStore } = useStore()
+
+  const clientId = myAppStore.envClientId[env]
 
   const [form] = Form.useForm()
 

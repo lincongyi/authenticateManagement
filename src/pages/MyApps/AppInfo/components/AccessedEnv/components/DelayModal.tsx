@@ -22,6 +22,7 @@ import type {
 import { appInfoContext } from '../../..'
 import { sitEnvContext } from '../../SitEnv'
 import { prodEnvContext } from '../../ProdEnv'
+import { useStore } from '@/stores'
 
 const { TextArea } = Input
 
@@ -34,9 +35,13 @@ const DelayModal = ({
 }) => {
   const { env } = useContext(appInfoContext)!
 
-  const { capability, clientId, fetchAppInfoByEnv } = useContext(
+  const { capability, fetchAppInfoByEnv } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
+
+  const { myAppStore } = useStore()
+
+  const clientId = myAppStore.envClientId[env]
 
   const { addTime, capabilityExpireTime, applyState } = capability!
 

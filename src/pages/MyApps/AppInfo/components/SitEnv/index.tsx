@@ -10,18 +10,20 @@ import { useStore } from '@/stores'
 
 const sitEnvContext = React.createContext<{
   capability: TGetAppInfoByEnv | undefined
-  clientId: string | undefined
   fetchAppInfoByEnv: Function | undefined
 }>({
   capability: undefined,
-  clientId: undefined,
   fetchAppInfoByEnv: undefined
 })
 
 const SitEnv = () => {
-  const { appId, env, isEnable } = useContext(appInfoContext)!
+  const { env, isEnable } = useContext(appInfoContext)!
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
+
+  const { myAppStore } = useStore()
+
+  const appId = myAppStore.appId
 
   const [state, setState] = useState<TGetAppInfoByEnv['state']>(1) // 步骤
 
@@ -66,8 +68,6 @@ const SitEnv = () => {
     setState(item.state)
   }
 
-  const { myAppStore } = useStore()
-
   const navigate = useNavigate()
 
   const [messageApi, contextHolder] = message.useMessage()
@@ -82,12 +82,19 @@ const SitEnv = () => {
   }
 
   /**
+   * 查看审批单
+   */
+  const onView = () => {
+    messageApi.info('暂未支持查看审批单')
+  }
+
+  /**
    * 上传盖章申请表
    */
   const toUploadForm = () => {
     if (!isEnable) return messageApi.warning('该应用已停用')
     if (state < 3) return
-    const clientId = myAppStore.clientId.sit
+    const clientId = myAppStore.envClientId.sit
     const { capabilityId } = activeCapability!
     navigate(`./uploadForm?clientId=${clientId}&capabilityId=${capabilityId}`)
   }
@@ -128,7 +135,6 @@ const SitEnv = () => {
                 <sitEnvContext.Provider
                   value={{
                     capability: activeCapability,
-                    clientId: myAppStore.clientId.sit,
                     fetchAppInfoByEnv
                   }}
                 >
@@ -186,7 +192,7 @@ const SitEnv = () => {
                           等待审批
                         </div>
                         {state <= 2 && (
-                          <div className={style.btn}>
+                          <div className={style.btn} onClick={onView}>
                             <i
                               className={`${style['btn-icon']} ${style.step02}`}
                             />
@@ -237,7 +243,7 @@ const SitEnv = () => {
                         </div>
                         <div className={style.name}>等待审批</div>
                         {state <= 4 && (
-                          <div className={style.btn}>
+                          <div className={style.btn} onClick={onView}>
                             <i
                               className={`${style['btn-icon']} ${style.step02}`}
                             />

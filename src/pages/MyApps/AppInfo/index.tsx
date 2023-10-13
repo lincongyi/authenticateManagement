@@ -27,7 +27,6 @@ const { Paragraph } = Typography
 
 const appInfoContext = React.createContext<
   | {
-      appId: string
       env: TEnv
       isEnable: Boolean
     }
@@ -61,7 +60,7 @@ const AppInfo = () => {
       const { data } = await getClientId({ id: appId })
       if (!data) return
       const { clientId } = data
-      myAppStore.setClientId(clientId)
+      myAppStore.setEnvClientId(clientId)
       setClientId(clientId.sit)
 
       const info = await getAppInfo({ id: clientId.sit })
@@ -99,7 +98,6 @@ const AppInfo = () => {
           {appId && appInfo && (
             <appInfoContext.Provider
               value={{
-                appId,
                 env: 'sit',
                 isEnable: appInfo?.state !== 3
               }}
@@ -127,7 +125,6 @@ const AppInfo = () => {
           {appId && appInfo && (
             <appInfoContext.Provider
               value={{
-                appId,
                 env: 'prod',
                 isEnable: appInfo?.state !== 3
               }}
@@ -179,12 +176,12 @@ const AppInfo = () => {
 
           <Descriptions.Item label='测试 Client Id'>
             <Paragraph copyable style={{ marginBottom: 0 }}>
-              {myAppStore.clientId.sit || '-'}
+              {myAppStore.envClientId.sit || '-'}
             </Paragraph>
           </Descriptions.Item>
           <Descriptions.Item label='正式 Client Id'>
             <Paragraph copyable style={{ marginBottom: 0 }}>
-              {myAppStore.clientId.prod || '-'}
+              {myAppStore.envClientId.prod || '-'}
             </Paragraph>
           </Descriptions.Item>
           <Descriptions.Item label='应用状态'>

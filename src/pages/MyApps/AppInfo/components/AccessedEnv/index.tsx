@@ -35,15 +35,23 @@ import { getApiData, getCallData } from '@/api/myApp'
 import type { TGetApiDataResponse, TGetCallDataResponse } from '@/api/myApp'
 import { useNavigate } from 'react-router-dom'
 import FormInfo from '@/components/FormInfo'
+import { useStore } from '@/stores'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
 
 const AccessedEnv = () => {
-  const { appId, env } = useContext(appInfoContext)!
-  const { capability, clientId } = useContext(
+  const { env } = useContext(appInfoContext)!
+
+  const { capability } = useContext(
     env === 'sit' ? sitEnvContext : prodEnvContext
   )!
+
+  const { myAppStore } = useStore()
+
+  const appId = myAppStore.appId
+
+  const clientId = myAppStore.envClientId[env]
 
   const [isHide, setIsHide] = useState(true) // 查看or隐藏Client Secret
 

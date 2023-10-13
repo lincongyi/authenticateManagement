@@ -81,7 +81,7 @@ export type TGetAppInfoResponse = {
   managerEmail: string // 负责人联系邮箱
 } & TAppParams
 
-export type TClientId = {
+export type TEnvClientId = {
   sit: string // 测试环境
   prod?: string // 正式环境
 }
@@ -91,7 +91,7 @@ export type TClientId = {
  */
 const getClientId = (params: {
   id: string
-}): Promise<TResponse<{ clientId: TClientId }>> => {
+}): Promise<TResponse<{ clientId: TEnvClientId }>> => {
   return request.post('/access/getClientId', params)
 }
 
