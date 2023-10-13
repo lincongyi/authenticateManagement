@@ -1,0 +1,1 @@
+import{aK as s}from"./index.15d8fadb.js";const p=t=>s.post("/access/getCapabilityList",t),e=t=>s.post("/access/getCapability",t),i=t=>s.post("/access/getAccessList",t),c=t=>s.post("/access/addAppCapabilityForm",t),r=t=>s.post("/access/getAppCapabilityForm",t),o=t=>s.post("/access/getAppCapabilityFormEnv",t);export{e as a,i as b,o as c,r as d,c as e,p as g};
