@@ -232,7 +232,7 @@ const AppInfo = () => {
                   <p className={style.item}>
                     <span className='font-secondary-color'>所属单位：</span>
                     <span className='font-primary-color'>
-                      {appInfo.companyName || '-'}
+                      {appInfo.companyInfo.companyName || '-'}
                     </span>
                   </p>
                   <p className={style.item}>

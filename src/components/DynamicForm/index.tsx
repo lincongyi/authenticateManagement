@@ -248,7 +248,7 @@ const DynamicForm = React.forwardRef<
         value: defaultValueItem?.value
       }
     })
-    setDataSource(source as TDataSource[])
+    setDataSource(source)
   }, [])
 
   /**

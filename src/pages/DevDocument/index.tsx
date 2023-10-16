@@ -80,9 +80,8 @@ const DevDocument = () => {
         const { data } = await queryDocument({
           id: defaultNode.id
         })
-        if (!data) return
-        setAnnexUrl(data.annexUrl)
-        setDocContent(data.htmlContent)
+        setAnnexUrl(data?.annexUrl || undefined)
+        setDocContent(data?.htmlContent || undefined)
       } catch (error) {
         setAnnexUrl(undefined)
         setDocContent(undefined)
@@ -151,8 +150,8 @@ const DevDocument = () => {
       setDirectoryList(data)
       let directoryItem = data[0]
       if (searchParams.size) {
-        const capabilityId = +searchParams.get('capabilityId')!
-        directoryItem = data.find(item => item.capabilityId === capabilityId)!
+        const projectId = +searchParams.get('projectId')!
+        directoryItem = data.find(item => item.projectId === projectId)!
       }
       const directoryId = Number(searchParams.get('directoryId'))
       if (directoryId) {
@@ -160,7 +159,7 @@ const DevDocument = () => {
       } else {
         initNode(directoryItem)
       }
-      setDefaultActiveKey(directoryItem.capabilityId.toString())
+      setDefaultActiveKey(directoryItem.projectId.toString())
       const { directoryList } = directoryItem
       setExpandedKeys(getExpandedKeys(directoryList))
 
@@ -173,7 +172,7 @@ const DevDocument = () => {
    *  切换项目
    */
   const onChange = (value: string) => {
-    const item = directoryList?.find(item => item.capabilityId === +value)
+    const item = directoryList?.find(item => item.projectId === +value)
     if (!item) return false
     initNode(item)
     setExpandedKeys(getExpandedKeys(item.directoryList))
@@ -237,7 +236,7 @@ const DevDocument = () => {
                   items={directoryList.map(item => {
                     return {
                       label: item.projectName,
-                      key: item.capabilityId.toString()
+                      key: item.projectId.toString()
                     }
                   })}
                 />

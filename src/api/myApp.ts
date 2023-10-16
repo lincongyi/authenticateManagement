@@ -79,6 +79,9 @@ export type TGetAppInfoResponse = {
   projectManager: string // 项目负责人
   managerPhone: string // 负责人联系电话
   managerEmail: string // 负责人联系邮箱
+  companyInfo: {
+    companyName: string // 所属单位
+  }
 } & TAppParams
 
 export type TEnvClientId = {
@@ -147,7 +150,7 @@ export type TGetAppInfoByEnv = {
  */
 const getAppInfoByEnv = (params: {
   appId: string
-  appEnv: TGetAppInfoResponse['appEnv']
+  appEnv: TEnv
 }): Promise<TResponse<TGetAppInfoByEnv[]>> => {
   return request.post('/access/getAppInfoByEnv', params)
 }

@@ -61,8 +61,8 @@ const SitEnv = () => {
   /**
    * 切换基础能力标签
    */
-  const onChange = (activeKey: string) => {
-    const item = appInfoByEnv?.find(item => item.capabilityId === +activeKey)
+  const onChange = (capabilityId: string) => {
+    const item = appInfoByEnv?.find(item => item.capabilityId === +capabilityId)
     if (!item) return
     setActiveCapability(item)
     setState(item.state)
@@ -181,8 +181,8 @@ const SitEnv = () => {
                     <Col span={6} className={style.flex}>
                       <div
                         className={`${style.step} ${
-                          state >= 2 ? style.active : ''
-                        } ${state > 2 ? style.done : ''}`}
+                          state >= 2 && style.active
+                        } ${state > 2 && style.done}`}
                       >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>2</i>
@@ -202,7 +202,7 @@ const SitEnv = () => {
                       </div>
                       <div
                         className={`${style.dashed} ${
-                          state > 2 ? style.active : ''
+                          state > 2 && style.active
                         }`}
                       >
                         审批通过
@@ -211,8 +211,8 @@ const SitEnv = () => {
                     <Col span={6} className={style.flex}>
                       <div
                         className={`${style.step} ${
-                          state >= 3 ? style.active : ''
-                        } ${state > 3 ? style.done : ''}`}
+                          state >= 3 && style.active
+                        } ${state > 3 && style.done}`}
                       >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>3</i>
@@ -235,8 +235,8 @@ const SitEnv = () => {
                     <Col span={6} className={style.flex}>
                       <div
                         className={`${style.step} ${
-                          state >= 4 ? style.active : ''
-                        } ${state > 4 ? style.done : ''}`}
+                          state >= 4 && style.active
+                        } ${state > 4 && style.done}`}
                       >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>4</i>
@@ -253,7 +253,7 @@ const SitEnv = () => {
                       </div>
                       <div
                         className={`${style.dashed} ${
-                          state > 4 ? style.active : ''
+                          state > 4 && style.active
                         }`}
                       >
                         审批通过

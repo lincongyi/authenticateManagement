@@ -16,6 +16,7 @@ export type TGetDirectoryResponse = {
   component: 'DEV_FILE_LIST' // 开发文档字段标识
   directoryList: TDirectory[]
   capabilityId: number
+  projectId: number
   projectName: string
 }
 
@@ -54,7 +55,7 @@ const queryDocument = (
 }
 
 export type TDevfileSearchResponse = {
-  capabilityId: number // 能力id
+  projectId: number // 能力id
   directoryId: number // 目录id
   name: string // 标题
   content: string // 内容
@@ -64,7 +65,7 @@ export type TDevfileSearchResponse = {
  * 文档搜索
  */
 const devfileSearch = (params: {
-  capabilityId: number | undefined // 能力id
+  projectId: number | undefined // 能力id
   searchStr: string // 搜索内容
 }): Promise<TResponse<TDevfileSearchResponse[]>> => {
   return request.post('/access/devfileSearch', params)
