@@ -37,7 +37,7 @@ const AppAccessModal = ({
     if (!appList) return
     if (selectedIndex === undefined) return messageApi.warning('请选择接入应用')
     const { appId } = appList[selectedIndex]
-    navigate(`/app/myApps/appInfo/access?appId=${appId}&capabilityId=${id}`)
+    navigate(`/app/myApps/appInfo?appId=${appId}`)
   }
 
   return (

@@ -61,8 +61,8 @@ const ProdEnv = () => {
   /**
    * 切换基础能力标签
    */
-  const onChange = (activeKey: string) => {
-    const item = appInfoByEnv?.find(item => item.capabilityId === +activeKey)
+  const onChange = (capabilityId: string) => {
+    const item = appInfoByEnv?.find(item => item.capabilityId === +capabilityId)
     if (!item) return
     setActiveCapability(item)
     setState(item.state)
@@ -76,11 +76,11 @@ const ProdEnv = () => {
    * 申请接入正式环境
    */
   const toApplyForProdEnv = () => {
-    if (!isEnable || !activeCapability) return
+    if (!isEnable) return messageApi.warning('该应用已停用')
+    if (!activeCapability) return
     if (state < 5) return messageApi.warning('请接入测试环境基础能力')
-    navigate(
-      `./access?appId=${appId}&capabilityId=${activeCapability.capabilityId}`
-    )
+    const { capabilityId } = activeCapability
+    navigate(`./access?appId=${appId}&capabilityId=${capabilityId}&env=${env}`)
   }
 
   /**
@@ -95,6 +95,9 @@ const ProdEnv = () => {
       {contextHolder}
       {appInfoByEnv ? (
         <Tabs
+          activeKey={
+            activeCapability && activeCapability?.capabilityId.toString()
+          }
           onChange={onChange}
           type='card'
           items={appInfoByEnv.map(item => {
@@ -149,8 +152,8 @@ const ProdEnv = () => {
                     <Col span={6} className={style.flex}>
                       <div
                         className={`${style.step} ${
-                          state >= 5 ? style.active : ''
-                        } ${state > 5 ? style.done : ''}`}
+                          state >= 5 && style.active
+                        } ${state > 5 && style.done}`}
                       >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>5</i>
@@ -176,8 +179,8 @@ const ProdEnv = () => {
                     <Col span={6} className={style.flex}>
                       <div
                         className={`${style.step} ${
-                          state >= 6 ? style.active : ''
-                        } ${state > 6 ? style.done : ''}`}
+                          state >= 6 && style.active
+                        } ${state > 6 && style.done}`}
                       >
                         <div className={style.tag}>
                           步骤 <i className={style['step-icon']}>6</i>
@@ -194,7 +197,7 @@ const ProdEnv = () => {
                       </div>
                       <div
                         className={`${style.dashed} ${
-                          state > 6 ? style.active : ''
+                          state > 6 && style.active
                         }`}
                       >
                         审批通过

@@ -497,7 +497,7 @@ const DynamicForm = React.forwardRef<
                         ]}
                       >
                         <Upload
-                          maxCount={item.multiple}
+                          maxCount={1}
                           fileList={fileList[item.field]}
                           beforeUpload={file => fileBeforeUpload(file, item)}
                           customRequest={options =>
@@ -522,7 +522,7 @@ const DynamicForm = React.forwardRef<
                           offset={4}
                           className='font-secondary-color'
                         >
-                          上传图片只允许{item.ruleList.join()}格式
+                          上传文件只允许{item.ruleList.join()}格式
                         </Col>
                         <Col
                           span={20}

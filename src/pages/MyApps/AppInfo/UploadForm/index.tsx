@@ -17,11 +17,13 @@ const UploadForm = () => {
   const navigate = useNavigate()
 
   const clientId = searchParams.get('clientId')
+
   const capabilityId = Number(searchParams.get('capabilityId'))
 
   const [capability, setCapability] = useState<TGetCapabilityResponse>()
 
-  // if (!clientId || !capabilityId) navigate(-1)
+  if (!clientId || !capabilityId) navigate(-1)
+
   useEffect(() => {
     ;(async () => {
       const { data } = await getCapability({ id: capabilityId })

@@ -36,6 +36,8 @@ import type { TGetApiDataResponse, TGetCallDataResponse } from '@/api/myApp'
 import { useNavigate } from 'react-router-dom'
 import FormInfo from '@/components/FormInfo'
 import { useStore } from '@/stores'
+import type { RangeValue } from 'rc-picker/lib/interface.d'
+import { getProjectId } from '@/api/devDocument'
 
 const { RangePicker } = DatePicker
 const { Paragraph } = Typography
@@ -70,8 +72,8 @@ const AccessedEnv = () => {
    * 日期范围发生变化的回调
    */
   const onRangeChange = (
-    dates: null | (Dayjs | null)[],
-    dateStrings: string[]
+    dates: RangeValue<Dayjs>,
+    dateStrings: [string, string]
   ) => {
     setDateRange(dateStrings)
   }
@@ -127,10 +129,12 @@ const AccessedEnv = () => {
   /**
    * 开发文档
    */
-  const toDevDocument = (id?: number) => {
+  const toDevDocument = async (directoryId?: number) => {
     if (!capability) return
-    let url = `../../devDocument?capabilityId=${capability.capabilityId}`
-    if (id) url += `&directoryId=${id}`
+    const { data } = await getProjectId({ id: capability.capabilityId })
+    if (!data) return
+    let url = `../../devDocument?projectId=${data.projectId}`
+    if (directoryId) url += `&directoryId=${directoryId}`
     navigate(url)
   }
 
@@ -212,7 +216,9 @@ const AccessedEnv = () => {
    */
   const onEdit = () => {
     if (!capability) return
-    navigate(`./access?appId=${appId}&capabilityId=${capability.capabilityId}`)
+    navigate(
+      `./access?appId=${appId}&capabilityId=${capability.capabilityId}&env=${env}`
+    )
   }
 
   const [delayModalOpen, setDelayModalOpen] = useState(false) // 控制申请延期Modal显示隐藏

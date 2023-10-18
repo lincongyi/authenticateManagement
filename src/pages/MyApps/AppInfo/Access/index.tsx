@@ -16,7 +16,6 @@ import type { UploadFile } from 'antd'
 import {
   addAppCapabilityForm,
   getAppCapabilityForm,
-  getAppCapabilityFormEnv,
   getCapability
 } from '@/api/ability'
 import type {
@@ -36,9 +35,12 @@ const Access = () => {
   const navigate = useNavigate()
 
   const appId = searchParams.get('appId')
+
   const capabilityId = Number(searchParams.get('capabilityId'))
 
-  if (!appId || !capabilityId) return navigate(-1)
+  const env = searchParams.get('env') as TEnv | null
+
+  if (!appId || !capabilityId || !env) return navigate(-1)
 
   const { myAppStore } = useStore()
 
@@ -53,8 +55,6 @@ const Access = () => {
 
   const defaultFormRef = useRef<FormInstance>()
 
-  const [env, setEnv] = useState<TEnv>()
-
   /**
    * 初始化动态表单内容
    */
@@ -64,28 +64,18 @@ const Access = () => {
       setCapability(data)
     })()
     ;(async () => {
-      const { data } = await getAppCapabilityFormEnv({
-        appId,
-        capabilityId
-      })
-
-      if (!data) return navigate(-1)
-      setEnv(data.env)
-
-      const formInfo = await getAppCapabilityForm({
+      const { data } = await getAppCapabilityForm({
         appId,
         capabilityId,
-        env: data.env
+        env
       })
-      if (!formInfo.data) return navigate(-1)
+      if (!data) return navigate(-1)
 
-      setCapabilityFormList(formInfo.data.formList)
+      setCapabilityFormList(data.formList)
       setDefaultForm(
-        JSON.parse(
-          formInfo.data.formList[0].defaultFormContent!
-        ) as TFormContent[]
+        JSON.parse(data.formList[0].defaultFormContent!) as TFormContent[]
       )
-      setActiveFormId(formInfo.data.formList[0].formId)
+      setActiveFormId(data.formList[0].formId)
     })()
   }, [])
 

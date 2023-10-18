@@ -163,21 +163,10 @@ const getAppCapabilityForm = (params: {
   return request.post('/access/getAppCapabilityForm', params)
 }
 
-/**
- * 获取应用能力配置表单环境
- */
-const getAppCapabilityFormEnv = (params: {
-  appId: string
-  capabilityId: number
-}): Promise<TResponse<{ env: 'sit' | 'prod' }>> => {
-  return request.post('/access/getAppCapabilityFormEnv', params)
-}
-
 export {
   getCapabilityList,
   getCapability,
   getAccessList,
   addAppCapabilityForm,
-  getAppCapabilityForm,
-  getAppCapabilityFormEnv
+  getAppCapabilityForm
 }

@@ -77,8 +77,9 @@ const SitEnv = () => {
    */
   const toAccess = () => {
     if (!isEnable) return messageApi.warning('该应用已停用')
-    const { capabilityId } = activeCapability!
-    navigate(`./access?appId=${appId}&capabilityId=${capabilityId}`)
+    if (!activeCapability) return
+    const { capabilityId } = activeCapability
+    navigate(`./access?appId=${appId}&capabilityId=${capabilityId}&env=${env}`)
   }
 
   /**

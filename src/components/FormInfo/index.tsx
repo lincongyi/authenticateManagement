@@ -11,13 +11,13 @@ const FormInfo = ({ capability }: { capability: TGetAppInfoByEnv }) => {
     wrapperCol: { span: 12 }
   }
 
+  const [formTabs, setFormTabs] = useState<Tab[]>() // 能力配置信息Tabs
+
+  const [formItems, setFormItems] = useState<TFormItem[]>() // 表单展示的数据
+
   /**
    * 初始化能力配置信息表单内容
    */
-
-  const [formTabs, setFormTabs] = useState<Tab[]>() // 能力配置信息Tabs
-  const [formItems, setFormItems] = useState<TFormItem[]>() // 表单展示的数据
-
   useEffect(() => {
     const { form } = capability
     if (form) {

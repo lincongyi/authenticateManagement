@@ -65,10 +65,19 @@ export type TDevfileSearchResponse = {
  * 文档搜索
  */
 const devfileSearch = (params: {
-  projectId: number | undefined // 能力id
+  projectId: number | undefined // 项目id
   searchStr: string // 搜索内容
 }): Promise<TResponse<TDevfileSearchResponse[]>> => {
   return request.post('/access/devfileSearch', params)
 }
 
-export { getDirectory, queryDocument, devfileSearch }
+/**
+ * 获取能力项目id
+ */
+const getProjectId = (params: {
+  id: number // 能力id
+}): Promise<TResponse> => {
+  return request.post('/access/getProjectId', params)
+}
+
+export { getDirectory, queryDocument, devfileSearch, getProjectId }

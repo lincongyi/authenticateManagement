@@ -184,7 +184,7 @@ const Index = () => {
    * 根据id返回基础能力
    */
   const getAccessCapability = (accessCapability: string) => {
-    if (!accessCapability) return '暂未接入'
+    if (!accessCapability) return '-'
 
     const capability = accessCapability.split(',')
     const capabilityToString = capability.map(item => {

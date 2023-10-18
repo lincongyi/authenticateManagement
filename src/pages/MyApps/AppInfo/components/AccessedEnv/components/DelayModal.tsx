@@ -45,8 +45,8 @@ const DelayModal = ({
 
   const { addTime, capabilityExpireTime, applyState } = capability!
 
-  type TExpiration = 0 | 1 | 2
-  const [expiration, setExpiration] = useState<TExpiration>(0) // 0-未过期；1-即将过期；2-已过期
+  type TExpiration = 0 | 1 | 2 // 0-未过期；1-即将过期；2-已过期
+  const [expiration, setExpiration] = useState<TExpiration>(0)
 
   /**
    * 获取应用接入能力配置信息是否过期
@@ -55,7 +55,7 @@ const DelayModal = ({
     const reg = /^(\d{4})-(\d{2})-(\d{2})$/
     if (!reg.test(time)) return 0
     const now = new Date().getTime()
-    const expireTime = new Date(capabilityExpireTime).getTime()
+    const expireTime = new Date(time).getTime()
     const difference = expireTime - now
     const timestamp = 30 * 24 * 60 * 60 * 1000 // 默认少于30天就是即将过期
     if (difference < 0) return 2
@@ -124,11 +124,9 @@ const DelayModal = ({
     })
     messageApi.success({
       content: '已成功提交申请',
-      duration: 2,
-      onClose () {
-        fetchAppInfoByEnv && fetchAppInfoByEnv()
-      }
+      duration: 2
     })
+    fetchAppInfoByEnv && fetchAppInfoByEnv()
     onCancel()
   }
 
@@ -149,7 +147,7 @@ const DelayModal = ({
         <Divider />
         <Form
           form={form}
-          name='increase'
+          name='delay'
           {...formProps}
           initialValues={{ type: 1 }}
           onFinish={onFinish}
@@ -235,7 +233,7 @@ const DelayModal = ({
             <Row>
               <Col span={24} className='tr'>
                 <Space>
-                  <Button onClick={onCancel}>取消</Button>,
+                  <Button onClick={onCancel}>取消</Button>
                   <Button type='primary' htmlType='submit'>
                     {!applyState ? '查看审批进度' : type ? '提交申请' : '确定'}
                   </Button>

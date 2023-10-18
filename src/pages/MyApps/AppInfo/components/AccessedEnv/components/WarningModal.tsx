@@ -51,7 +51,7 @@ const WarningModal = ({
     ;(async () => {
       if (!open) return
       const { data } = await getApiConfig({
-        apiId: id,
+        apiId: +id,
         clientId: clientId!
       })
       form.setFieldsValue(data)

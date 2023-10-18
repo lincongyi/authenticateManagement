@@ -133,6 +133,7 @@ type TFormList = {
 export type TGetAppInfoByEnv = {
   capabilityName: string
   capabilityId: number
+  projectId: number
   clientSecret: string //
   path: string // 能力访问路径
   addTime: string // 接入时间
@@ -186,21 +187,6 @@ const applyDateNum = (params: {
   return request.post('/access/applyDateNum', params)
 }
 
-export type TApplyExtensionParams = {
-  clientId: string
-  capabilityId: number
-  env: TEnv
-  type: 0 | 1 // 是否延长有效期：0-否；1-是
-  describe: string // 应用描述
-}
-
-/**
- * 申请延期
- */
-const applyExtension = (params: TApplyExtensionParams): Promise<TResponse> => {
-  return request.post('/access/applyExtension', params)
-}
-
 export type TApplyExtensionInfoResponse = {
   applyTime: string // 提交申请延期时间
   expireTime: string // 有效期止
@@ -217,6 +203,21 @@ const applyExtensionInfo = (params: {
   clientId: string
 }): Promise<TResponse<TApplyExtensionInfoResponse>> => {
   return request.post('/access/applyExtensionInfo', params)
+}
+
+export type TApplyExtensionParams = {
+  clientId: string
+  capabilityId: number
+  env: TEnv
+  type: 0 | 1 // 是否延长有效期：0-否；1-是
+  describe: string // 应用描述
+}
+
+/**
+ * 申请延期
+ */
+const applyExtension = (params: TApplyExtensionParams): Promise<TResponse> => {
+  return request.post('/access/applyExtension', params)
 }
 
 type TGetApiConfigResponse = {
@@ -277,6 +278,7 @@ export type TGetApiDataResponse = {
   dateNum: number // 日用量限额（测试环境）
   reqTotal: number // 请求总次数
   errorNum: number // 请求失败次数
+  projectId: number
   directoryId: number // 接口对应开发文档的目录id
 }
 
