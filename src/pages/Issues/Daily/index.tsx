@@ -122,10 +122,11 @@ const Daily = () => {
   })
 
   /**
-   * 分页、排序、筛选变化时触发
+   * 翻页
    */
   const onTableChange = (tablePagination: TablePaginationConfig) => {
-    setPagination({ ...pagination, ...tablePagination })
+    const pageNum = tablePagination.current || 1
+    setPagination({ ...pagination, pageNum })
   }
 
   const columns: ColumnsType<TDataType> = [

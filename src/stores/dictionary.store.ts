@@ -2,6 +2,12 @@
 import { makeAutoObservable, toJS } from 'mobx'
 import type { TDictionary } from '@api/index'
 
+type TProcessKeyList = {
+  dictList: TDictList[]
+  typeName: string
+  typeValue: string
+}
+
 export type TDictionaryList = {
   appState: TDictionary | undefined // 应用状态
   appType: TDictionary | undefined // 接入系统类型
@@ -16,6 +22,7 @@ export type TDictionaryList = {
   encryptType: TDictionary | undefined // 鉴权方式
   licenseFileType: TDictionary | undefined // 授权文件
   pushAsync: TDictionary | undefined // 结果推送类型
+  processKeyList: TProcessKeyList | undefined // 申请类型
 }
 
 const DictionaryStore = () => {

@@ -223,16 +223,16 @@ const routes: TRoutes[] = [
           icon: React.createElement(AppstoreOutlined),
           breadcrumb: '我的应用'
         }
+      },
+      {
+        path: 'myApplications', // 我的申请
+        element: lazyLoad('MyApplications'),
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(SolutionOutlined),
+          breadcrumb: '我的申请'
+        }
       }
-      // {
-      //   path: 'myApplications', // 我的申请
-      //   element: lazyLoad('MyApplications'),
-      //   meta: {
-      //     isMenuItem: true,
-      //     icon: React.createElement(SolutionOutlined),
-      //     breadcrumb: '我的申请'
-      //   }
-      // }
       // {
       //   path: 'helps', // 问题帮助
       //   element: lazyLoad('Helps'),

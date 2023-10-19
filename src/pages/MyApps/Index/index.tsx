@@ -117,7 +117,7 @@ const Index = () => {
   })
 
   /**
-   * 分页、排序、筛选变化时触发
+   * 翻页
    */
   const onTableChange = (tablePagination: TablePaginationConfig) => {
     const pageNum = tablePagination.current || 1

@@ -15,7 +15,7 @@ import { ColorChangeHandler, SketchPicker } from 'react-color'
 import Header from '@components/Header'
 import { getMenu, getAppRoutes } from './index.config'
 import { runInAction } from 'mobx'
-// import { getApplyCount } from '@api/myApplications'
+import { getApplyCount } from '@api/myApplications'
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb'
 import type { TRoutes } from '../../router'
 
@@ -28,10 +28,10 @@ const AppLayout = () => {
     // 渲染导航菜单栏并且获取我的申请数
     ;(async () => {
       // 暂时屏蔽获取我的申请数
-      // if (!applyCountStore.applyCount.length) {
-      //   const { data } = await getApplyCount()
-      //   applyCountStore.setApplyCount(data!)
-      // }
+      if (!applyCountStore.applyCount.length) {
+        const { data } = await getApplyCount()
+        applyCountStore.setApplyCount(data!)
+      }
       const items = getMenu()
 
       setMenuItems(() =>

@@ -26,14 +26,14 @@ import {
   handleUrging,
   handleStopApply
 } from '@api/myApplications'
-import { getdictionary } from '@api/index'
 import type { TGetApplyListParams } from '@api/myApplications'
 import { formatDictionary } from '@utils/index'
 import CheckModal from './components/CheckModal'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { useStore } from '@stores/index'
-import { useUpdateEffect } from '@/hooks'
+import { useUpdateEffect, useGetDictionary } from '@/hooks'
+import { observer } from 'mobx-react-lite'
 
 const { RangePicker } = DatePicker
 
@@ -48,6 +48,9 @@ const stateInfo = [
 const MyApplications = () => {
   type TStateList = TState & { title: string; options?: string[] }
   const [stateList, setStateList] = useState<TStateList[]>()
+
+  const { dictionaryStore } = useGetDictionary()
+
   /**
    * @param {number} state 审批状态
    * @returns {string} 审批状态中文
@@ -68,9 +71,14 @@ const MyApplications = () => {
    * 获取申请总数
    */
   const initApplyCount = async () => {
-    const { data } = await getApplyCount()
-    applyCountStore.setApplyCount(data!)
-    const list = data?.map((item: TState, index: number) => ({
+    let applyCount = applyCountStore.applyCount
+    if (!applyCount) {
+      const { data } = await getApplyCount()
+      if (!data) return
+      applyCountStore.setApplyCount(data)
+      applyCount = data
+    }
+    const list = applyCount.map((item: TState, index: number) => ({
       ...item,
       ...stateInfo[index]
     }))
@@ -82,23 +90,23 @@ const MyApplications = () => {
   }, [])
 
   const [processKeyList, setProcessKeyList] = useState<Option[]>()
-  useEffect(() => {
-    ;(async () => {
-      /**
-       * 初始化申请类型
-       */
-      const { data } = await getdictionary({
-        typeValues: ['processKeyList']
-      })
-      const { dictList } = data.processKeyList
-      setProcessKeyList(formatDictionary(dictList))
 
-      renderTable({
-        processState: -1,
-        pageNum: 0, // 后端接口接收pageNum是从0开始算的，所以前端传pageNum需要current - 1，赋值current需要pageNum + 1
-        pageSize: 10
-      })
-    })()
+  useEffect(() => {
+    const keyList = dictionaryStore.getDictionaryItem(
+      'processKeyList'
+    ) as TDictList[]
+    if (!keyList) return
+    setProcessKeyList(formatDictionary(keyList))
+  }, [dictionaryStore.getDictionaryItem('processKeyList')])
+
+  /**
+   * 初始化表格数据
+   */
+  useEffect(() => {
+    renderTable({
+      processState: -1,
+      ...defaultPagination
+    })
   }, [])
 
   /**
@@ -153,11 +161,10 @@ const MyApplications = () => {
    */
   useUpdateEffect(() => {
     form.resetFields()
-    setPagination({ ...pagination, pageNum: 1 })
+    setPagination({ ...pagination, pageNum: defaultPagination.pageNum })
     renderTable({
       processState: activeState - 1,
-      pageNum: 0,
-      pageSize: 10
+      ...defaultPagination
     } as TGetApplyListParams)
   }, [activeState])
 
@@ -167,7 +174,7 @@ const MyApplications = () => {
    * 重置
    */
   const onReset = () => {
-    setPagination({ ...pagination, pageNum: 1, pageSize: 10 })
+    setPagination({ ...pagination, ...defaultPagination })
     form.resetFields()
   }
 
@@ -195,8 +202,7 @@ const MyApplications = () => {
       startTime,
       endTime,
       processState: activeState - 1,
-      pageNum: 0,
-      pageSize: 10
+      ...defaultPagination
     } as TGetApplyListParams
     renderTable(params)
 
@@ -242,8 +248,7 @@ const MyApplications = () => {
     })
     renderTable({
       processState: activeState - 1,
-      pageNum: 0,
-      pageSize: 10
+      ...defaultPagination
     } as TGetApplyListParams)
   }
 
@@ -260,8 +265,7 @@ const MyApplications = () => {
     })
     renderTable({
       processState: activeState - 1,
-      pageNum: 0,
-      pageSize: 10
+      ...defaultPagination
     } as TGetApplyListParams)
   }
 
@@ -278,35 +282,42 @@ const MyApplications = () => {
     }
   }
 
+  const defaultPagination = {
+    pageNum: 1,
+    pageSize: 10
+  }
+
   /**
    * 表格分页参数
    */
   const [pagination, setPagination] = useState({
-    pageNum: 1,
-    pageSize: 10,
+    ...defaultPagination,
     total: 0
   })
 
+  /**
+   * 翻页
+   */
+  const onTableChange = (tablePagination: TablePaginationConfig) => {
+    const pageNum = tablePagination.current || 1
+    setPagination({ ...pagination, pageNum })
+  }
+
   useUpdateEffect(() => {
-    const dateRange = form.getFieldValue('dateRange')
+    const dateRange: [string, string] | undefined =
+      form.getFieldValue('dateRange')
     const [startTime, endTime] = dateRange || [undefined, undefined]
+    const { pageNum, pageSize } = pagination
     const params: TGetApplyListParams = {
       processState: activeState - 1,
       ...form.getFieldsValue(),
       startTime,
       endTime,
-      pageNum: pagination.pageNum,
-      pageSize: 10
+      pageNum,
+      pageSize
     }
     renderTable(params)
   }, [pagination.pageNum])
-
-  /**
-   * 分页、排序、筛选变化时触发
-   */
-  const onTableChange = (tablePagination: TablePaginationConfig) => {
-    setPagination({ ...pagination, ...tablePagination })
-  }
 
   const columns: ColumnsType<TApplyDetail> = [
     {
@@ -465,11 +476,6 @@ const MyApplications = () => {
           >
             <Row gutter={20}>
               <Col span={6}>
-                <Form.Item label='审批单号' name='instanceId'>
-                  <Input placeholder='请输入审批单号' maxLength={40} />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
                 <Form.Item label='申请类型：' name='keys'>
                   <Cascader
                     placeholder='请选择申请类型'
@@ -479,6 +485,11 @@ const MyApplications = () => {
                     maxTagCount='responsive'
                     showCheckedStrategy={Cascader.SHOW_CHILD}
                   />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item label='审批单号' name='instanceId'>
+                  <Input placeholder='请输入审批单号' maxLength={40} />
                 </Form.Item>
               </Col>
               <Col span={6}>
@@ -533,4 +544,4 @@ const MyApplications = () => {
   )
 }
 
-export default MyApplications
+export default observer(MyApplications)

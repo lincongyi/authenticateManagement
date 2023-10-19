@@ -9,7 +9,7 @@ const getApplyCount = (
     endTime: ''
   }
 ): Promise<TResponse<TState[]>> => {
-  return request.post('/user/getApplyCount', params)
+  return request.post('/access/getApplyCount', params)
 }
 
 export type TGetApplyListParams = {
@@ -27,7 +27,7 @@ export type TGetApplyListParams = {
  * 获取申请列表
  */
 const getApplyList = (params: TGetApplyListParams): Promise<TResponse> => {
-  return request.post('/user/getApplyList', params)
+  return request.post('/access/getApplyList', params)
 }
 
 /**
@@ -36,14 +36,14 @@ const getApplyList = (params: TGetApplyListParams): Promise<TResponse> => {
 const getApplyDetail = (params: {
   instanceId: string
 }): Promise<TResponse<TApplyDetail>> => {
-  return request.post('/user/getApplyDetail', params)
+  return request.post('/access/getApplyDetail', params)
 }
 
 /**
  * 催办
  */
 const handleUrging = (params: { instanceId: string }): Promise<TResponse> => {
-  return request.post('/user/urging', params)
+  return request.post('/access/urging', params)
 }
 
 /**
@@ -52,7 +52,7 @@ const handleUrging = (params: { instanceId: string }): Promise<TResponse> => {
 const handleStopApply = (params: {
   instanceId: string
 }): Promise<TResponse> => {
-  return request.post('/user/stopApply', params)
+  return request.post('/access/stopApply', params)
 }
 
 export {
