@@ -35,13 +35,13 @@ const DevDocument = () => {
     useState<TGetDirectoryResponse['directoryList']>() // 当前文档目录
 
   /**
-   * 返回active node。如果不存在directoryId，就默认返回第一个node
+   * 返回active node。如果不传directoryId，就默认返回第一个node
    */
   const getDefaultNode = (
     arr: TDirectory[],
     directoryId?: number
   ): TDirectory | undefined => {
-    if (!Array.isArray(arr)) return undefined
+    if (!Array.isArray(arr) || !arr.length) return undefined
     if (directoryId) {
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].leafDirectory && arr[i].leafDirectory?.length) {
@@ -200,15 +200,16 @@ const DevDocument = () => {
   const [annexUrl, setAnnexUrl] = useState<TAnnexUrl[]>() // 开发文档下载信息
 
   /**
-   * 选择目录节点
+   * 选择目录or文件节点
    */
   const onSelect: TreeProps['onSelect'] = async (selectedKeys, info) => {
+    if (!info.selected) return
     setSelectedNode(info.node as EventDataNode<TDirectory>)
     // 判断当前子节点没有childNode才请求文档
-    if (!(info.node as EventDataNode<TDirectory>).leafDirectory?.length) {
-      const { data } = await queryDocument({ id: selectedKeys[0] as number })
-      setAnnexUrl(data?.annexUrl)
-    }
+    if ((info.node as EventDataNode<TDirectory>).type === 'Folder') return
+    const { data } = await queryDocument({ id: selectedKeys[0] as number })
+    setAnnexUrl(data?.annexUrl || undefined)
+    setDocContent(data?.htmlContent || undefined)
   }
 
   /**

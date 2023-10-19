@@ -5,7 +5,7 @@ const AbilityContent = ({ html }: { html: string | undefined }) => {
     <>
       {html ? (
         <div
-          className='markdown-body'
+          className='markdown-body font-primary-color'
           dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : (

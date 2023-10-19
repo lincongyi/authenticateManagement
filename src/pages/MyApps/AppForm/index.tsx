@@ -34,7 +34,7 @@ export const formProps = {
   autoComplete: 'off'
 }
 
-const defaultMaxLength = 20
+const defaultMaxLength = 30
 
 const AppForm = () => {
   const { dictionaryStore } = useGetDictionary()
@@ -162,7 +162,9 @@ const AppForm = () => {
           <Select
             placeholder='请选择应用类型'
             fieldNames={fieldNames}
-            options={dictionaryStore.getDictionaryItem('appType')}
+            options={
+              dictionaryStore.getDictionaryItem('appType') as TDictList[]
+            }
           />
         </Form.Item>
         <Form.Item
@@ -173,7 +175,9 @@ const AppForm = () => {
           <Select
             placeholder='请选择所属级别'
             fieldNames={fieldNames}
-            options={dictionaryStore.getDictionaryItem('systemlevel')}
+            options={
+              dictionaryStore.getDictionaryItem('systemlevel') as TDictList[]
+            }
           />
         </Form.Item>
         <Form.Item
@@ -184,7 +188,9 @@ const AppForm = () => {
           <Select
             placeholder='请选择系统对外服务范围'
             fieldNames={fieldNames}
-            options={dictionaryStore.getDictionaryItem('networkType')}
+            options={
+              dictionaryStore.getDictionaryItem('networkType') as TDictList[]
+            }
           />
         </Form.Item>
         <Form.Item
@@ -236,11 +242,7 @@ const AppForm = () => {
           />
         </Form.Item>
         <Form.Item label='负责人联系电话' name='managerPhone'>
-          <Input
-            placeholder='请输入负责人联系电话'
-            showCount
-            maxLength={defaultMaxLength}
-          />
+          <Input placeholder='请输入负责人联系电话' showCount maxLength={11} />
         </Form.Item>
         <Form.Item label='负责人联系邮箱' name='managerEmail'>
           <Input

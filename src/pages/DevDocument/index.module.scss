@@ -65,6 +65,8 @@ $border: 1px solid rgb(232 233 234 / 100%);
 }
 
 .doc-content {
+  @include font-primary-color;
+
   flex: 1;
   padding: 20px;
   overflow-y: auto;
@@ -103,4 +105,8 @@ $border: 1px solid rgb(232 233 234 / 100%);
   :global(.ant-tabs-tab-active) {
     background-color: #e6f0ff;
   }
+}
+
+[data-theme='dark'] .doc-content pre {
+  background-color: inherit !important;
 }
