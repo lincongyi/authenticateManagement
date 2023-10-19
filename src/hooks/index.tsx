@@ -1,4 +1,4 @@
-import { getdictionary } from '@api/index'
+import { TDictionary, getdictionary } from '@api/index'
 import { TDictionaryList } from '@stores/dictionary.store'
 import { useStore } from '@stores/index'
 import { useEffect, useRef } from 'react'
@@ -37,12 +37,14 @@ const useGetDictionary = () => {
    * 根据dictValue获取dictName
    */
   const getDictionaryItemName = (
-    item: keyof TDictionaryList,
+    item: Exclude<keyof TDictionaryList, 'processKeyList'>,
     value: string | number
   ) => {
-    const options = dictionaryStore.getDictionaryItem(item)
+    const options = dictionaryStore.getDictionaryItem(
+      item
+    ) as TDictionary['dictList']
     if (!options) return false
-    const result = options?.find(item => item.dictValue === value)
+    const result = options.find(item => item.dictValue === value)
     if (!result) return false
     return result.dictName
   }

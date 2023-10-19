@@ -18,6 +18,7 @@ import { addApp, getAppInfo, updateApp } from '@api/myApp'
 import type { TAppParams } from '@api/myApp'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useGetDictionary } from '@/hooks'
+import { TDictionary } from '@/api'
 
 const { Title } = Typography
 const { TextArea } = Input
@@ -163,7 +164,9 @@ const AppForm = () => {
             placeholder='请选择应用类型'
             fieldNames={fieldNames}
             options={
-              dictionaryStore.getDictionaryItem('appType') as TDictList[]
+              dictionaryStore.getDictionaryItem(
+                'appType'
+              ) as TDictionary['dictList']
             }
           />
         </Form.Item>
@@ -176,7 +179,9 @@ const AppForm = () => {
             placeholder='请选择所属级别'
             fieldNames={fieldNames}
             options={
-              dictionaryStore.getDictionaryItem('systemlevel') as TDictList[]
+              dictionaryStore.getDictionaryItem(
+                'systemlevel'
+              ) as TDictionary['dictList']
             }
           />
         </Form.Item>
@@ -189,7 +194,9 @@ const AppForm = () => {
             placeholder='请选择系统对外服务范围'
             fieldNames={fieldNames}
             options={
-              dictionaryStore.getDictionaryItem('networkType') as TDictList[]
+              dictionaryStore.getDictionaryItem(
+                'networkType'
+              ) as TDictionary['dictList']
             }
           />
         </Form.Item>

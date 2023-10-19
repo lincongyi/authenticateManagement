@@ -116,7 +116,7 @@ const Access = () => {
       if (!options) return undefined
       const labelValueList =
         value?.reduce((prev: any[], next: any) => {
-          const optionItem = options?.find(__item => __item.value === next)
+          const optionItem = options.find(__item => __item.value === next)
           const label = optionItem ? optionItem.label : undefined
           return [...prev, label]
         }, []) || undefined

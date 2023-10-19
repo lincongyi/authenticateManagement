@@ -44,7 +44,7 @@ const DictionaryStore = () => {
     /**
      * 生成select选择器的options内容
      */
-    generateOptions (item: keyof TDictionaryList) {
+    generateOptions (item: Exclude<keyof TDictionaryList, 'processKeyList'>) {
       const options = toJS(this.getDictionaryItem(item))
       if (!options) return undefined
       return [{ dictValue: -1, dictName: '全部' }, ...options]

@@ -92,9 +92,9 @@ const MyApplications = () => {
   const [processKeyList, setProcessKeyList] = useState<Option[]>()
 
   useEffect(() => {
-    const keyList = dictionaryStore.getDictionaryItem(
+    const keyList: TDictList[] | undefined = dictionaryStore.getDictionaryItem(
       'processKeyList'
-    ) as TDictList[]
+    ) as TDictList[] | undefined
     if (!keyList) return
     setProcessKeyList(formatDictionary(keyList))
   }, [dictionaryStore.getDictionaryItem('processKeyList')])
