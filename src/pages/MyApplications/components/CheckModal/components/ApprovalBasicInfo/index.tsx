@@ -1,7 +1,7 @@
 import React from 'react'
 import { Descriptions, Tag } from 'antd'
 
-const ApprovalFormInfo = ({ info }: { info: TApplyDetail | undefined }) => {
+const ApprovalBasicInfo = ({ info }: { info: TApplyDetail | undefined }) => {
   return (
     <>
       <Descriptions bordered className='tc' column={2}>
@@ -22,7 +22,7 @@ const ApprovalFormInfo = ({ info }: { info: TApplyDetail | undefined }) => {
           {info?.addTime || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='申请单位：'>
-          {info?.unifyName || '-'}
+          {info?.companyName || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='单位管理员：'>
           {info?.starter || '-'}
@@ -31,11 +31,11 @@ const ApprovalFormInfo = ({ info }: { info: TApplyDetail | undefined }) => {
           {info?.processName || '-'}
         </Descriptions.Item>
         <Descriptions.Item label='应用服务名称：'>
-          {info?.processName || '-'}
+          {info?.unifyName || '-'}
         </Descriptions.Item>
       </Descriptions>
     </>
   )
 }
 
-export default ApprovalFormInfo
+export default ApprovalBasicInfo

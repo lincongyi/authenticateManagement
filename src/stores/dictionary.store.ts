@@ -1,6 +1,7 @@
 // 身份认证能力表单功能模块
 import { makeAutoObservable, toJS } from 'mobx'
 import type { TDictionary } from '@api/index'
+import { formatDictionary } from '@/utils'
 
 type TProcessKeyList = {
   dictList: TDictList[]
@@ -48,6 +49,34 @@ const DictionaryStore = () => {
       const options = toJS(this.getDictionaryItem(item))
       if (!options) return undefined
       return [{ dictValue: -1, dictName: '全部' }, ...options]
+    },
+
+    /**
+     * 扁平化处理processKeyList
+     */
+    flattenProcessKeyList () {
+      if (!this.getDictionaryItem('processKeyList')) return undefined
+      const processKeyList = formatDictionary(
+        this.getDictionaryItem('processKeyList') as TDictList[]
+      )
+      return processKeyList.reduce(
+        (prev: Option[], next: Option) => [...prev, ...next.children!],
+        []
+      )
+    },
+
+    processKeyListMap: {
+      ACCESS_REGISTER: '单位账号注册申请',
+      UPDATE_COMPANY_INFO: '变更详情',
+      ACCESS_CAPABILITY: '基础能力接入申请信息（测试账号）',
+      PROD_CAPABILITY: '基础能力接入申请信息（正式账号）',
+      APPLY_FILE_CAPABILITY: '盖章申请表/函',
+      STOP_APPLICATION: '停用应用信息',
+      START_APPLICATION: '启用应用信息',
+      CAPABILITY_UPDATE: '基础服务参数更改申请（测试）',
+      PROD_CAPABILITY_UPDATE: '基础服务参数更改申请（正式）',
+      ADD_NUM_APPLICATION: '增加用量申请信息',
+      DELAY_CAPABILITY: '基础服务延期申请信息'
     }
   })
 }

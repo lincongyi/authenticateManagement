@@ -86,6 +86,9 @@ const DevDocument = () => {
         setAnnexUrl(undefined)
         setDocContent(undefined)
       }
+    } else {
+      setAnnexUrl(undefined)
+      setDocContent(undefined)
     }
   }
 

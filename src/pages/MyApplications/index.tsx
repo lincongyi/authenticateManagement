@@ -47,7 +47,8 @@ const stateInfo = [
 
 const MyApplications = () => {
   type TStateList = TState & { title: string; options?: string[] }
-  const [stateList, setStateList] = useState<TStateList[]>()
+
+  const [stateList, setStateList] = useState<TStateList[]>() // 审批状态数据统计
 
   const { dictionaryStore } = useGetDictionary()
 
@@ -71,14 +72,17 @@ const MyApplications = () => {
    * 获取申请总数
    */
   const initApplyCount = async () => {
-    let applyCount = applyCountStore.applyCount
-    if (!applyCount) {
-      const { data } = await getApplyCount()
-      if (!data) return
-      applyCountStore.setApplyCount(data)
-      applyCount = data
-    }
-    const list = applyCount.map((item: TState, index: number) => ({
+    const { data } = await getApplyCount()
+    if (!data) return
+    applyCountStore.setApplyCount(data)
+    renderApplyCount(data)
+  }
+
+  /**
+   * 渲染申请总数
+   */
+  const renderApplyCount = (data: TState[]) => {
+    const list = data.map((item: TState, index: number) => ({
       ...item,
       ...stateInfo[index]
     }))
@@ -86,7 +90,12 @@ const MyApplications = () => {
   }
 
   useEffect(() => {
-    initApplyCount()
+    const applyCount = applyCountStore.applyCount
+    if (!applyCount) {
+      initApplyCount()
+    } else {
+      renderApplyCount(applyCount)
+    }
   }, [])
 
   const [processKeyList, setProcessKeyList] = useState<Option[]>()
@@ -274,11 +283,9 @@ const MyApplications = () => {
   /**
    * 重新申请
    */
-  const onReapply = ({ key }: TApplyDetail) => {
+  const onReapply = ({ key }: { key: TApplyKey }) => {
     if (key === 'UPDATE_COMPANY_INFO') {
       navigate('/app/myAccount/companySettings')
-    } else if (key === 'ACCESS_APPLICATION') {
-      navigate('/app/appServiceCenter')
     }
   }
 
@@ -290,7 +297,7 @@ const MyApplications = () => {
   /**
    * 表格分页参数
    */
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<TPagination>({
     ...defaultPagination,
     total: 0
   })
@@ -382,9 +389,11 @@ const MyApplications = () => {
                 <React.Fragment key={index}>
                   {item === 'check' && (
                     <>
-                      <Button type='link' onClick={() => onCheck(values)}>
-                        查看
-                      </Button>
+                      <Badge dot={!values.isNoticeUser} offset={[-15, 10]}>
+                        <Button type='link' onClick={() => onCheck(values)}>
+                          查看
+                        </Button>
+                      </Badge>
                     </>
                   )}
                   {item === 'urge' && (
@@ -403,7 +412,7 @@ const MyApplications = () => {
                         okText='确定'
                         cancelText='取消'
                       >
-                        <Button type='link' style={{ color: '#ff7875' }}>
+                        <Button type='link' style={{ color: 'orange' }}>
                           撤回
                         </Button>
                       </Popconfirm>
@@ -537,7 +546,7 @@ const MyApplications = () => {
           instanceId={instanceId}
           open={open}
           setOpen={setOpen}
-          callback={initApplyCount}
+          callback={() => onFinish(form.getFieldsValue())}
         />
       )}
     </>

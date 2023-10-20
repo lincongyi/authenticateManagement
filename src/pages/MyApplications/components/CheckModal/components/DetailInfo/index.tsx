@@ -1,18 +1,15 @@
 import React from 'react'
 import { Descriptions, Typography, Image } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
+import { useGetDictionary } from '@/hooks'
 
 const { Text } = Typography
 
-const DetailInfo = ({
-  info
-}: {
-  info: {
-    before: TCompanyInfo
-    after: TCompanyInfo
-  }
-}) => {
-  const { before, after } = info
+const DetailInfo = ({ applyKey, info }: { applyKey: TApplyKey; info: any }) => {
+  const { dictionaryStore } = useGetDictionary()
+
+  console.log('applyKey', applyKey)
+  console.log('info', info)
 
   /**
    * 比对数据差异
@@ -29,7 +26,7 @@ const DetailInfo = ({
 
   return (
     <>
-      <Typography.Title level={5}>单位注册信息</Typography.Title>
+      {/* <Typography.Title level={5}>单位注册信息</Typography.Title>
       <Descriptions bordered className='tc' column={2}>
         <Descriptions.Item label={onCompare('companyName', '单位名称：')}>
           {after.companyName ? onCompare('companyName') : '-'}
@@ -77,7 +74,7 @@ const DetailInfo = ({
         <Descriptions.Item label={onCompare('adminEmail', '管理员邮箱：')}>
           {after.adminEmail ? onCompare('adminEmail') : '-'}
         </Descriptions.Item>
-      </Descriptions>
+      </Descriptions> */}
     </>
   )
 }

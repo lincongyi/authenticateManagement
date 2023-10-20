@@ -34,7 +34,7 @@ import { prodEnvContext } from '../ProdEnv'
 import { getApiData, getCallData } from '@/api/myApp'
 import type { TGetApiDataResponse, TGetCallDataResponse } from '@/api/myApp'
 import { useNavigate } from 'react-router-dom'
-import FormInfo from '@/components/FormInfo'
+import DynamicFormInfo from '@/components/DynamicFormInfo'
 import { useStore } from '@/stores'
 import type { RangeValue } from 'rc-picker/lib/interface.d'
 import { getProjectId } from '@/api/devDocument'
@@ -394,7 +394,7 @@ const AccessedEnv = () => {
               </Space>
             </div>
 
-            {capability && <FormInfo capability={capability} />}
+            {capability && <DynamicFormInfo capability={capability} />}
           </div>
         </Col>
       </Row>

@@ -14,7 +14,7 @@ const getApplyCount = (
 
 export type TGetApplyListParams = {
   instanceId?: string | undefined // 审批单号,
-  keys?: (applicationType | undefined)[] | undefined // 申请类型
+  keys?: TApplyKey[] | undefined // 申请类型
   unifyName?: string | undefined // 应用/服务名称
   processState: -1 | 0 | 1 | 2 | 3 // 审批状态
   startTime?: string | undefined // 开始日期

@@ -5,7 +5,7 @@ import { Tab } from 'rc-tabs/lib/interface.d'
 import type { TFormItem, TFormTabledataSource } from '@/api/ability'
 import type { TGetAppInfoByEnv } from '@/api/myApp'
 
-const FormInfo = ({ capability }: { capability: TGetAppInfoByEnv }) => {
+const DynamicFormInfo = ({ capability }: { capability: TGetAppInfoByEnv }) => {
   const formProps = {
     labelCol: { span: 4 },
     wrapperCol: { span: 12 }
@@ -120,4 +120,4 @@ const FormInfo = ({ capability }: { capability: TGetAppInfoByEnv }) => {
   )
 }
 
-export default FormInfo
+export default DynamicFormInfo

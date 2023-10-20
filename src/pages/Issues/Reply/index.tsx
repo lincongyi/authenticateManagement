@@ -101,7 +101,7 @@ const Reply = () => {
   }
 
   // 表格分页参数
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<TPagination>({
     pageNum: 1,
     pageSize: 10,
     total: 31

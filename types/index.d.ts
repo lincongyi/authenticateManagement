@@ -120,3 +120,9 @@ type TEnv = 'sit' | 'prod'
 interface URLSearchParams {
   size: number
 }
+
+type TPagination = {
+  pageNum: number
+  pageSize: number
+  total: number
+}

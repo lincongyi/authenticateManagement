@@ -3,10 +3,11 @@ import style from './index.module.scss'
 import { Modal, Button, Steps, Tag, Typography, Space } from 'antd'
 import { getApplyDetail } from '@api/myApplications'
 import userAvatar from '@/assets/myApplications-default-avatar.png'
-import ApprovalFormInfo from './components/ApprovalFormInfo'
+import ApprovalBasicInfo from './components/ApprovalBasicInfo'
 import DetailInfo from './components/DetailInfo'
 import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons'
 import { useStore } from '@stores/index'
+import { useGetDictionary } from '@/hooks'
 
 const { Text } = Typography
 
@@ -25,6 +26,7 @@ const NodeTitle = ({
 }) => {
   const isEnded: boolean =
     ![0, 1].includes(item.isPass) || (!item.isPass && item.isLastNode)
+
   return (
     <div style={{ fontWeight: 'bold' }}>
       {item.name}（{item.userCount}）
@@ -45,7 +47,7 @@ const NodeTitle = ({
 }
 
 /**
- * 遍历负责审批用户列表
+ * 遍历负责审批的用户列表
  */
 const UserList = ({
   list,
@@ -55,15 +57,16 @@ const UserList = ({
   isPass: TNodes['isPass']
 }) => {
   const { themeStore } = useStore()
+
   const colorPrimary = themeStore.antdThemeColor
 
   return (
     <>
       {list.map(item => (
-        <div className={style['user-item']} key={item.sysRole.id}>
+        <div className={style['user-item']} key={item.id}>
           <p className={style.flex}>
             <img src={userAvatar} style={{ marginRight: 10 }} />
-            {item.sysRole.name}
+            {item.nickName}
             {item.isPassUser &&
               (item.passState ? (
                 <CloseCircleFilled
@@ -100,8 +103,12 @@ const CheckModal = ({
   setOpen: Function
   callback: Function
 }) => {
+  const { dictionaryStore } = useGetDictionary()
+
   const [info, setInfo] = useState<TApplyDetail>()
+
   const [current, setCurrent] = useState(0)
+
   const [items, setItems] = useState<
     {
       title: JSX.Element
@@ -116,10 +123,9 @@ const CheckModal = ({
     if (!instanceId) return
     ;(async () => {
       const { data } = await getApplyDetail({ instanceId })
+      if (!data) return
       setInfo(data)
-
-      const { nodes } = data!
-
+      const { nodes } = data
       /**
        * 格式化审批进度数据
        */
@@ -149,7 +155,7 @@ const CheckModal = ({
       centered
       open={open}
       onCancel={onCancel}
-      width={640}
+      width={840}
       footer={[
         <Button key='cancel' onClick={() => onCancel()}>
           关闭
@@ -158,19 +164,21 @@ const CheckModal = ({
     >
       <div className='modal-content'>
         <div className='title'>审批单信息</div>
-        {info && <ApprovalFormInfo info={info} />}
+        {info && <ApprovalBasicInfo info={info} />}
 
-        {info?.info?.after && info.info.before && (
+        {info && (
           <>
-            <div className='title'>变更详情</div>
+            <div className='title'>
+              {dictionaryStore.processKeyListMap[info.key]}
+            </div>
             <div className={style.detail}>
-              <DetailInfo info={info.info} />
+              <DetailInfo applyKey={info.key} info={info.info} />
             </div>
           </>
         )}
 
         <div className='title'>审批进度</div>
-        <Steps direction='vertical' current={current} items={items} />
+        {/* <Steps direction='vertical' current={current} items={items} /> */}
       </div>
     </Modal>
   )
