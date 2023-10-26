@@ -133,9 +133,12 @@ const DynamicFormDistinction = ({
     } else if (['imageUpload', 'fileUpload'].includes(type)) {
       const labelValue = formItems[index].labelValue as UploadFile[]
       const oldLabelValue = oldFormItems[index].labelValue as UploadFile[]
-      if (labelValue.length !== oldLabelValue.length) return false
-
-      return labelValue[__index!]?.uid === oldLabelValue[__index!]?.uid
+      let isDifferent = false
+      if (labelValue[__index!]) {
+        const { uid } = labelValue[__index!]
+        isDifferent = oldLabelValue.some(item => item.uid === uid)
+      }
+      return isDifferent
     }
     return formItems[index].labelValue === oldFormItems[index].labelValue
   }

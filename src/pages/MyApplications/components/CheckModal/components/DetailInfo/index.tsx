@@ -50,7 +50,7 @@ const DetailInfo = ({ applyKey, info }: { applyKey: TApplyKey; info: any }) => {
           </Descriptions>
         </>
       )}
-      {/* ['基础服务参数更改申请（测试）','基础服务参数更改申请（正式）] */}
+      {/* ['基础服务参数更改申请（测试）','基础服务参数更改申请（正式）'] */}
       {['CAPABILITY_UPDATE', 'PROD_CAPABILITY_UPDATE'].includes(applyKey) && (
         <DynamicFormDistinction formInfo={info} />
       )}
