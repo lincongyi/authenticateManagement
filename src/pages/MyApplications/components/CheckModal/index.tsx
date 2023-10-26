@@ -176,7 +176,7 @@ const CheckModal = ({
         )}
 
         <div className='title'>审批进度</div>
-        {/* <Steps direction='vertical' current={current} items={items} /> */}
+        <Steps direction='vertical' current={current} items={items} />
       </div>
     </Modal>
   )

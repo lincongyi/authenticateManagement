@@ -39,7 +39,7 @@ type TNodes = {
 
 type TApplyKey =
   | 'ACCESS_REGISTER' // 单位账号注册申请
-  | 'UPDATE_COMPANY_INFO' // 变更详情
+  | 'UPDATE_COMPANY_INFO' // 单位账号变更详情
   | 'ACCESS_CAPABILITY' // 基础能力接入申请信息（测试账号）
   | 'PROD_CAPABILITY' // 基础能力接入申请信息（正式账号）
   | 'APPLY_FILE_CAPABILITY' // 盖章申请表/函
