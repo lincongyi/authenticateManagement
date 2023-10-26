@@ -171,9 +171,7 @@ const CheckModal = ({
             <div className='title'>
               {dictionaryStore.processKeyListMap[info.key]}
             </div>
-            <div className={style.detail}>
-              <DetailInfo applyKey={info.key} info={info.info} />
-            </div>
+            <DetailInfo applyKey={info.key} info={info.info} />
           </>
         )}
 

@@ -124,9 +124,11 @@ const DelayModal = ({
     })
     messageApi.success({
       content: '已成功提交申请',
-      duration: 2
+      duration: 2,
+      onClose () {
+        fetchAppInfoByEnv && fetchAppInfoByEnv()
+      }
     })
-    fetchAppInfoByEnv && fetchAppInfoByEnv()
     onCancel()
   }
 

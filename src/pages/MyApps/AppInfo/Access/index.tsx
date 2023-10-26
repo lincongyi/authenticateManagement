@@ -15,6 +15,7 @@ import {
 import type { UploadFile } from 'antd'
 import {
   addAppCapabilityForm,
+  editAppCapabilityForm,
   getAppCapabilityForm,
   getCapability
 } from '@/api/ability'
@@ -270,6 +271,8 @@ const Access = () => {
     })
     if (!confirmed) return
 
+    const isEdit = !!searchParams.get('isEdit') // 是否申请配置修改流程
+
     const params: TAddAppCapabilityFormParams = {
       appId: appId!,
       capabilityId,
@@ -278,7 +281,8 @@ const Access = () => {
       env: env!
     }
 
-    await addAppCapabilityForm(params)
+    if (!isEdit) await addAppCapabilityForm(params)
+    else await editAppCapabilityForm(params)
 
     messageApi.success({
       content: `已成功${type ? '提交审核' : '保存草稿'}`,

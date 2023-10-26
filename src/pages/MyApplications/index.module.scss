@@ -1,3 +1,19 @@
 .state-filter {
   display: flex;
 }
+
+:global(.ant-timeline .ant-timeline-item:last-child) {
+  padding-bottom: 0;
+}
+
+:global(.ant-timeline .ant-timeline-item-last >.ant-timeline-item-content) {
+  min-height: inherit;
+}
+
+:global(.ant-timeline .ant-timeline-item-content) {
+  inset-block-start: 0;
+}
+
+:global(.ant-timeline .ant-timeline-item-head-custom) {
+  inset-block-start: 11px;
+}

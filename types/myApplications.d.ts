@@ -38,17 +38,17 @@ type TNodes = {
 }
 
 type TApplyKey =
-  | 'ACCESS_REGISTER' // '单位账号注册申请'
-  | 'UPDATE_COMPANY_INFO' // '变更详情'
-  | 'ACCESS_CAPABILITY' // '基础能力接入申请信息（测试账号）'
-  | 'PROD_CAPABILITY' // '基础能力接入申请信息（正式账号）'
-  | 'APPLY_FILE_CAPABILITY' // '盖章申请表/函'
-  | 'STOP_APPLICATION' // '停用应用信息'
-  | 'START_APPLICATION' // '启用应用信息'
-  | 'CAPABILITY_UPDATE' // '基础服务参数更改申请（测试）'
-  | 'PROD_CAPABILITY_UPDATE' // '基础服务参数更改申请（正式）'
-  | 'ADD_NUM_APPLICATION' // '增加用量申请信息'
-  | 'DELAY_CAPABILITY' // '基础服务延期申请信息'
+  | 'ACCESS_REGISTER' // 单位账号注册申请
+  | 'UPDATE_COMPANY_INFO' // 变更详情
+  | 'ACCESS_CAPABILITY' // 基础能力接入申请信息（测试账号）
+  | 'PROD_CAPABILITY' // 基础能力接入申请信息（正式账号）
+  | 'APPLY_FILE_CAPABILITY' // 盖章申请表/函
+  | 'STOP_APPLICATION' // 停用应用信息
+  | 'START_APPLICATION' // 启用应用信息
+  | 'CAPABILITY_UPDATE' // 基础服务参数更改申请（测试）
+  | 'PROD_CAPABILITY_UPDATE' // 基础服务参数更改申请（正式）
+  | 'ADD_NUM_APPLICATION' // 增加用量申请信息
+  | 'DELAY_CAPABILITY' // 基础服务延期申请信息
 
 type TApplyDetail = {
   id: string
@@ -66,8 +66,9 @@ type TApplyDetail = {
   info: any
   nodes: TNodes[]
   timeline?: {
+    dot: JSX.Element
     color: string
-    children: string
+    children: JSX.Element
   }[]
   key: TApplyKey // 审批单类型
   urging: 0 | 1 // 0-未催办；1-已催办

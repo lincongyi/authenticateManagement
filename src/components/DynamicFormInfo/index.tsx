@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Empty, Form, Table, Tabs, Image, Typography } from 'antd'
 import type { UploadFile } from 'antd'
 import { Tab } from 'rc-tabs/lib/interface.d'
-import type { TFormItem, TFormTabledataSource } from '@/api/ability'
-import type { TGetAppInfoByEnv } from '@/api/myApp'
+import type { TFormItem, TFormList, TFormTabledataSource } from '@/api/ability'
 
-const DynamicFormInfo = ({ capability }: { capability: TGetAppInfoByEnv }) => {
+const DynamicFormInfo = ({ formList }: { formList: TFormList[] }) => {
   const formProps = {
     labelCol: { span: 4 },
     wrapperCol: { span: 12 }
@@ -19,31 +18,23 @@ const DynamicFormInfo = ({ capability }: { capability: TGetAppInfoByEnv }) => {
    * 初始化能力配置信息表单内容
    */
   useEffect(() => {
-    const { form } = capability
-    if (form) {
-      const tabs = form.formList.map(item => ({
-        label: item.formName,
-        key: item.formId.toString()
-      }))
-      setFormTabs(tabs)
-      setFormItems([
-        ...capability.form.formList[0].defaultFormList!,
-        ...capability.form.formList[0].form
-      ])
-    }
-  }, [capability])
+    const tabs = formList.map(item => ({
+      label: item.formName,
+      key: item.formId.toString()
+    }))
+    setFormTabs(tabs)
+    setFormItems([...formList[0].defaultFormList!, ...(formList[0].form || [])])
+  }, [formList])
 
   /**
    * 切换能力配置信息表单内容
    */
   const onChange = (activeKey: string) => {
-    const item = capability?.form.formList.find(
-      item => item.formId === +activeKey
-    )
+    const item = formList.find(item => item.formId === +activeKey)
     if (!item) return
     const index = formTabs?.findIndex(__item => __item.key === activeKey)
     if (!index) {
-      setFormItems([...item.defaultFormList!, ...item.form])
+      setFormItems([...item.defaultFormList!, ...(item.form || [])])
     } else {
       setFormItems(item.form)
     }

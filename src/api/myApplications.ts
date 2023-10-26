@@ -26,7 +26,9 @@ export type TGetApplyListParams = {
 /**
  * 获取申请列表
  */
-const getApplyList = (params: TGetApplyListParams): Promise<TResponse> => {
+const getApplyList = (
+  params: TGetApplyListParams
+): Promise<TResponse<{ list: TApplyDetail[] } & TPagination>> => {
   return request.post('/access/getApplyList', params)
 }
 

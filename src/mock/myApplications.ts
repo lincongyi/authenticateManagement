@@ -120,9 +120,7 @@ export type TGetApplyListParams = {
   processState: -1 | 0 | 1 | 2 | 3 // 审批状态
   startTime?: string | undefined // 开始日期
   endTime?: string | undefined // 结束日期
-  pageNum: number
-  pageSize: number
-}
+} & TPagination
 
 /**
  * 获取申请列表

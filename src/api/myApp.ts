@@ -1,6 +1,6 @@
 import { request } from '@utils/request'
 import type { TAppCount, TDataType } from '@pages/MyApps/Index/index.d'
-import type { TFormItem } from './ability'
+import type { TFormList } from './ability'
 
 /**
  * 获取应用数量
@@ -17,9 +17,6 @@ const getMyAppList = (): Promise<TResponse> => {
 }
 
 type TGetAppListParams = {
-  pageNum: number
-  pageSize: number
-  total: number
   appAbility?: string
   appEnv?: TEnv
   appName?: string
@@ -27,14 +24,11 @@ type TGetAppListParams = {
   startTime?: string
   endTime?: string
   state?: TDataType['state']
-}
+} & TPagination
 
 type TGetAppListResponse = {
   list: TDataType[]
-  pageNum: number
-  pageSize: number
-  total: number
-}
+} & TPagination
 
 /**
  * 获取我的应用列表
@@ -121,13 +115,6 @@ const getAppInfo = (params: {
  */
 const updateApp = (params: TAppParams): Promise<TResponse> => {
   return request.post('/access/updateApp', params)
-}
-
-type TFormList = {
-  form: TFormItem[]
-  defaultFormList?: TFormItem[]
-  formName: string
-  formId: number
 }
 
 export type TGetAppInfoByEnv = {

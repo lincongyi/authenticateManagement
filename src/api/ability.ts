@@ -163,10 +163,20 @@ const getAppCapabilityForm = (params: {
   return request.post('/access/getAppCapabilityForm', params)
 }
 
+/**
+ * 编辑能力配置表单信息
+ */
+const editAppCapabilityForm = (
+  params: TAddAppCapabilityFormParams
+): Promise<TResponse> => {
+  return request.post('/access/editAppCapabilityForm', params)
+}
+
 export {
   getCapabilityList,
   getCapability,
   getAccessList,
   addAppCapabilityForm,
-  getAppCapabilityForm
+  getAppCapabilityForm,
+  editAppCapabilityForm
 }

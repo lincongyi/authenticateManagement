@@ -34,6 +34,12 @@ import dayjs from 'dayjs'
 import { useStore } from '@stores/index'
 import { useUpdateEffect, useGetDictionary } from '@/hooks'
 import { observer } from 'mobx-react-lite'
+import {
+  CheckCircleFilled,
+  ClockCircleFilled,
+  CloseCircleFilled,
+  ExclamationCircleFilled
+} from '@ant-design/icons'
 
 const { RangePicker } = DatePicker
 
@@ -134,17 +140,35 @@ const MyApplications = () => {
     return result?.label || ''
   }
 
+  const [dataSource, setDataSource] = useState<TApplyDetail[]>([])
+
   /**
    * 渲染表格数据
    */
   const renderTable = async (params: TGetApplyListParams) => {
     const { data } = await getApplyList(params)
-    const list = data.list.map((item: TApplyDetail) => {
+    if (!data) return
+    const list = data.list.map(item => {
+      const { state } = item
       /**
        * 处理审批进度组件数据
        */
-      const timeline = item.nodes.map(__item => {
+      const timeline = item.nodes.map((__item, __index) => {
         return {
+          dot:
+            __index === item.nodes.length - 1 ? (
+              [
+                <CheckCircleFilled key={state} />,
+                <ClockCircleFilled key={state} />,
+                <CloseCircleFilled style={{ color: '#FF4050' }} key={state} />,
+                <ExclamationCircleFilled
+                  style={{ color: '#bfbfbf' }}
+                  key={state}
+                />
+              ][state]
+            ) : (
+              <CheckCircleFilled />
+            ),
           color: ['blue', 'gray', 'red', 'orange'][__item.isPass],
           children: (
             <span
@@ -440,8 +464,6 @@ const MyApplications = () => {
       )
     }
   ]
-
-  const [dataSource, setDataSource] = useState<TApplyDetail[]>([])
 
   return (
     <>

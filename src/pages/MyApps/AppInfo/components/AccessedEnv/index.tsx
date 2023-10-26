@@ -217,7 +217,9 @@ const AccessedEnv = () => {
   const onEdit = () => {
     if (!capability) return
     navigate(
-      `./access?appId=${appId}&capabilityId=${capability.capabilityId}&env=${env}`
+      `./access?appId=${appId}&capabilityId=${
+        capability.capabilityId
+      }&env=${env}&isEdit=${true}`
     )
   }
 
@@ -394,7 +396,9 @@ const AccessedEnv = () => {
               </Space>
             </div>
 
-            {capability && <DynamicFormInfo capability={capability} />}
+            {capability && (
+              <DynamicFormInfo formList={capability.form.formList} />
+            )}
           </div>
         </Col>
       </Row>

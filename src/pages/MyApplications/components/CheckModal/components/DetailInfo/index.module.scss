@@ -1,0 +1,21 @@
+.container {
+  padding: 24px 32px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+}
+
+.img-wrap {
+  display: inline-block;
+  padding: 4px;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+
+  &.different {
+    border-color: #f00;
+  }
+
+  & + .img-wrap {
+    margin-left: 10px;
+  }
+}

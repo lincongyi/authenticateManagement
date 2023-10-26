@@ -51,7 +51,8 @@ const UploadForm = () => {
   const fileBeforeUpload = (file: RcFile) => {
     const { name } = file
     const fileType = name.substring(name.lastIndexOf('.') + 1)
-    const isMatched = ['doc', 'docx', 'pdf', 'png', 'jpg'].includes(fileType)
+    // const isMatched = ['doc', 'docx', 'pdf', 'png', 'jpg'].includes(fileType)
+    const isMatched = ['pdf'].includes(fileType)
     if (!isMatched) messageApi.error(`不支持上传${fileType}格式文件`)
     return isMatched || Upload.LIST_IGNORE
   }
