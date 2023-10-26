@@ -129,6 +129,9 @@ const DynamicForm = React.forwardRef<
       ...imageList,
       [field]: imageList[field].filter(item => item.uid !== uid)
     })
+
+    // 为了不让Upload组件执行onChange事件
+    return false
   }
 
   const [previewOpen, setPreviewOpen] = useState(false) // 控制预览图片Modal显示隐藏
@@ -211,6 +214,9 @@ const DynamicForm = React.forwardRef<
       ...fileList,
       [field]: fileList[field].filter(item => item.uid !== uid)
     })
+
+    // 为了不让Upload组件执行onChange事件
+    return false
   }
 
   const [keyPair, setKeyPair] =
@@ -222,7 +228,6 @@ const DynamicForm = React.forwardRef<
   const generateKeyPair = async (field: string) => {
     const { data } = await getSecretKey()
     if (!data) return
-
     const { publicKey, privateKey } = data
     setKeyPair({ ...keyPair, [field]: { publicKey, privateKey } })
     form.setFieldValue(field, publicKey)
