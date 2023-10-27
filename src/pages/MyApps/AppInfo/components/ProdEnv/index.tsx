@@ -176,7 +176,11 @@ const ProdEnv = () => {
                           </div>
                         )}
                       </div>
-                      <div className={style.dashed}></div>
+                      <div
+                        className={`${style.dashed} ${
+                          state > 5 && style.active
+                        }`}
+                      ></div>
                     </Col>
                     <Col span={6} className={style.flex}>
                       <div
