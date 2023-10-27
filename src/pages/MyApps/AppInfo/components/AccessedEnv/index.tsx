@@ -57,13 +57,6 @@ const AccessedEnv = () => {
 
   const [isHide, setIsHide] = useState(true) // 查看or隐藏Client Secret
 
-  /**
-   * 查看配置更新记录
-   */
-  const onCheck = () => {
-    console.log('onCheck')
-  }
-
   const [dateRange, setDateRange] = useState<string[]>([
     dayjs().add(-7, 'd').format(dateFormat),
     dayjs().format(dateFormat)
@@ -298,12 +291,7 @@ const AccessedEnv = () => {
             </div>
             <div className={style['info-item']}>
               <div className={style.label}>配置更新时间</div>
-              <div className={style.value}>
-                {capability?.updateTime}
-                <Button type='link' onClick={onCheck}>
-                  查看配置更新记录
-                </Button>
-              </div>
+              <div className={style.value}>{capability?.updateTime}</div>
             </div>
           </div>
         </Col>

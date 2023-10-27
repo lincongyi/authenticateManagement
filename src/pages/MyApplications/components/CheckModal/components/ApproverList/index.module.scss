@@ -1,0 +1,18 @@
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+}
+
+.sign-list-wrap {
+  padding: 10px 20px;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+}

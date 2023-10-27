@@ -21,18 +21,30 @@ type TDictList = {
   dictValue: TDictValue[]
 }
 
+/**
+ * 申请状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+ */
+type TIsPass = 0 | 1 | 2 | 3
+
+type TSign = {
+  completeTime: string | null
+  isPass: TIsPass
+  name: string
+}
+
 type TSysUser = {
   id: number
   isPassUser: boolean // 是否作为当前节点通过的负责人
   completeTime: string // 完成时间
-  passState: 0 | 1 | 2 | 3 // 申请状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+  passState: TIsPass
   nickName: string // 审批人员姓名
+  signList: TSign[] // 当前节点加签审批员
 }
 
 type TNodes = {
   name: string // 审批进度节点name
   userCount: number // 当前节点人数
-  isPass: 0 | 1 | 2 | 3 // 当前节点状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+  isPass: TIsPass // 当前节点最终审批结果
   sysUsers: TSysUser[]
   isMulti: 0 | 1 // 0-或签节点；1-会签节点
 }
@@ -45,15 +57,14 @@ type TApplyKey =
   | 'APPLY_FILE_CAPABILITY' // 盖章申请表/函
   | 'STOP_APPLICATION' // 停用应用信息
   | 'START_APPLICATION' // 启用应用信息
-  | 'CAPABILITY_UPDATE' // 基础服务参数更改申请（测试）
-  | 'PROD_CAPABILITY_UPDATE' // 基础服务参数更改申请（正式）
+  | 'CAPABILITY_UPDATE' // 基础服务参数更改申请（测试）（正式）
   | 'ADD_NUM_APPLICATION' // 增加用量申请信息
   | 'DELAY_CAPABILITY' // 基础服务延期申请信息
 
 type TApplyDetail = {
   id: string
   processInstanceId: string // 审批单号
-  state: 0 | 1 | 2 | 3 // 申请状态：0-审批通过；1-审批中；2-审批不通过；3-撤回
+  state: TIsPass
   count: number
   unifyName: string // 应用/服务名称
   addTime: string // 申请时间
@@ -64,6 +75,8 @@ type TApplyDetail = {
   processName: string // 审批单类型
   isNoticeUser: boolean // 是否被查看过
   info: any
+  endCopyList: TSign[] // 提交审批抄送
+  startCopyList: TSign[] // 审批结束抄送
   nodes: TNodes[]
   timeline?: {
     dot: JSX.Element

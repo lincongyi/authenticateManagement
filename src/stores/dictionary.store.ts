@@ -73,8 +73,7 @@ const DictionaryStore = () => {
       APPLY_FILE_CAPABILITY: '盖章申请表/函',
       STOP_APPLICATION: '停用应用信息',
       START_APPLICATION: '启用应用信息',
-      CAPABILITY_UPDATE: '基础服务参数更改申请（测试）',
-      PROD_CAPABILITY_UPDATE: '基础服务参数更改申请（正式）',
+      CAPABILITY_UPDATE: '基础服务参数更改申请（测试）（正式）',
       ADD_NUM_APPLICATION: '增加用量申请信息',
       DELAY_CAPABILITY: '基础服务延期申请信息'
     }

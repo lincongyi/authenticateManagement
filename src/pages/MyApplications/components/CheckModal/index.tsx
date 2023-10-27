@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import style from './index.module.scss'
-import { Modal, Button, Steps, Tag, Typography, Space } from 'antd'
+import { Modal, Button, Steps, Tag, Typography } from 'antd'
 import { getApplyDetail } from '@api/myApplications'
-import userAvatar from '@/assets/myApplications-default-avatar.png'
 import ApprovalBasicInfo from './components/ApprovalBasicInfo'
 import DetailInfo from './components/DetailInfo'
-import { CheckCircleFilled, CloseCircleFilled } from '@ant-design/icons'
-import { useStore } from '@stores/index'
+import userAvatar from '@/assets/myApplications-default-avatar.png'
 import { useGetDictionary } from '@/hooks'
-
-const { Text } = Typography
+import ApproverList from './components/ApproverList'
+import { StepProps } from 'antd/lib/steps'
 
 /**
  * 节点title
@@ -30,7 +28,7 @@ const NodeTitle = ({
   return (
     <div style={{ fontWeight: 'bold' }}>
       {item.name}（{item.userCount}）
-      <Text
+      <Typography.Text
         strong
         style={{
           fontSize: 14,
@@ -38,57 +36,11 @@ const NodeTitle = ({
         }}
       >
         {['已通过', '审批中', '审批未通过', '撤回'][item.isPass]}
-      </Text>
+      </Typography.Text>
       {isEnded && (
         <Tag style={{ marginLeft: 8, fontWeight: 'normal' }}>已结束</Tag>
       )}
     </div>
-  )
-}
-
-/**
- * 遍历负责审批的用户列表
- */
-const UserList = ({
-  list,
-  isPass
-}: {
-  list: TSysUser[]
-  isPass: TNodes['isPass']
-}) => {
-  const { themeStore } = useStore()
-
-  const colorPrimary = themeStore.antdThemeColor
-
-  return (
-    <>
-      {list.map(item => (
-        <div className={style['user-item']} key={item.id}>
-          <p className={style.flex}>
-            <img src={userAvatar} style={{ marginRight: 10 }} />
-            {item.nickName}
-            {item.isPassUser &&
-              (item.passState ? (
-                <CloseCircleFilled
-                  style={{ color: '#FF3B30', marginLeft: 4 }}
-                />
-              ) : (
-                <CheckCircleFilled
-                  style={{ color: colorPrimary, marginLeft: 4 }}
-                />
-              ))}
-          </p>
-          <Space>
-            {item.completeTime && (
-              <Text type='secondary'>
-                {['审批通过', '审批中', '审批不通过', '撤回'][isPass]}
-              </Text>
-            )}
-            {item.completeTime}
-          </Space>
-        </div>
-      ))}
-    </>
   )
 }
 
@@ -109,12 +61,62 @@ const CheckModal = ({
 
   const [current, setCurrent] = useState(0)
 
+  /**
+   * 审批流程
+   */
   const [items, setItems] = useState<
     {
       title: JSX.Element
       description: JSX.Element
     }[]
   >()
+
+  /**
+   * 提交审批抄送
+   */
+  const [startCopyItems, setStartCopyItems] = useState<
+    {
+      title?: React.ReactNode
+      status?: 'wait' | 'error' | 'process' | 'finish' | undefined
+      description?: React.ReactNode
+    }[]
+  >()
+
+  /**
+   * 审批结束抄送
+   */
+  const [endCopyItems, setEndCopyItems] = useState<
+    {
+      title?: React.ReactNode
+      status?: 'wait' | 'error' | 'process' | 'finish' | undefined
+      description?: React.ReactNode
+    }[]
+  >()
+
+  const getCopyItems = (list: TSign[]) => {
+    return [
+      {
+        title: (
+          <p style={{ fontWeight: 'bold', color: '#1e2636' }}>审批结束抄送</p>
+        ),
+        status: 'process',
+        description: (
+          <>
+            {list.map(item => {
+              return (
+                <>
+                  <p className={style.flex}>
+                    <img src={userAvatar} style={{ marginRight: 10 }} />
+                    {item.name}
+                  </p>
+                </>
+              )
+            })}
+          </>
+        )
+      } as StepProps
+    ]
+  }
 
   /**
    * 监听传入的审批id变更
@@ -125,7 +127,7 @@ const CheckModal = ({
       const { data } = await getApplyDetail({ instanceId })
       if (!data) return
       setInfo(data)
-      const { nodes } = data
+      const { nodes, startCopyList, endCopyList } = data
       /**
        * 格式化审批进度数据
        */
@@ -133,14 +135,19 @@ const CheckModal = ({
         const isLastNode = index === nodes.length - 1
         return {
           title: <NodeTitle item={{ ...item, isLastNode }} />,
-          description: <UserList list={item.sysUsers} isPass={item.isPass} />
+          description: <ApproverList list={item.sysUsers} />
         }
       })
 
       const index = nodes.findIndex(item => item.isPass)
+
       setCurrent(index)
 
       setItems(items)
+
+      setStartCopyItems(getCopyItems(startCopyList))
+
+      setEndCopyItems(getCopyItems(endCopyList))
     })()
   }, [instanceId])
 
@@ -176,7 +183,9 @@ const CheckModal = ({
         )}
 
         <div className='title'>审批进度</div>
+        <Steps direction='vertical' items={startCopyItems} />
         <Steps direction='vertical' current={current} items={items} />
+        <Steps direction='vertical' items={endCopyItems} />
       </div>
     </Modal>
   )
