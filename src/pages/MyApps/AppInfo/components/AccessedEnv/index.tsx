@@ -9,7 +9,6 @@ import {
   Alert,
   Table,
   Space,
-  Typography,
   Empty
 } from 'antd'
 import dayjs from 'dayjs'
@@ -20,7 +19,8 @@ import {
   HistoryOutlined,
   FileTextOutlined,
   EyeOutlined,
-  EyeInvisibleOutlined
+  EyeInvisibleOutlined,
+  CopyOutlined
 } from '@ant-design/icons'
 import { dateFormat, disabledDate, rangePresets } from '@utils/date'
 import LineChart from './components/LineChart'
@@ -38,9 +38,9 @@ import DynamicFormInfo from '@/components/DynamicFormInfo'
 import { useStore } from '@/stores'
 import type { RangeValue } from 'rc-picker/lib/interface.d'
 import { getProjectId } from '@/api/devDocument'
+import { handleCopy } from '@/utils'
 
 const { RangePicker } = DatePicker
-const { Paragraph } = Typography
 
 const AccessedEnv = () => {
   const { env } = useContext(appInfoContext)!
@@ -245,37 +245,37 @@ const AccessedEnv = () => {
               <div className={style.value}>
                 {isHide ? '**************' : capability?.clientSecret}
                 <Space>
-                  <div>
+                  <div
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setIsHide(!isHide)}
+                  >
                     {isHide ? (
                       <EyeOutlined
                         style={{
                           color: '#1E55D1',
-                          marginRight: 4,
-                          cursor: 'pointer'
+                          marginRight: 4
                         }}
-                        onClick={() => setIsHide(!isHide)}
                       />
                     ) : (
                       <EyeInvisibleOutlined
                         style={{
                           color: '#1E55D1',
-                          marginRight: 4,
-                          cursor: 'pointer'
+                          marginRight: 4
                         }}
-                        onClick={() => setIsHide(!isHide)}
                       />
                     )}
                     {isHide ? '查看' : '隐藏'}
                   </div>
-                  <div>
-                    <Paragraph
-                      copyable={{ text: capability?.clientSecret }}
+                  <div
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => handleCopy(capability?.clientSecret)}
+                  >
+                    <CopyOutlined
                       style={{
-                        marginRight: 4,
-                        marginBottom: 0,
-                        display: 'inline-block'
+                        color: '#1E55D1',
+                        marginRight: 4
                       }}
-                    ></Paragraph>
+                    />
                     复制
                   </div>
                 </Space>

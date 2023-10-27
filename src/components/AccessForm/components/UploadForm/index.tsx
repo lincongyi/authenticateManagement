@@ -52,9 +52,9 @@ const UploadForm = React.forwardRef<
    * 上传前校验文件格式
    */
   const beforeUpload = (file: RcFile) => {
-    const reg = /application\/vnd|application\/pdf|image\/jpeg/
+    const reg = /application\/pdf/
     const isPermitted = reg.test(file.type)
-    if (!isPermitted) messageApi.error('上传只支持doc/docx/pdf/jpg格式')
+    if (!isPermitted) messageApi.error('申请表（函）文件只支持pdf格式')
     return isPermitted
   }
 
@@ -121,7 +121,7 @@ const UploadForm = React.forwardRef<
           name='fileUrl'
           label='（附印章）基础能力接入申请表：'
           valuePropName='fileUrl'
-          extra='支持文件格式：doc/docx/pdf/jpg'
+          extra='支持文件格式：pdf'
           rules={[{ required: true, message: '请上传申请表' }]}
         >
           <Upload
@@ -136,7 +136,7 @@ const UploadForm = React.forwardRef<
           name='fileUrl2'
           label='（附印章）基础能力接入申请函：'
           valuePropName='fileUrl2'
-          extra='支持文件格式：doc/docx/pdf/jpg'
+          extra='支持文件格式：pdf'
           rules={[{ required: true, message: '请上传申请函' }]}
         >
           <Upload

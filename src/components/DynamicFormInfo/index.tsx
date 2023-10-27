@@ -48,7 +48,12 @@ const DynamicFormInfo = ({ formList }: { formList: TFormList[] }) => {
       return (
         <>
           {(item.labelValue as UploadFile[]).map(__item => (
-            <Image width={200} height={200} src={__item.url} key={__item.uid} />
+            <div
+              style={{ marginRight: 10, display: 'inline-block ' }}
+              key={__item.uid}
+            >
+              <Image width={200} height={200} src={__item.url} />
+            </div>
           ))}
         </>
       )

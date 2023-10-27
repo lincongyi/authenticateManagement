@@ -1,16 +1,6 @@
 import React, { useState } from 'react'
 import style from './index.module.scss'
-import {
-  Button,
-  Col,
-  Divider,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Space,
-  message
-} from 'antd'
+import { Button, Col, Divider, Form, Input, Modal, Row, Space } from 'antd'
 import { LikeOutlined, DislikeOutlined } from '@ant-design/icons'
 import appIcon01 from '@/assets/issue-app-icon-01.png'
 import appIcon02 from '@/assets/issue-app-icon-02.png'
@@ -38,14 +28,11 @@ const CheckModal = ({
     { name: '微警认证小程序', icon: appIcon03 }
   ])
 
-  const [messageApi, contextHolder] = message.useMessage()
-
   /**
    * 复制
    */
   const onCopy = () => {
     handleCopy(item.answer)
-    messageApi.success({ content: '复制成功' })
   }
 
   const item = {
@@ -56,7 +43,6 @@ const CheckModal = ({
 
   return (
     <>
-      {contextHolder}
       <Modal
         title='问题详情'
         open={open}

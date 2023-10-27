@@ -35,7 +35,8 @@ const emailPattern = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
  * @param {string} content 文字内容
  * @returns void
  */
-const handleCopy = (content: string) => {
+const handleCopy = (content: string | undefined) => {
+  if (!content) return
   const copy = (e: ClipboardEvent) => {
     e.preventDefault()
     e.clipboardData!.setData('text/plain', content)
@@ -43,6 +44,7 @@ const handleCopy = (content: string) => {
   }
   document.addEventListener('copy', copy)
   document.execCommand('Copy')
+  message.success({ content: '复制成功' })
 }
 
 /**
