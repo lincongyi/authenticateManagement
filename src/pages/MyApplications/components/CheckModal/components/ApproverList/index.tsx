@@ -9,8 +9,6 @@ import userAvatar from '@/assets/myApplications-default-avatar.png'
  * 遍历负责审批的用户列表
  */
 const ApproverList = ({ list }: { list: TSysUser[] }) => {
-  console.log('list', list)
-
   const { themeStore } = useStore()
 
   const colorPrimary = themeStore.antdThemeColor

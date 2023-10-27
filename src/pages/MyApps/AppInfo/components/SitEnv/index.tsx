@@ -86,7 +86,9 @@ const SitEnv = () => {
    * 查看审批单
    */
   const onView = () => {
-    messageApi.info('暂未支持查看审批单')
+    if (!activeCapability) return
+    const { flowId } = activeCapability
+    navigate(`/app/myApplications?processInstanceId=${flowId}`)
   }
 
   /**
@@ -177,7 +179,11 @@ const SitEnv = () => {
                           </div>
                         )}
                       </div>
-                      <div className={style.dashed}></div>
+                      <div
+                        className={`${style.dashed} ${
+                          state > 1 && style.active
+                        }`}
+                      ></div>
                     </Col>
                     <Col span={6} className={style.flex}>
                       <div
@@ -231,7 +237,11 @@ const SitEnv = () => {
                           </div>
                         )}
                       </div>
-                      <div className={style.dashed}></div>
+                      <div
+                        className={`${style.dashed} ${
+                          state > 3 && style.active
+                        }`}
+                      ></div>
                     </Col>
                     <Col span={6} className={style.flex}>
                       <div

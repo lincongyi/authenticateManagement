@@ -131,6 +131,7 @@ export type TGetAppInfoByEnv = {
   form: {
     formList: TFormList[]
   }
+  flowId: string // 审批单id
 }
 
 /**

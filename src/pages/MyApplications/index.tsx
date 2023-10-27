@@ -29,7 +29,7 @@ import {
 import type { TGetApplyListParams } from '@api/myApplications'
 import { formatDictionary } from '@utils/index'
 import CheckModal from './components/CheckModal'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { useStore } from '@stores/index'
 import { useUpdateEffect, useGetDictionary } from '@/hooks'
@@ -114,6 +114,8 @@ const MyApplications = () => {
     setProcessKeyList(formatDictionary(keyList))
   }, [dictionaryStore.getDictionaryItem('processKeyList')])
 
+  const [searchParams] = useSearchParams()
+
   /**
    * 初始化表格数据
    */
@@ -122,6 +124,9 @@ const MyApplications = () => {
       processState: -1,
       ...defaultPagination
     })
+
+    const processInstanceId = searchParams.get('processInstanceId')
+    if (processInstanceId) onCheck({ processInstanceId })
   }, [])
 
   /**

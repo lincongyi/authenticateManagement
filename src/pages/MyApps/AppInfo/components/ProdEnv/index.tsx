@@ -87,7 +87,9 @@ const ProdEnv = () => {
    * 查看审批单
    */
   const onView = () => {
-    messageApi.info('暂未支持查看审批单')
+    if (!activeCapability) return
+    const { flowId } = activeCapability
+    navigate(`/app/myApplications?processInstanceId=${flowId}`)
   }
 
   return (
