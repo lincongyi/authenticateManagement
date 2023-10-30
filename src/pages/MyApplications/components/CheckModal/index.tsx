@@ -93,11 +93,13 @@ const CheckModal = ({
     }[]
   >()
 
-  const getCopyItems = (list: TSign[]) => {
+  const getCopyItems = (list: TSign[], type: 0 | 1) => {
     return [
       {
         title: (
-          <p style={{ fontWeight: 'bold', color: '#1e2636' }}>审批结束抄送</p>
+          <p style={{ fontWeight: 'bold', color: '#1e2636' }}>
+            {!type ? '提交审批抄送' : '审批结束抄送'}
+          </p>
         ),
         status: 'process',
         description: (
@@ -145,9 +147,9 @@ const CheckModal = ({
 
       setItems(items)
 
-      setStartCopyItems(getCopyItems(startCopyList))
+      setStartCopyItems(getCopyItems(startCopyList, 0))
 
-      setEndCopyItems(getCopyItems(endCopyList))
+      setEndCopyItems(getCopyItems(endCopyList, 1))
     })()
   }, [instanceId])
 

@@ -10,7 +10,8 @@ import {
   RadarChartOutlined,
   AppstoreOutlined,
   SolutionOutlined,
-  FileSearchOutlined
+  FileSearchOutlined,
+  BellOutlined
 } from '@ant-design/icons'
 
 // 从文件系统导入多个模块
@@ -231,6 +232,15 @@ const routes: TRoutes[] = [
           isMenuItem: true,
           icon: React.createElement(SolutionOutlined),
           breadcrumb: '我的申请'
+        }
+      },
+      {
+        path: 'messageCenter', // 消息中心
+        element: lazyLoad('MessageCenter'),
+        meta: {
+          isMenuItem: true,
+          icon: React.createElement(BellOutlined),
+          breadcrumb: '消息中心'
         }
       }
       // {

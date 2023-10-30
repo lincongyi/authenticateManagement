@@ -18,30 +18,47 @@ import { runInAction } from 'mobx'
 import { getApplyCount } from '@api/myApplications'
 import { ItemType } from 'antd/es/breadcrumb/Breadcrumb'
 import type { TRoutes } from '../../router'
+import { getUnReadNum } from '@/api/messageCenter'
 
 const { Content, Sider } = Layout
 
 const AppLayout = () => {
-  const { applyCountStore } = useStore()
-  const [menuItems, setMenuItems] = useState<MenuProps['items']>()
+  const { applyCountStore, unreadCountStore } = useStore()
+
+  const [menuItems, setMenuItems] = useState<TMenuItem[]>()
+
   useEffect(() => {
-    // 渲染导航菜单栏并且获取我的申请数
+    /**
+     * 渲染导航菜单栏并且获取我的申请数
+     */
     ;(async () => {
-      // 暂时屏蔽获取我的申请数
       if (!applyCountStore.applyCount.length) {
         const { data } = await getApplyCount()
-        applyCountStore.setApplyCount(data!)
+        if (!data) return
+        applyCountStore.setApplyCount(data)
+      }
+      /**
+       * 渲染导航菜单栏并且获取未读消息数
+       */
+      if (unreadCountStore.unreadCount === undefined) {
+        const { data } = await getUnReadNum()
+        if (!data) return
+        unreadCountStore.setUnreadCount(data.unRead)
       }
       const items = getMenu()
 
       setMenuItems(() =>
         items.map(item => {
-          if (item.label === '我的申请') {
+          if (['我的申请', '消息中心'].includes(item.label as string)) {
             item.label = (
               <>
-                我的申请
+                {item.label}
                 <Badge
-                  count={applyCountStore.getTotal()}
+                  count={
+                    item.label === '我的申请'
+                      ? applyCountStore.getTotal()
+                      : unreadCountStore.unreadCount
+                  }
                   style={{ marginLeft: 4, marginBottom: 4 }}
                 />
               </>

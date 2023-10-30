@@ -5,6 +5,7 @@ import AccessFormStore from './accessForm.store'
 import ApplyCountStore from './applyCount.store'
 import DictionaryStore from './dictionary.store'
 import MyAppStore from './myApp.store'
+import unreadCount from './unread.store'
 
 const RootStore = React.createContext({
   registerStore: RegisterStore(),
@@ -12,7 +13,8 @@ const RootStore = React.createContext({
   accessFormStore: AccessFormStore(),
   applyCountStore: ApplyCountStore(),
   dictionaryStore: DictionaryStore(),
-  myAppStore: MyAppStore()
+  myAppStore: MyAppStore(),
+  unreadCountStore: unreadCount()
 })
 
 const useStore = () => React.useContext(RootStore)

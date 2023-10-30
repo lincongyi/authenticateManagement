@@ -1,11 +1,13 @@
 import React from 'react'
 import style from './index.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { Button, Dropdown, Space, Modal, message } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { Button, Dropdown, Space, Modal, message, Badge, Image } from 'antd'
+import { BellFilled } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import Logo from '@/assets/logo.png'
 import { logout } from '@api/index'
+import defaultUser from '@/assets/default-user.png'
+import { useStore } from '@/stores'
 
 export const dropdownList: TMenuItem[] = [
   { key: 'myAccount', label: '用户信息', icon: 'myAccount' },
@@ -30,6 +32,8 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
   const toHome = () => {
     navigate('/')
   }
+
+  const { unreadCountStore } = useStore()
 
   const items: MenuProps['items'] = dropdownList.map((item, index) => {
     return {
@@ -95,7 +99,16 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
               >
                 {companyName}
               </Button>
-              <UserOutlined />
+              <Badge size='small' count={unreadCountStore.unreadCount}>
+                <BellFilled style={{ fontSize: 18, color: '#fff' }} />
+              </Badge>
+
+              <Image
+                width={32}
+                style={{ marginLeft: 10 }}
+                preview={false}
+                src={defaultUser}
+              />
               <Dropdown menu={{ items }} placement='bottomRight' arrow>
                 <Button type='text' style={{ color: '#fff' }}>
                   {accountNumber}

@@ -1,0 +1,20 @@
+.item:nth-child(2n) {
+  background-color: #f7f8fa;
+}
+
+.meta {
+  color: #9a9da4;
+
+  &.active {
+    @include font-primary-color;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+:global(.ant-list .ant-list-item) {
+  padding: 16px 20px;
+}
