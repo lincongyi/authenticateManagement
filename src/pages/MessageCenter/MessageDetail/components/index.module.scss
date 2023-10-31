@@ -1,0 +1,19 @@
+.title {
+  color: $primary-color;
+  font-weight: bold;
+  font-size: 26px;
+  line-height: 1.5;
+}
+
+.date {
+  @include font-primary-color;
+
+  margin-top: 20px;
+}
+
+.tips {
+  @include font-primary-color;
+
+  font-size: 16px;
+  line-height: 24px;
+}
