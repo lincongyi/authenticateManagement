@@ -66,13 +66,13 @@ const ScanQrcode = ({
   }
 
   type TQrcode = {
-    qrcodeContent: string
+    qrCodeContent: string
     certToken: string
     status: 'active' | 'expired' | 'loading'
   }
 
   const [qrcode, setQrcode] = useState<TQrcode>({
-    qrcodeContent: '',
+    qrCodeContent: '',
     certToken: '',
     status: 'loading'
   })
@@ -82,9 +82,9 @@ const ScanQrcode = ({
    */
   const handleQrcode = async () => {
     const { data } = await getQrcode()
-    const { qrcodeContent, certToken } = data
+    const { qrCodeContent, certToken } = data
     setQrcode({
-      qrcodeContent,
+      qrCodeContent,
       certToken,
       status: 'active'
     })
@@ -105,20 +105,20 @@ const ScanQrcode = ({
    * 设置定时器，二维码过期时间
    */
   useEffect(() => {
-    if (!qrcode.qrcodeContent) return
+    if (!qrcode.qrCodeContent) return
     clearTimeout(qrcodeTimer)
     qrcodeTimer = setTimeout(() => {
       setQrcode({ ...qrcode, status: 'expired' })
       clearInterval(wsTimer)
       ws && ws.close()
     }, 5 * 60 * 1000)
-  }, [qrcode.qrcodeContent])
+  }, [qrcode.qrCodeContent])
   return (
     <>
       {contextHolder}
-      {qrcode.qrcodeContent && (
+      {qrcode.qrCodeContent && (
         <QRCode
-          value={qrcode.qrcodeContent}
+          value={qrcode.qrCodeContent}
           status={qrcode.status}
           color={qrcodeColor}
           onRefresh={() => handleQrcode()}

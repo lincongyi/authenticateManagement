@@ -1,27 +1,55 @@
-import React from 'react'
-import { Badge, Button, Divider, List, Image } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Badge, Button, Divider, List, Image, Pagination } from 'antd'
 import style from './index.module.scss'
 import { useStore } from '@/stores'
 import messageCenterBell from '@/assets/messageCenter-bell.png'
 import messageCenterBellActive from '@/assets/messageCenter-bell-active.png'
+import { getMsgList } from '@api/messageCenter'
+import type { TMsg } from '@api/messageCenter'
+import { useNavigate } from 'react-router-dom'
 
 const MessageCenter = () => {
   const { unreadCountStore } = useStore()
 
-  const data = [
-    {
-      title: 'Ant Design Title 1'
-    },
-    {
-      title: 'Ant Design Title 2'
-    },
-    {
-      title: 'Ant Design Title 3'
-    },
-    {
-      title: 'Ant Design Title 4'
-    }
-  ]
+  const [messageList, setMessageList] = useState<TMsg[]>()
+
+  const fetchMsgList = async () => {
+    const { data } = await getMsgList({
+      pageNum: pagination.pageNum,
+      pageSize: pagination.pageSize
+    })
+    if (!data) return
+    setMessageList(data.list)
+  }
+
+  /**
+   * 表格分页参数
+   */
+  const [pagination, setPagination] = useState<TPagination>({
+    pageNum: 1,
+    pageSize: 10,
+    total: 11
+  })
+
+  /**
+   * 初始化消息列表数据 && 监听翻页事件
+   */
+  useEffect(() => {
+    fetchMsgList()
+  }, [pagination.pageNum])
+
+  /**
+   * 监听翻页事件
+   */
+  const onChange = (page: number) => {
+    setPagination({ ...pagination, pageNum: page })
+  }
+
+  const navigate = useNavigate()
+
+  const onCheck = async (id: number) => {
+    navigate(`./messageDetail?id=${id}`)
+  }
 
   return (
     <>
@@ -33,21 +61,28 @@ const MessageCenter = () => {
       <Divider />
       <List
         itemLayout='horizontal'
-        dataSource={data}
+        dataSource={messageList}
         renderItem={item => (
-          <List.Item className={style.item}>
+          <List.Item className={style.item} onClick={() => onCheck(item.id)}>
             <List.Item.Meta
-              className={style.meta}
               avatar={
-                <Image width={25} preview={false} src={messageCenterBell} />
+                <Image
+                  width={25}
+                  preview={false}
+                  src={
+                    item.isRead ? messageCenterBell : messageCenterBellActive
+                  }
+                />
               }
               title={
                 <>
-                  <div className={style.content}>
-                    <div className={style.title}>
-                      恭喜您注册申请通过，快去应用服务中心探索你想要的服务吧
-                    </div>
-                    <div className={style.date}>2023.04.25 18:13:12</div>
+                  <div
+                    className={`${style.content} ${
+                      !item.isRead && style.active
+                    }`}
+                  >
+                    <div className={style.title}>{item.title}</div>
+                    <div className={style.date}>{item.sendTime}</div>
                   </div>
                 </>
               }
@@ -55,6 +90,9 @@ const MessageCenter = () => {
           </List.Item>
         )}
       />
+      <div className={style['pagination-wrap']}>
+        <Pagination {...pagination} onChange={onChange} />
+      </div>
     </>
   )
 }

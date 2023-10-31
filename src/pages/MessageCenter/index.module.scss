@@ -1,20 +1,26 @@
+.item {
+  cursor: pointer;
+}
+
 .item:nth-child(2n) {
   background-color: #f7f8fa;
 }
 
-.meta {
+.content {
+  display: flex;
+  justify-content: space-between;
   color: #9a9da4;
 
   &.active {
     @include font-primary-color;
   }
-
-  .content {
-    display: flex;
-    justify-content: space-between;
-  }
 }
 
 :global(.ant-list .ant-list-item) {
   padding: 16px 20px;
+}
+
+.pagination-wrap {
+  margin: 10px 0;
+  text-align: right;
 }

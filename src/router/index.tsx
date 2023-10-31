@@ -236,7 +236,19 @@ const routes: TRoutes[] = [
       },
       {
         path: 'messageCenter', // 消息中心
-        element: lazyLoad('MessageCenter'),
+        children: [
+          {
+            path: '',
+            element: lazyLoad('MessageCenter')
+          },
+          {
+            path: 'messageDetail',
+            element: lazyLoad('MessageCenter/MessageDetail'),
+            meta: {
+              breadcrumb: '查看消息'
+            }
+          }
+        ],
         meta: {
           isMenuItem: true,
           icon: React.createElement(BellOutlined),

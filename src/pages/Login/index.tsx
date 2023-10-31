@@ -82,10 +82,6 @@ const Login = () => {
     password: 'dabby@2019'
   }
 
-  const onChange = (key: string) => {
-    console.log(key)
-  }
-
   const items: TabsProps['items'] = [
     {
       key: '1',
@@ -200,13 +196,7 @@ const Login = () => {
             <Typography.Title level={3} className='tc'>
               欢迎来到微警开发平台·机构端
             </Typography.Title>
-            <Tabs
-              size='large'
-              centered
-              defaultActiveKey='1'
-              items={items}
-              onChange={onChange}
-            />
+            <Tabs size='large' centered defaultActiveKey='1' items={items} />
           </div>
         </div>
       </Content>

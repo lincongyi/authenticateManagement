@@ -28,22 +28,22 @@ const AppLayout = () => {
   const [menuItems, setMenuItems] = useState<TMenuItem[]>()
 
   useEffect(() => {
-    /**
-     * 渲染导航菜单栏并且获取我的申请数
-     */
     ;(async () => {
-      if (!applyCountStore.applyCount.length) {
-        const { data } = await getApplyCount()
-        if (!data) return
-        applyCountStore.setApplyCount(data)
-      }
       /**
-       * 渲染导航菜单栏并且获取未读消息数
+       * 渲染导航菜单栏并且获取未读消息数（优先获取未读消息）
        */
       if (unreadCountStore.unreadCount === undefined) {
         const { data } = await getUnReadNum()
         if (!data) return
         unreadCountStore.setUnreadCount(data.unRead)
+      }
+      /**
+       * 渲染导航菜单栏并且获取我的申请数
+       */
+      if (!applyCountStore.applyCount.length) {
+        const { data } = await getApplyCount()
+        if (!data) return
+        applyCountStore.setApplyCount(data)
       }
       const items = getMenu()
 

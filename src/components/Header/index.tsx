@@ -67,7 +67,7 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
               content: '成功退出登录',
               duration: 2
             })
-            navigate('/')
+            navigate('/login')
           }
         })
         break

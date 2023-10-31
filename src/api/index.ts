@@ -49,7 +49,7 @@ const getProcessByKey = (params: object): Promise<TResponse> => {
  * 获取二维码
  */
 const getQrcode = (): Promise<TResponse> => {
-  return request.get('/user/qrcode')
+  return request.post('/loginQrCode')
 }
 
 export type TDictionary = {
