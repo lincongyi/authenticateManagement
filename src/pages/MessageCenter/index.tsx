@@ -4,12 +4,24 @@ import style from './index.module.scss'
 import { useStore } from '@/stores'
 import messageCenterBell from '@/assets/messageCenter-bell.png'
 import messageCenterBellActive from '@/assets/messageCenter-bell-active.png'
-import { getMsgList } from '@api/messageCenter'
+import { getMsgList, getUnReadNum } from '@api/messageCenter'
 import type { TMsg } from '@api/messageCenter'
 import { useNavigate } from 'react-router-dom'
+import { observer } from 'mobx-react-lite'
 
 const MessageCenter = () => {
   const { unreadCountStore } = useStore()
+
+  /**
+   * 针对查看详情，返回后重新获取未读消息
+   */
+  useEffect(() => {
+    ;(async () => {
+      const { data } = await getUnReadNum()
+      if (!data) return
+      unreadCountStore.setUnreadCount(data.unRead)
+    })()
+  }, [])
 
   const [messageList, setMessageList] = useState<TMsg[]>()
 
@@ -97,4 +109,4 @@ const MessageCenter = () => {
   )
 }
 
-export default MessageCenter
+export default observer(MessageCenter)

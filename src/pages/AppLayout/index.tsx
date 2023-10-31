@@ -68,7 +68,7 @@ const AppLayout = () => {
         })
       )
     })()
-  }, [applyCountStore.getTotal()])
+  }, [applyCountStore.getTotal(), unreadCountStore.unreadCount])
 
   /**
    * 导航菜单栏折叠
