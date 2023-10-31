@@ -48,13 +48,6 @@ const removeRequest = (config: AxiosRequestConfig) => {
 request.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token')
-    if (!token) {
-      const url = window.location.hash.substring(1)
-      if (url.includes('redirect')) return config
-      const redirect = url === '/login' ? '/app/appServiceCenter' : url
-      window.location.href = `#/login?redirect=${redirect}`
-      return config
-    }
     config.headers!.token = `${token}`
     removeRequest(config)
     addRequest(config)

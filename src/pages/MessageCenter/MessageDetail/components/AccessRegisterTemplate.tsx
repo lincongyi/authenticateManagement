@@ -2,6 +2,7 @@ import React from 'react'
 import style from './index.module.scss'
 import { TGetMsgDetail } from '@/api/messageCenter'
 import { Descriptions, Divider, Typography, Image } from 'antd'
+import { useNavigate } from 'react-router-dom'
 
 const { Link, Text } = Typography
 
@@ -36,6 +37,9 @@ const AccessRegisterTemplate = ({ info }: { info: TGetMsgDetail }) => {
       children: content.areaCode
     }
   ]
+
+  const navigate = useNavigate()
+
   return (
     <>
       <div className={style.title}>
@@ -45,7 +49,10 @@ const AccessRegisterTemplate = ({ info }: { info: TGetMsgDetail }) => {
       <Divider />
       <div className={style.tips}>
         您已成功注册单位账号，以下是您的单位注册信息。若需查看或更改单位信息，请前往
-        <Link>【单位账号设置】</Link>进行查看或发起单位信息更改申请。
+        <Link onClick={() => navigate('/app/myAccount/companyInfo')}>
+          【单位账号设置】
+        </Link>
+        进行查看或发起单位信息更改申请。
       </div>
       <Descriptions
         title='单位注册信息'
@@ -55,14 +62,18 @@ const AccessRegisterTemplate = ({ info }: { info: TGetMsgDetail }) => {
         items={items}
       />
       <div className={style.tips}>
-        通过单位账号，您可前往<Link>【应用服务中心】</Link>
+        通过单位账号，您可前往
+        <Link onClick={() => navigate('/app/appServiceCenter')}>
+          【基础能力中心】
+        </Link>
         查看和了解多种认证服务详细介绍、接入场景等，并可发起申请接入服务。
       </div>
       <div className={style.tips}>
-        感谢您的注册和使用！ 如有更多问题，可发起系统线上
-        <Link>【问题反馈工单】</Link>
-        ，将有相关人员进行解决处理。或直接联系微警认证客服热线：
-        <Text strong>020-66600778</Text>
+        感谢您的注册和使用！ 如有更多问题，直接联系微警认证客服热线：
+        <Text strong underline>
+          020-66600778
+        </Text>
+        ，将有相关人员进行解决处理。
       </div>
     </>
   )
