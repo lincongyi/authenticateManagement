@@ -117,7 +117,7 @@ const SitEnv = () => {
               label: (
                 <>
                   {item.capabilityName}
-                  {!!item.state && (
+                  {item.state >= 5 && (
                     <CheckCircleOutlined style={{ marginLeft: 10 }} />
                   )}
                 </>

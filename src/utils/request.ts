@@ -11,6 +11,7 @@ const request = axios.create({
  * 获取请求的key值
  */
 const getRequestKey = (config: AxiosRequestConfig) => {
+  if (!config) return ''
   const { method, url } = config
   return [method, url].join('')
 }
@@ -80,9 +81,13 @@ request.interceptors.response.use(
   },
   error => {
     removeRequest(error.config)
-    const { retMessage = '网络错误' } = error.response.data
-    message.warning(retMessage)
-    return Promise.reject(error)
+    if (error.response) {
+      const { retMessage = '网络错误' } = error.response.data
+      message.warning(retMessage)
+      return Promise.reject(error)
+    } else {
+      return Promise.reject(error.message)
+    }
   }
 )
 

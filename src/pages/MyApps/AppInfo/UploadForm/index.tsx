@@ -48,13 +48,15 @@ const UploadForm = () => {
   /**
    * 上传前校验文件
    */
-  const fileBeforeUpload = (file: RcFile) => {
+  const fileBeforeUpload = (file: RcFile, maxSize: number = 1) => {
     const { name } = file
     const fileType = name.substring(name.lastIndexOf('.') + 1)
     // const isMatched = ['doc', 'docx', 'pdf', 'png', 'jpg'].includes(fileType)
     const isMatched = ['pdf'].includes(fileType)
     if (!isMatched) messageApi.error(`不支持上传${fileType}格式文件`)
-    return isMatched || Upload.LIST_IGNORE
+    const isExceeded = file.size / 1024 / 1024 < maxSize
+    if (!isExceeded) message.error(`图片文件大小<${maxSize}MB`)
+    return isMatched || isExceeded || Upload.LIST_IGNORE
   }
 
   let fileItem: UploadFile
@@ -182,6 +184,12 @@ const UploadForm = () => {
           <Form.Item
             name='applyFile'
             label='（附印章）基础能力接入申请表：'
+            extra={
+              <>
+                <p>支持文件格式：pdf</p>
+                <p>支持文件大小：1Mb</p>
+              </>
+            }
             rules={[{ required: true, message: '请上传申请表' }]}
           >
             <Upload
@@ -197,6 +205,12 @@ const UploadForm = () => {
           <Form.Item
             name='applyLetter'
             label='（附印章）基础能力接入申请函：'
+            extra={
+              <>
+                <p>支持文件格式：pdf</p>
+                <p>支持文件大小：1Mb</p>
+              </>
+            }
             rules={[{ required: true, message: '请上传申请表' }]}
           >
             <Upload

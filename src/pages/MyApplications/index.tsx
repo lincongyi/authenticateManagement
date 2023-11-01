@@ -312,9 +312,27 @@ const MyApplications = () => {
   /**
    * 重新申请
    */
-  const onReapply = ({ key }: { key: TApplyKey }) => {
-    if (key === 'UPDATE_COMPANY_INFO') {
+  const onReapply = (values: TApplyDetail) => {
+    const { key } = values
+    /**
+     * 针对还有个别类型进行跳转区分
+     */
+    if (['UPDATE_COMPANY_INFO'].includes(key)) {
       navigate('/app/myAccount/companySettings')
+    } else if (
+      [
+        'ACCESS_CAPABILITY',
+        'PROD_CAPABILITY',
+        'APPLY_FILE_CAPABILITY',
+        'STOP_APPLICATION',
+        'START_APPLICATION',
+        'CAPABILITY_UPDATE',
+        'ADD_NUM_APPLICATION',
+        'DELAY_CAPABILITY'
+      ].includes(key)
+    ) {
+      const { appId } = values.info
+      navigate(`/app/myApps/appInfo?appId=${appId}`)
     }
   }
 

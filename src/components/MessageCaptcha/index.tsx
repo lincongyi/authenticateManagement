@@ -36,7 +36,7 @@ const MessageCaptcha = ({
       key: adminPhone,
       operation
     })
-    let duration = 6
+    let duration = 60
     setMessageCaptcha({ text: `${duration}秒后重新获取`, isWaiting: true })
     messageCaptchaTimer = setInterval(() => {
       duration--

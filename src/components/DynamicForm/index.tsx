@@ -304,292 +304,305 @@ const DynamicForm = React.forwardRef<
       {contextHolder}
       <Form ref={ref} form={form} name={formId.toString()} {...formProps}>
         {formList.map(item => (
-          <Form.Item
-            key={item.field}
-            {...{
-              noStyle: ['imageUpload', 'fileUpload'].includes(item.type),
-              name: !['imageUpload', 'fileUpload'].includes(item.type)
-                ? item.field
-                : undefined,
-              label:
-                !['imageUpload', 'fileUpload'].includes(item.type) &&
-                item.cnName,
-              rules: [
-                {
-                  required: item.required,
-                  message: `${
-                    [
-                      'dateTime',
-                      'radio',
-                      'checkbox',
-                      'select',
-                      'selectMultiple',
-                      'table'
-                    ].includes(item.type)
-                      ? '请选择'
-                      : '请输入'
-                  }${item.cnName}`
-                },
-                {
-                  validator (
-                    _,
-                    value: ({ id: string; value: string } | null)[]
-                  ) {
-                    if (item.type === 'table' && value) {
-                      const existNull = value.some(item => !item)
-                      if (existNull) {
-                        return Promise.reject(
-                          new Error('请录入所有调用并发上限')
-                        )
+          <>
+            {/* 单独针对这个表单项进行处理 */}
+            {item.cnName !== '接入服务有效期止' && (
+              <Form.Item
+                key={item.field}
+                {...{
+                  noStyle: ['imageUpload', 'fileUpload'].includes(item.type),
+                  name: !['imageUpload', 'fileUpload'].includes(item.type)
+                    ? item.field
+                    : undefined,
+                  label:
+                    !['imageUpload', 'fileUpload'].includes(item.type) &&
+                    item.cnName,
+                  rules: [
+                    {
+                      required: item.required,
+                      message: `${
+                        [
+                          'dateTime',
+                          'radio',
+                          'checkbox',
+                          'select',
+                          'selectMultiple',
+                          'table'
+                        ].includes(item.type)
+                          ? '请选择'
+                          : '请输入'
+                      }${item.cnName}`
+                    },
+                    {
+                      validator (
+                        _,
+                        value: ({ id: string; value: string } | null)[]
+                      ) {
+                        if (item.type === 'table' && value) {
+                          const existNull = value.some(item => !item)
+                          if (existNull) {
+                            return Promise.reject(
+                              new Error('请录入所有调用并发上限')
+                            )
+                          }
+                        }
+                        return Promise.resolve()
                       }
                     }
-                    return Promise.resolve()
-                  }
-                }
-              ],
-              valuePropName: ['switch', 'checkbox'].includes(item.type)
-                ? 'checked'
-                : undefined
-            }}
-          >
-            {(() => {
-              switch (item.type) {
-                case 'text':
-                  return (
-                    <Input
-                      {...{
-                        placeholder: item.placeholder,
-                        maxLength: item.maxLength
-                      }}
-                      showCount
-                    />
-                  )
-                case 'textarea':
-                  return (
-                    <Input.TextArea
-                      {...{
-                        placeholder: item.placeholder,
-                        maxLength: item.maxLength
-                      }}
-                      showCount
-                    />
-                  )
-                case 'dateTime':
-                  return (
-                    <DatePicker
-                      style={{ minWidth: 160 }}
-                      {...{
-                        placeholder: item.placeholder
-                      }}
-                    />
-                  )
-                case 'radio':
-                  return <Radio.Group {...{ options: item.options || [] }} />
-                case 'checkbox':
-                  return (
-                    <Checkbox.Group
-                      {...{
-                        options: item.options || [],
-                        defaultValue: item.value
-                      }}
-                    />
-                  )
-                case 'select':
-                  return (
-                    <Select
-                      {...{
-                        options: item.options || [],
-                        placeholder: item.placeholder
-                      }}
-                    />
-                  )
-                case 'selectMultiple':
-                  return (
-                    <Select
-                      mode='multiple'
-                      allowClear
-                      {...{
-                        options: item.options || [],
-                        placeholder: item.placeholder
-                      }}
-                    />
-                  )
-                case 'switch':
-                  return (
-                    <Switch
-                      {...{
-                        options: item.options || [],
-                        placeholder: item.placeholder,
-                        checkedChildren: item.switchText?.split('/')[0],
-                        unCheckedChildren: item.switchText?.split('/')[1]
-                      }}
-                    />
-                  )
+                  ],
+                  valuePropName: ['switch', 'checkbox'].includes(item.type)
+                    ? 'checked'
+                    : undefined
+                }}
+              >
+                {(() => {
+                  switch (item.type) {
+                    case 'text':
+                      return (
+                        <Input
+                          {...{
+                            placeholder: item.placeholder,
+                            maxLength: item.maxLength
+                          }}
+                          showCount
+                        />
+                      )
+                    case 'textarea':
+                      return (
+                        <Input.TextArea
+                          {...{
+                            placeholder: item.placeholder,
+                            maxLength: item.maxLength
+                          }}
+                          showCount
+                        />
+                      )
+                    case 'dateTime':
+                      return (
+                        <DatePicker
+                          style={{ minWidth: 160 }}
+                          {...{
+                            placeholder: item.placeholder
+                          }}
+                        />
+                      )
+                    case 'radio':
+                      return (
+                        <Radio.Group {...{ options: item.options || [] }} />
+                      )
+                    case 'checkbox':
+                      return (
+                        <Checkbox.Group
+                          {...{
+                            options: item.options || [],
+                            defaultValue: item.value
+                          }}
+                        />
+                      )
+                    case 'select':
+                      return (
+                        <Select
+                          {...{
+                            options: item.options || [],
+                            placeholder: item.placeholder
+                          }}
+                        />
+                      )
+                    case 'selectMultiple':
+                      return (
+                        <Select
+                          mode='multiple'
+                          allowClear
+                          {...{
+                            options: item.options || [],
+                            placeholder: item.placeholder
+                          }}
+                        />
+                      )
+                    case 'switch':
+                      return (
+                        <Switch
+                          {...{
+                            options: item.options || [],
+                            placeholder: item.placeholder,
+                            checkedChildren: item.switchText?.split('/')[0],
+                            unCheckedChildren: item.switchText?.split('/')[1]
+                          }}
+                        />
+                      )
 
-                case 'imageUpload':
-                  return (
-                    <>
-                      <Form.Item
-                        name={item.field}
-                        label={item.label}
-                        style={{ marginBottom: 0 }}
-                        rules={[
-                          {
-                            required: item.required,
-                            message: `请补充${item.cnName}`
-                          }
-                        ]}
-                      >
-                        <Upload
-                          listType='picture-card'
-                          maxCount={1}
-                          fileList={imageList[item.field]}
-                          beforeUpload={file =>
-                            imgBeforeUpload(file, item.fileSize)
-                          }
-                          customRequest={options =>
-                            imgCustomRequest(options, item.field)
-                          }
-                          onPreview={onImagePreview}
-                          onRemove={file => onImageRemove(file, item.field)}
-                        >
-                          {(!imageList[item.field] ||
-                            item.multiple > imageList[item.field].length) && (
+                    case 'imageUpload':
+                      return (
+                        <>
+                          <Form.Item
+                            name={item.field}
+                            label={item.label}
+                            style={{ marginBottom: 0 }}
+                            rules={[
+                              {
+                                required: item.required,
+                                message: `请补充${item.cnName}`
+                              }
+                            ]}
+                          >
+                            <Upload
+                              listType='picture-card'
+                              maxCount={1}
+                              fileList={imageList[item.field]}
+                              beforeUpload={file =>
+                                imgBeforeUpload(file, item.fileSize)
+                              }
+                              customRequest={options =>
+                                imgCustomRequest(options, item.field)
+                              }
+                              onPreview={onImagePreview}
+                              onRemove={file => onImageRemove(file, item.field)}
+                            >
+                              {(!imageList[item.field] ||
+                                item.multiple >
+                                  imageList[item.field].length) && (
+                                <>
+                                  <PlusOutlined />
+                                  选择图片
+                                </>
+                              )}
+                            </Upload>
+                          </Form.Item>
+                          <Row>
+                            <Col
+                              span={20}
+                              offset={4}
+                              className='font-secondary-color'
+                            >
+                              上传图片只允许JPG/PNG格式
+                            </Col>
+                            <Col
+                              span={20}
+                              offset={4}
+                              className='font-secondary-color'
+                            >
+                              支持图片文件大小：{item.fileSize}M
+                            </Col>
+                            <Col
+                              span={20}
+                              offset={4}
+                              className='font-secondary-color'
+                            >
+                              支持上传图片数量：{item.multiple}张
+                            </Col>
+                          </Row>
+                        </>
+                      )
+                    case 'fileUpload':
+                      return (
+                        <>
+                          <Form.Item
+                            name={item.field}
+                            label={item.label}
+                            style={{ marginBottom: 0 }}
+                            rules={[
+                              {
+                                required: item.required,
+                                message: `请补充${item.cnName}`
+                              }
+                            ]}
+                          >
+                            <Upload
+                              maxCount={1}
+                              fileList={fileList[item.field]}
+                              beforeUpload={file =>
+                                fileBeforeUpload(file, item)
+                              }
+                              customRequest={options =>
+                                fileCustomRequest(options, item.field)
+                              }
+                              onRemove={file => onFileRemove(file, item.field)}
+                            >
+                              <Button
+                                icon={<UploadOutlined />}
+                                disabled={
+                                  fileList[item.field] &&
+                                  item.multiple <= fileList[item.field].length
+                                }
+                              >
+                                上传文件
+                              </Button>
+                            </Upload>
+                          </Form.Item>
+                          <Row>
+                            <Col
+                              span={20}
+                              offset={4}
+                              className='font-secondary-color'
+                            >
+                              上传文件只允许{item.ruleList.join()}格式
+                            </Col>
+                            <Col
+                              span={20}
+                              offset={4}
+                              className='font-secondary-color'
+                            >
+                              支持文件大小：{item.fileSize}M
+                            </Col>
+                            <Col
+                              span={20}
+                              offset={4}
+                              className='font-secondary-color'
+                            >
+                              支持上传文件数量：{item.multiple}
+                            </Col>
+                          </Row>
+                        </>
+                      )
+                    case 'privateKey':
+                      return (
+                        <Space>
+                          <Button
+                            type='primary'
+                            onClick={() => generateKeyPair(item.field)}
+                          >
+                            生成密钥对
+                          </Button>
+                          {keyPair && (
                             <>
-                              <PlusOutlined />
-                              选择图片
+                              <span
+                                style={{
+                                  minWidth: 50,
+                                  display: 'inline-block'
+                                }}
+                              >
+                                公钥：
+                              </span>
+                              <Typography.Paragraph
+                                copyable
+                                style={{ marginBottom: 0 }}
+                              >
+                                {keyPair[item.field].publicKey}
+                              </Typography.Paragraph>
                             </>
                           )}
-                        </Upload>
-                      </Form.Item>
-                      <Row>
-                        <Col
-                          span={20}
-                          offset={4}
-                          className='font-secondary-color'
-                        >
-                          上传图片只允许JPG/PNG格式
-                        </Col>
-                        <Col
-                          span={20}
-                          offset={4}
-                          className='font-secondary-color'
-                        >
-                          支持图片文件大小：{item.fileSize}M
-                        </Col>
-                        <Col
-                          span={20}
-                          offset={4}
-                          className='font-secondary-color'
-                        >
-                          支持上传图片数量：{item.multiple}张
-                        </Col>
-                      </Row>
-                    </>
-                  )
-                case 'fileUpload':
-                  return (
-                    <>
-                      <Form.Item
-                        name={item.field}
-                        label={item.label}
-                        style={{ marginBottom: 0 }}
-                        rules={[
-                          {
-                            required: item.required,
-                            message: `请补充${item.cnName}`
-                          }
-                        ]}
-                      >
-                        <Upload
-                          maxCount={1}
-                          fileList={fileList[item.field]}
-                          beforeUpload={file => fileBeforeUpload(file, item)}
-                          customRequest={options =>
-                            fileCustomRequest(options, item.field)
-                          }
-                          onRemove={file => onFileRemove(file, item.field)}
-                        >
-                          <Button
-                            icon={<UploadOutlined />}
-                            disabled={
-                              fileList[item.field] &&
-                              item.multiple <= fileList[item.field].length
-                            }
-                          >
-                            上传文件
-                          </Button>
-                        </Upload>
-                      </Form.Item>
-                      <Row>
-                        <Col
-                          span={20}
-                          offset={4}
-                          className='font-secondary-color'
-                        >
-                          上传文件只允许{item.ruleList.join()}格式
-                        </Col>
-                        <Col
-                          span={20}
-                          offset={4}
-                          className='font-secondary-color'
-                        >
-                          支持文件大小：{item.fileSize}M
-                        </Col>
-                        <Col
-                          span={20}
-                          offset={4}
-                          className='font-secondary-color'
-                        >
-                          支持上传文件数量：{item.multiple}
-                        </Col>
-                      </Row>
-                    </>
-                  )
-                case 'privateKey':
-                  return (
-                    <Space>
-                      <Button
-                        type='primary'
-                        onClick={() => generateKeyPair(item.field)}
-                      >
-                        生成密钥对
-                      </Button>
-                      {keyPair && (
+                        </Space>
+                      )
+                    case 'table':
+                      return (
                         <>
-                          <span
-                            style={{ minWidth: 50, display: 'inline-block' }}
-                          >
-                            公钥：
-                          </span>
-                          <Typography.Paragraph
-                            copyable
-                            style={{ marginBottom: 0 }}
-                          >
-                            {keyPair[item.field].publicKey}
-                          </Typography.Paragraph>
+                          <Table
+                            rowKey='id'
+                            bordered
+                            dataSource={dataSource}
+                            columns={columns}
+                            pagination={false}
+                          />
                         </>
-                      )}
-                    </Space>
-                  )
-                case 'table':
-                  return (
-                    <>
-                      <Table
-                        rowKey='id'
-                        bordered
-                        dataSource={dataSource}
-                        columns={columns}
-                        pagination={false}
-                      />
-                    </>
-                  )
+                      )
 
-                default:
-                  return <></>
-              }
-            })()}
-          </Form.Item>
+                    default:
+                      return <></>
+                  }
+                })()}
+              </Form.Item>
+            )}
+          </>
         ))}
       </Form>
       <Modal

@@ -29,6 +29,7 @@ const getMsgList = (
 export type TGetMsgDetail = {
   content: string // 消息主要内容
   type: TApplyKey
+  state: 0 | 1 // 0-失败；1-成功
 } & TMsg
 
 /**

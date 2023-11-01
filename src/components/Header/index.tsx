@@ -99,9 +99,14 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
               >
                 {companyName}
               </Button>
-              <Badge size='small' count={unreadCountStore.unreadCount}>
-                <BellFilled style={{ fontSize: 18, color: '#fff' }} />
-              </Badge>
+              <div
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate('/app/messageCenter')}
+              >
+                <Badge size='small' count={unreadCountStore.unreadCount}>
+                  <BellFilled style={{ fontSize: 18, color: '#fff' }} />
+                </Badge>
+              </div>
 
               <Image
                 width={32}

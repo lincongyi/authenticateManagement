@@ -31,7 +31,9 @@ const MessageCenter = () => {
       pageSize: pagination.pageSize
     })
     if (!data) return
-    setMessageList(data.list)
+    const { list, pageNum, pageSize, total } = data
+    setMessageList(list)
+    setPagination({ pageNum, pageSize, total })
   }
 
   /**
@@ -40,7 +42,7 @@ const MessageCenter = () => {
   const [pagination, setPagination] = useState<TPagination>({
     pageNum: 1,
     pageSize: 10,
-    total: 11
+    total: 0
   })
 
   /**

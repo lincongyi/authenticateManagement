@@ -87,6 +87,7 @@ const DevDocument = () => {
         setDocContent(undefined)
       }
     } else {
+      setSelectedNode(undefined)
       setAnnexUrl(undefined)
       setDocContent(undefined)
     }

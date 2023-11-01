@@ -99,12 +99,15 @@ const DynamicFormInfo = ({ formList }: { formList: TFormList[] }) => {
           <Tabs onChange={onChange} items={formTabs} />
           {formItems && !!formItems.length && (
             <Form {...formProps}>
-              {formItems.map((item, index) => (
-                <div key={item.field}>
-                  <Form.Item label={item.cnName}>
-                    {formatFormItemValue(item)}
-                  </Form.Item>
-                </div>
+              {formItems.map(item => (
+                <>
+                  {/* 单独针对这个表单项进行处理 */}
+                  {item.cnName !== '接入服务有效期止' && (
+                    <Form.Item label={item.cnName} key={item.field}>
+                      {formatFormItemValue(item)}
+                    </Form.Item>
+                  )}
+                </>
               ))}
             </Form>
           )}

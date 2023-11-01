@@ -107,7 +107,7 @@ const ProdEnv = () => {
               label: (
                 <>
                   {item.capabilityName}
-                  {!!item.state && (
+                  {item.state >= 7 && (
                     <CheckCircleOutlined style={{ marginLeft: 10 }} />
                   )}
                 </>

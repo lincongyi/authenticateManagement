@@ -37,7 +37,7 @@ const EmailCaptcha = ({
       key: adminEmail,
       operation
     })
-    let duration = 6
+    let duration = 60
     setEmailCaptcha({ text: `${duration}秒后重新获取`, isWaiting: true })
     emailCaptchaTimer = setInterval(() => {
       duration--
