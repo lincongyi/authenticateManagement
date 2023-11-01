@@ -42,7 +42,7 @@ const verifyCaptcha = (params: object): Promise<TResponse> => {
  * 获取当前任务
  */
 const getProcessByKey = (params: object): Promise<TResponse> => {
-  return request.post('/getProcessByKey', params)
+  return request.post('/access/getProcessByKey', params)
 }
 
 /**

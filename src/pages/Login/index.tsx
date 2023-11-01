@@ -15,7 +15,8 @@ import {
   Popover,
   Tabs,
   Divider,
-  Typography
+  Typography,
+  Space
 } from 'antd'
 import { login } from '@api/login'
 import ScanQrcode from '@components/ScanQrcode'
@@ -166,9 +167,19 @@ const Login = () => {
           </Form>
           <Divider />
           <div className='tc'>
-            <Button shape='round' size='large' onClick={toApply}>
-              没有账号？<span className='primary-color'>去注册</span>
-            </Button>
+            <Space>
+              <Button shape='round' size='large' onClick={toApply}>
+                没有账号？<span className='primary-color'>去注册</span>
+              </Button>
+              <Button
+                shape='round'
+                type='primary'
+                size='large'
+                onClick={() => navigate('/register/tour')}
+              >
+                已注册？查看进度
+              </Button>
+            </Space>
           </div>
         </>
       )

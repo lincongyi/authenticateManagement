@@ -71,6 +71,7 @@ type TApplyDetail = {
   modTime: string // 审批时间
   completeTime: string // 审批完成时间
   starter: string // 申请人
+  adminName: string // 单位管理员
   companyName: string // 申请单位
   processName: string // 审批单类型
   isNoticeUser: boolean // 是否被查看过

@@ -56,7 +56,7 @@ const UploadForm = () => {
     if (!isMatched) messageApi.error(`不支持上传${fileType}格式文件`)
     const isExceeded = file.size / 1024 / 1024 < maxSize
     if (!isExceeded) message.error(`图片文件大小<${maxSize}MB`)
-    return isMatched || isExceeded || Upload.LIST_IGNORE
+    return (isMatched && isExceeded) || Upload.LIST_IGNORE
   }
 
   let fileItem: UploadFile
