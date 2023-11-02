@@ -25,14 +25,21 @@ const applyUpdateCompanyInfo = (params: object): Promise<TResponse> => {
  * 校验预留手机号or邮箱的图形验证码是否正确
  */
 const retrievePassword = (params: object): Promise<TResponse> => {
-  return request.post('/access/retrievePassword', params)
+  return request.post('/retrievePassword', params)
+}
+
+/**
+ * 扫码认证回调
+ */
+const authResult = (params: { certToken: string }): Promise<TResponse> => {
+  return request.post('/authResult', params)
 }
 
 /**
  * 重置密码
  */
 const currentResetPassword = (params: object): Promise<TResponse> => {
-  return request.post('/access/currentResetPassword', params)
+  return request.post('/currentResetPassword', params)
 }
 
 export {
@@ -40,5 +47,6 @@ export {
   currentUserInfo,
   applyUpdateCompanyInfo,
   retrievePassword,
+  authResult,
   currentResetPassword
 }

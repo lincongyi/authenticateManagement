@@ -45,10 +45,10 @@ const Login = () => {
   /**
    * 登录
    */
-  const onLogin = async (
-    { loginType, ...values }: Omit<TLoginParams, 'systemType'>,
-    callback?: Function
-  ) => {
+  const onLogin = async ({
+    loginType,
+    ...values
+  }: Omit<TLoginParams, 'systemType'>) => {
     const { data } = await login({
       systemType: 'user',
       loginType,
@@ -63,8 +63,6 @@ const Login = () => {
         companyName: data!.companyName
       })
     )
-
-    callback && callback()
 
     if (!search) navigate('/app/appServiceCenter')
     else {

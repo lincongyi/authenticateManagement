@@ -67,6 +67,7 @@ request.interceptors.response.use(
     if (!retCode) return response.data
     else {
       const { retMessage } = response.data
+      if (retCode === 6000) return Promise.reject(retMessage)
       message.warning({
         content: retMessage,
         onClose: () => {

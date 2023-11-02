@@ -12,7 +12,7 @@ const ScanQrcode = ({
 }: {
   callback?: Function
   size?: number
-  isLoop?: boolean
+  isLoop: boolean
 }) => {
   const { themeStore } = useStore()
 
