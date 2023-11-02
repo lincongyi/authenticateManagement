@@ -48,7 +48,7 @@ const getProcessByKey = (params: object): Promise<TResponse> => {
 /**
  * 获取二维码
  */
-const getQrcode = (): Promise<TResponse> => {
+const loginQrCode = (): Promise<TResponse> => {
   return request.post('/loginQrCode')
 }
 
@@ -98,7 +98,7 @@ export {
   imgCaptcha,
   verifyCaptcha,
   getProcessByKey,
-  getQrcode,
+  loginQrCode,
   getdictionary,
   getSecretKey,
   upload

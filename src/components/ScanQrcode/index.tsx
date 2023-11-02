@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { QRCode, message } from 'antd'
+import { QRCode } from 'antd'
 import { useStore } from '@stores/index'
-import { getQrcode } from '@api/index'
-import { v4 as uuidv4 } from 'uuid'
-import { loadEnv } from '@utils/index'
-import { useUpdateEffect } from '@/hooks'
+import { loginQrCode } from '@api/index'
 
-const { VITE_WEBSOCKET_URL } = loadEnv()
-
-let ws: WebSocket
-let wsTimer: NodeJS.Timer
 let qrcodeTimer: NodeJS.Timer
 
 const ScanQrcode = ({
   callback,
-  size
+  size,
+  isLoop
 }: {
-  callback: Function
+  callback?: Function
   size?: number
+  isLoop?: boolean
 }) => {
   const { themeStore } = useStore()
 
@@ -29,41 +24,6 @@ const ScanQrcode = ({
     const isLightTheme = themeStore.mainTheme === 'light'
     setQrcodeColor(isLightTheme ? '#000' : '#fff')
   }, [themeStore.mainTheme])
-
-  const [messageApi, contextHolder] = message.useMessage()
-
-  const connWebSocket = () => {
-    ws = new WebSocket(VITE_WEBSOCKET_URL)
-    ws.addEventListener('open', event => {
-      const data = {
-        flag: 'getCertCode',
-        token: uuidv4(),
-        cert_token: qrcode?.certToken
-      }
-      ws.send(JSON.stringify(data))
-
-      wsTimer = setInterval(() => {
-        ws.send('')
-      }, 10 * 1000)
-    })
-
-    ws.addEventListener('message', ({ data }) => {
-      if (JSON.parse(data).certRes === 0) {
-        // 扫码认证结果的回调
-        ws && ws.close()
-        messageApi.success({
-          content: '认证已通过！',
-          duration: 2,
-          onClose: () => {
-            // eslint-disable-next-line n/no-callback-literal
-            callback({ certToken: qrcode.certToken })
-          }
-        })
-      } else {
-        handleQrcode()
-      }
-    })
-  }
 
   type TQrcode = {
     qrCodeContent: string
@@ -81,25 +41,38 @@ const ScanQrcode = ({
    * 获取二维码
    */
   const handleQrcode = async () => {
-    const { data } = await getQrcode()
+    const { data } = await loginQrCode()
     const { qrCodeContent, certToken } = data
     setQrcode({
       qrCodeContent,
       certToken,
       status: 'active'
     })
+    return certToken
   }
 
-  useUpdateEffect(() => {
-    connWebSocket()
-  }, [qrcode])
+  let timer: NodeJS.Timer
+  /**
+   * 扫码登录，轮询登录接口
+   */
+  const onLoop = (certToken: string) => {
+    timer = setInterval(() => {
+      callback && callback(certToken)
+    }, 3000)
+  }
 
   useEffect(() => {
-    handleQrcode()
-    return () => {
-      clearInterval(wsTimer)
+    clearInterval(timer)
+    if (isLoop) {
+      ;(async () => {
+        const certToken = await handleQrcode()
+        onLoop(certToken)
+      })()
     }
-  }, [])
+    return () => {
+      clearInterval(timer)
+    }
+  }, [isLoop])
 
   /**
    * 设置定时器，二维码过期时间
@@ -109,13 +82,10 @@ const ScanQrcode = ({
     clearTimeout(qrcodeTimer)
     qrcodeTimer = setTimeout(() => {
       setQrcode({ ...qrcode, status: 'expired' })
-      clearInterval(wsTimer)
-      ws && ws.close()
     }, 5 * 60 * 1000)
   }, [qrcode.qrCodeContent])
   return (
     <>
-      {contextHolder}
       {qrcode.qrCodeContent && (
         <QRCode
           value={qrcode.qrCodeContent}

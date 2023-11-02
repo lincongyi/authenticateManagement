@@ -1,6 +1,14 @@
 import { request } from '@utils/request'
 
-type TLoginResponse = {
+export type TLoginParams = {
+  accountNumber?: string
+  password?: string
+  systemType: 'user'
+  loginType: 'password' | 'qrCode'
+  certToken?: string
+}
+
+export type TLoginResponse = {
   token: string
   accountNumber: string // 用户名
   userId: string
@@ -11,7 +19,7 @@ type TLoginResponse = {
 /**
  * 登录
  */
-const login = (params: object): Promise<TResponse<TLoginResponse>> => {
+const login = (params: TLoginParams): Promise<TResponse<TLoginResponse>> => {
   return request.post('/login', params)
 }
 

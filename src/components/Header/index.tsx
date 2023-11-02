@@ -27,10 +27,10 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
   const navigate = useNavigate()
 
   /**
-   * 返回首页
+   * 返回登录
    */
-  const toHome = () => {
-    navigate('/')
+  const toLogin = () => {
+    navigate('/login')
   }
 
   const { unreadCountStore } = useStore()
@@ -121,8 +121,8 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
               </Dropdown>
             </Space>
           ) : (
-            <Button type='text' className={style['back-btn']} onClick={toHome}>
-              返回首页
+            <Button type='text' className={style['back-btn']} onClick={toLogin}>
+              返回
             </Button>
           )}
         </div>

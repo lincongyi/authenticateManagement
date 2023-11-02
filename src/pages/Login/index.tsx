@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import style from './index.module.scss'
 import { useNavigate, useLocation, To } from 'react-router-dom'
 import {
@@ -19,6 +19,7 @@ import {
   Space
 } from 'antd'
 import { login } from '@api/login'
+import type { TLoginParams } from '@api/login'
 import ScanQrcode from '@components/ScanQrcode'
 import type { TabsProps } from 'antd'
 
@@ -41,17 +42,16 @@ const Login = () => {
     navigate('/register')
   }
 
-  type TloginParams = {
-    accountNumber: string // 账号
-    password: string // 密码
-  }
   /**
    * 登录
    */
-  const onFinish = async (values: TloginParams) => {
+  const onLogin = async (
+    { loginType, ...values }: Omit<TLoginParams, 'systemType'>,
+    callback?: Function
+  ) => {
     const { data } = await login({
       systemType: 'user',
-      loginType: 'password',
+      loginType,
       ...values
     })
     if (!data) return
@@ -64,28 +64,41 @@ const Login = () => {
       })
     )
 
+    callback && callback()
+
     if (!search) navigate('/app/appServiceCenter')
     else {
       const searchParams = new URLSearchParams(search.substring(1))
       navigate(searchParams.get('redirect') as To)
     }
   }
+
+  type TAccountLoginParams = {
+    accountNumber: string // 账号
+    password: string // 密码
+  }
+
+  /**
+   * 账号登录
+   */
+  const onFinish = (values: TAccountLoginParams) => {
+    onLogin({ loginType: 'password', ...values })
+  }
+
   const onFinishFailed = (errorInfo: any) => {
     console.log(errorInfo)
   }
 
-  const handleScanCode = (token: string) => {
-    console.log(token)
-  }
-
   const initialValues = {
-    accountNumber: 'cy0318',
+    accountNumber: 'cy031801',
     password: 'dabby@2019'
   }
 
+  const [isLoop, setIsLoop] = useState(false) // 是否轮询登录接口
+
   const items: TabsProps['items'] = [
     {
-      key: '1',
+      key: 'account',
       label: '账号登陆',
       children: (
         <>
@@ -185,16 +198,27 @@ const Login = () => {
       )
     },
     {
-      key: '2',
+      key: 'qrcode',
       label: '扫码登陆',
       children: (
         <div className={style['qrcode-wrap']}>
           <p className={style.tips}>请使用微警认证App或微信扫描二维码</p>
-          <ScanQrcode callback={handleScanCode} size={200} />
+          <ScanQrcode
+            callback={(certToken: string) =>
+              onLogin({ loginType: 'qrCode', certToken })
+            }
+            size={200}
+            isLoop={isLoop}
+          />
         </div>
       )
     }
   ]
+
+  /**
+   * 切换登录方式的回调
+   */
+  const onChange = (activeKey: string) => setIsLoop(activeKey === 'qrcode')
 
   return (
     <>
@@ -207,7 +231,13 @@ const Login = () => {
             <Typography.Title level={3} className='tc'>
               欢迎来到微警开发平台·机构端
             </Typography.Title>
-            <Tabs size='large' centered defaultActiveKey='1' items={items} />
+            <Tabs
+              size='large'
+              centered
+              defaultActiveKey='1'
+              items={items}
+              onChange={onChange}
+            />
           </div>
         </div>
       </Content>
