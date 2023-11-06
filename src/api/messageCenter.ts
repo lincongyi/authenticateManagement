@@ -26,11 +26,25 @@ const getMsgList = (
   return request.post('/access/getMsgList', params)
 }
 
+type MessageItem = {
+  label: string
+  children: string | number
+  type: 1 | 2 | 3 // 1-纯文本；2-申请状态；3-base64
+}
+
+type TMessage = {
+  title: string
+  column: number
+  items: MessageItem[]
+}
+
 export type TGetMsgDetail = {
-  content: string // 消息主要内容
-  type: TApplyKey
-  state: 0 | 1 // 0-失败；1-成功
-} & TMsg
+  title: string
+  sendTime: string
+  content: string
+  tips: string
+  list: TMessage[]
+}
 
 /**
  * 获取消息详情

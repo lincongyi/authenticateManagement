@@ -79,14 +79,18 @@ const SearchDocument = () => {
     return list.map(item => {
       const { name, content, ...rest } = item
       const pattern = /<span style='color:blue'>/g
-      const newName = name.replace(
-        pattern,
-        `<span style="color:${colorPrimary}; font-weight: bold">`
-      )
-      const newContent = content.replace(
-        pattern,
-        `<span style="color:${colorPrimary}; font-weight: bold">`
-      )
+      const newName =
+        name &&
+        name.replace(
+          pattern,
+          `<span style="color:${colorPrimary}; font-weight: bold">`
+        )
+      const newContent =
+        content &&
+        content.replace(
+          pattern,
+          `<span style="color:${colorPrimary}; font-weight: bold">`
+        )
       return {
         ...rest,
         ...{

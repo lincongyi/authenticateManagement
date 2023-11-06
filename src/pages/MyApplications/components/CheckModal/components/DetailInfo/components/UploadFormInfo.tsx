@@ -1,5 +1,5 @@
-import React from 'react'
-import { Col, Form, Row, Space, Typography, message } from 'antd'
+import React, { useState } from 'react'
+import { Button, Col, Form, Modal, Row, Space, Typography } from 'antd'
 import { EyeOutlined, DownloadOutlined } from '@ant-design/icons'
 import { TUploadApplyFileParams } from '@/api/myApp'
 
@@ -11,28 +11,46 @@ const UploadFormInfo = ({ formInfo }: { formInfo: TUploadApplyFileParams }) => {
     wrapperCol: { span: 16 }
   }
 
-  const [messageApi, contextHolder] = message.useMessage()
-
   /**
    * 预览
    */
   const onPreview = (index: 0 | 1) => {
     if (!index) {
-      messageApi.info('预览申请表')
+      setTitle('预览申请表')
+      setPdf(formInfo.applyFile)
     } else {
-      messageApi.info('预览申请函')
+      setTitle('预览申请函')
+      setPdf(formInfo.applyLetterName)
     }
+    setOpen(true)
   }
 
-  /**
-   * 下载
-   */
-  const onDownLoad = () => {
-    messageApi.info('暂未支持下载')
-  }
+  const [open, setOpen] = useState(false) // 控制预览上传文件显示隐藏
+
+  const [title, setTitle] = useState<'预览申请表' | '预览申请函'>()
+
+  const [pdf, setPdf] = useState<string>()
+
   return (
     <>
-      {contextHolder}
+      <Modal
+        title={title}
+        width={840}
+        open={open}
+        onCancel={() => setOpen(false)}
+        footer={[
+          <Button key='cancel' onClick={() => setOpen(false)}>
+            关闭
+          </Button>
+        ]}
+      >
+        <iframe
+          src={pdf}
+          // type='application/x-google-chrome-pdf'
+          width='100%'
+          height='600'
+        />
+      </Modal>
       <Form name='uploadFormInfo' {...formProps}>
         <Form.Item label='（附印章）基础能力接入申请表' required>
           <Row>
@@ -44,8 +62,7 @@ const UploadFormInfo = ({ formInfo }: { formInfo: TUploadApplyFileParams }) => {
                   <EyeOutlined style={{ marginRight: 4 }} />
                   预览
                 </Link>
-                <Link onClick={onDownLoad}>
-                  {/* <Link href={formInfo.applyFile} target='_blank'> */}
+                <Link href={formInfo.applyFile} target='_blank'>
                   <DownloadOutlined style={{ marginRight: 4 }} />
                   下载
                 </Link>
@@ -67,8 +84,7 @@ const UploadFormInfo = ({ formInfo }: { formInfo: TUploadApplyFileParams }) => {
                   <EyeOutlined style={{ marginRight: 4 }} />
                   预览
                 </Link>
-                <Link onClick={onDownLoad}>
-                  {/* <Link href={formInfo.applyFile} target='_blank'> */}
+                <Link href={formInfo.applyFile} target='_blank'>
                   <DownloadOutlined style={{ marginRight: 4 }} />
                   下载
                 </Link>

@@ -87,8 +87,8 @@ const Login = () => {
     console.log(errorInfo)
   }
 
-  const initialValues = {
-    accountNumber: 'cy031801',
+  const initialValues = !import.meta.env.PROD && {
+    accountNumber: 'cy0318',
     password: 'dabby@2019'
   }
 
