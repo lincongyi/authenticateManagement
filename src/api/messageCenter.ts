@@ -28,11 +28,11 @@ const getMsgList = (
 
 type MessageItem = {
   label: string
-  children: string | number
+  children: string | number | JSX.Element
   type: 1 | 2 | 3 // 1-纯文本；2-申请状态；3-base64
 }
 
-type TMessage = {
+export type TMessage = {
   title: string
   column: number
   items: MessageItem[]

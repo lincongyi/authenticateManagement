@@ -87,10 +87,12 @@ const Login = () => {
     console.log(errorInfo)
   }
 
-  const initialValues = !import.meta.env.PROD && {
-    accountNumber: 'cy0318',
-    password: 'dabby@2019'
-  }
+  const initialValues = import.meta.env.PROD
+    ? undefined
+    : {
+        accountNumber: 'cy0318',
+        password: 'dabby@2019'
+      }
 
   const [isLoop, setIsLoop] = useState(false) // 是否轮询登录接口
 
