@@ -6,7 +6,7 @@ import Login from '@pages/Login'
 import AppLayout from '@pages/AppLayout'
 import Register from '@pages/Register'
 import {
-  HomeOutlined,
+  // HomeOutlined,
   RadarChartOutlined,
   AppstoreOutlined,
   SolutionOutlined,
@@ -127,20 +127,13 @@ const routes: TRoutes[] = [
         children: [
           {
             path: '',
-            element: lazyLoad('AppServiceCenter/Guide')
+            element: lazyLoad('AppServiceCenter')
           },
           {
             path: 'introduction',
             element: lazyLoad('AppServiceCenter/Introduction'),
             meta: {
               breadcrumb: '查看基础能力介绍'
-            }
-          },
-          {
-            path: 'access', // 基础能力接入
-            element: lazyLoad('AppServiceCenter/Access'),
-            meta: {
-              breadcrumb: '基础能力接入'
             }
           }
         ],
@@ -179,17 +172,10 @@ const routes: TRoutes[] = [
             element: lazyLoad('MyApps/Index')
           },
           {
-            path: 'authenticationData',
-            element: lazyLoad('MyApps/AuthenticationData'),
-            meta: {
-              breadcrumb: '认证数据'
-            }
-          },
-          {
             path: 'appForm',
             element: lazyLoad('MyApps/AppForm'),
             meta: {
-              breadcrumb: '编辑单位应用'
+              breadcrumb: '填写应用信息'
             }
           },
           {
@@ -255,57 +241,6 @@ const routes: TRoutes[] = [
           breadcrumb: '消息中心'
         }
       }
-      // {
-      //   path: 'helps', // 问题帮助
-      //   element: lazyLoad('Helps'),
-      //   meta: {
-      //     isMenuItem: true,
-      //     icon: React.createElement(FileExclamationOutlined),
-      //     breadcrumb: '问题帮助'
-      //   }
-      // },
-      // {
-      //   path: 'issues', // 业务问题
-      //   children: [
-      //     {
-      //       path: 'daily', // 日常问题
-      //       element: lazyLoad('Issues/Daily'),
-      //       meta: {
-      //         isMenuItem: true,
-      //         breadcrumb: '日常问题'
-      //       }
-      //     },
-      //     {
-      //       path: 'recommend', // 问题推荐
-      //       element: lazyLoad('Issues/Recommend'),
-      //       meta: {
-      //         isMenuItem: true,
-      //         breadcrumb: '问题推荐'
-      //       }
-      //     },
-      //     {
-      //       path: 'classification', // 问题分类
-      //       element: lazyLoad('Issues/Classification'),
-      //       meta: {
-      //         isMenuItem: true,
-      //         breadcrumb: '问题分类'
-      //       }
-      //     },
-      //     {
-      //       path: 'reply', // 自动回复
-      //       element: lazyLoad('Issues/Reply'),
-      //       meta: {
-      //         isMenuItem: true,
-      //         breadcrumb: '自动回复'
-      //       }
-      //     }
-      //   ],
-      //   meta: {
-      //     isMenuItem: true,
-      //     icon: React.createElement(FileExclamationOutlined),
-      //     breadcrumb: '业务问题'
-      //   }
-      // }
     ]
   }
 ]

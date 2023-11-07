@@ -51,28 +51,45 @@ git cz
 
 - Register 账号注册申请
 
+  - Tour 查询注册进度
+
+  - Result 注册结果
+
 - AppLayout 布局
 
 - MyAccount 账号信息
+
+  - AccountInfo 账号信息
+
+  - AccountSettings 修改密码
+
+  - CompanyInfo 单位信息
+
+  - CompanySettings 修改单位信息
 
 - Main 首页
 
 - AppServiceCenter 基础能力中心
 
+  - Introduction 基础能力介绍页
+
+- DevDocument 开发文档
+
+  - SearchDocument 搜索文档
+
 - MyApps 我的应用
+
+  - AppForm 新增/编辑单位应用
+
+  - AppInfo 应用接入基础能力详情
+
+    - Access 新增/编辑接入基础能力表单信息
+
+    - UploadForm 上传申请表/函
 
 - MyApplications 我的申请
 
-- Helps 问题帮助
+- MessageCenter 消息中心
 
-- Issues 业务问题
+  - MessageDetail 查看消息详情
 
-  - 日常问题
-
-  - 问题推荐
-
-  - 问题分类
-
-  - 自动回复
-
-  - 用户咨询

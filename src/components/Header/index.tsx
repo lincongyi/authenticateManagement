@@ -103,8 +103,15 @@ const Header = ({ isLogin = true }: { isLogin?: boolean }) => {
                 style={{ cursor: 'pointer' }}
                 onClick={() => navigate('/app/messageCenter')}
               >
-                <Badge size='small' count={unreadCountStore.unreadCount}>
-                  <BellFilled style={{ fontSize: 18, color: '#fff' }} />
+                <Badge
+                  size='small'
+                  count={unreadCountStore.unreadCount}
+                  overflowCount={100}
+                  offset={[-10, 0]}
+                >
+                  <BellFilled
+                    style={{ fontSize: 18, color: '#fff', paddingRight: 20 }}
+                  />
                 </Badge>
               </div>
 
