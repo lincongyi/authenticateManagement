@@ -4,6 +4,10 @@
 
 https://sit.weijing.gov.cn/fcfe_test/authenticateManagement/index.html
 
+### 演示版本地址
+
+http://14.215.30.26:18808/authenticateManagement/index.html#/
+
 ## 安装使用
 
 ```sh

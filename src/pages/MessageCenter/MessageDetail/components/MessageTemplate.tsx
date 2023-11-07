@@ -1,7 +1,7 @@
 import React from 'react'
 import style from './index.module.scss'
 import type { TGetMsgDetail, TMessage } from '@/api/messageCenter'
-import { Descriptions, Divider, Typography, Image, Tag } from 'antd'
+import { Descriptions, Divider, Typography, Image, Tag, Row, Col } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 const { Link } = Typography
@@ -21,10 +21,11 @@ export const linkMap: Record<string, string> = {
 }
 
 const MessageTemplate = ({ info }: { info: TGetMsgDetail }) => {
+  const infoList = JSON.parse(info.list) as TMessage[]
   /**
    * Descriptions组件渲染数据
    */
-  const list: TMessage[] = info.list.map(item => {
+  const list: TMessage[] = infoList.map(item => {
     const items = item.items.map((__item, __index) => {
       switch (__item.type) {
         case 1:
@@ -74,35 +75,29 @@ const MessageTemplate = ({ info }: { info: TGetMsgDetail }) => {
 
   /**
    * 针对处理title、tips中含有跳转操作的字符串，转换Link组件进行渲染
-   * @param {string} str 传入字符串
+   * @param {string} content 传入字符串
    * @returns {string | JSX.Element} 如果link跳转，直接返回字符串；如果包含跳转功能，返回JSX.Element
    */
   const formatLink = (content: string) => {
-    const pattern = /<a href="[/\w+]+">|<\/a>/g
+    const pattern = /【[\u4e00-\u9fa5]+】/g
     if (!pattern.test(content)) return content
-    // const result = content.match(pattern)
+    const match = content.match(pattern) as RegExpMatchArray
 
     /**
      * firstContent:单独提取出第一句话
      * rest:遍历渲染
      */
     const [firstContent, ...rest] = content.split(pattern)
-    const target = []
-
-    /**
-     * 转成二维数组来进行渲染
-     */
-    for (let i = 0; i < rest.length; i += 2) {
-      target.push([rest[i], rest[i + 1]])
-    }
 
     return (
       <>
         {firstContent}
-        {target.map((item, index) => (
+        {rest.map((item, index) => (
           <React.Fragment key={index}>
-            <Link onClick={() => navigate(linkMap[item[0]])}>{item[0]}</Link>
-            {item[1]}
+            <Link onClick={() => navigate(linkMap[match[index]])}>
+              {match[index]}
+            </Link>
+            {item}
           </React.Fragment>
         ))}
       </>
@@ -116,14 +111,17 @@ const MessageTemplate = ({ info }: { info: TGetMsgDetail }) => {
       <Divider />
       <div className={style.content}>{formatLink(info.content)}</div>
       {list.map((item, index) => (
-        <Descriptions
-          key={index}
-          title='单位注册信息'
-          column={item.column || 2}
-          bordered
-          style={{ margin: '20px 0' }}
-          items={item.items}
-        />
+        <Row key={index}>
+          <Col span={item.items.length >= 6 ? 24 : 12}>
+            <Descriptions
+              title='单位注册信息'
+              column={item.items.length >= 6 ? 2 : 1}
+              bordered
+              style={{ margin: '20px 0' }}
+              items={item.items}
+            />
+          </Col>
+        </Row>
       ))}
 
       <div className={style.tips}>{formatLink(info.tips)}</div>

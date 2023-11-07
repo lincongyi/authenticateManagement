@@ -298,6 +298,16 @@ const uploadApplyFile = (
   return request.post('/access/uploadApplyFile', params)
 }
 
+/**
+ * 下载申请表/函
+ */
+const downloadApplicationForm = (params: {
+  url: string
+  fileName: string
+}): Promise<BlobPart> => {
+  return request.get('/download', { responseType: 'blob', params })
+}
+
 export {
   getAppCount,
   getMyAppList,
@@ -317,5 +327,6 @@ export {
   apiConfig,
   getCallData,
   getApiData,
-  uploadApplyFile
+  uploadApplyFile,
+  downloadApplicationForm
 }

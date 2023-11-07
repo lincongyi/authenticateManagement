@@ -93,6 +93,12 @@ const CheckModal = ({
     }[]
   >()
 
+  /**
+   *
+   * @param {TSign[]} list 审批抄送人
+   * @param {0|1} type 0-提交审批抄送；1-审批结束抄送
+   * @returns {StepProps[]} 审批抄送节点
+   */
   const getCopyItems = (list: TSign[], type: 0 | 1) => {
     return [
       {
@@ -101,6 +107,7 @@ const CheckModal = ({
             {!type ? '提交审批抄送' : '审批结束抄送'}
           </p>
         ),
+        icon: <div className={style['copy-icon']}></div>,
         status: 'process',
         description: (
           <>

@@ -43,7 +43,7 @@ export type TGetMsgDetail = {
   sendTime: string
   content: string
   tips: string
-  list: TMessage[]
+  list: string // JSON.parse()后的类型 => TMessage[]
 }
 
 /**

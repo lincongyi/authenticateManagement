@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Button, Col, Form, Modal, Row, Space, Typography } from 'antd'
+import { Col, Form, Row, Space, Typography, message } from 'antd'
 import { EyeOutlined, DownloadOutlined } from '@ant-design/icons'
-import { TUploadApplyFileParams } from '@/api/myApp'
+import { TUploadApplyFileParams, downloadApplicationForm } from '@/api/myApp'
 
 const { Link } = Typography
 
@@ -11,58 +11,60 @@ const UploadFormInfo = ({ formInfo }: { formInfo: TUploadApplyFileParams }) => {
     wrapperCol: { span: 16 }
   }
 
+  const [messageApi, contextHolder] = message.useMessage()
+
+  const [disableDownLoad, setDisableDownLoad] = useState(false)
+
   /**
-   * 预览
+   * 下载
    */
-  const onPreview = (index: 0 | 1) => {
-    if (!index) {
-      setTitle('预览申请表')
-      setPdf(formInfo.applyFile)
-    } else {
-      setTitle('预览申请函')
-      setPdf(formInfo.applyLetterName)
+  const onDownLoad = async (url: string, fileName: string) => {
+    if (disableDownLoad) return messageApi.info('请勿频繁请求')
+    setDisableDownLoad(true)
+    try {
+      const res = await downloadApplicationForm({
+        url,
+        fileName
+      })
+      const blob = new Blob([res], { type: 'application/pdf' })
+      const objectUrl = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = objectUrl
+      link.download = fileName
+
+      document.body.appendChild(link) // 如果不需要显示下载链接可以不需要这行代码
+      link.click()
+      URL.revokeObjectURL(objectUrl)
+
+      messageApi.success('已成功下载文件')
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setTimeout(() => {
+        setDisableDownLoad(false)
+      }, 3000)
     }
-    setOpen(true)
   }
-
-  const [open, setOpen] = useState(false) // 控制预览上传文件显示隐藏
-
-  const [title, setTitle] = useState<'预览申请表' | '预览申请函'>()
-
-  const [pdf, setPdf] = useState<string>()
 
   return (
     <>
-      <Modal
-        title={title}
-        width={840}
-        open={open}
-        onCancel={() => setOpen(false)}
-        footer={[
-          <Button key='cancel' onClick={() => setOpen(false)}>
-            关闭
-          </Button>
-        ]}
-      >
-        <iframe
-          src={pdf}
-          // type='application/x-google-chrome-pdf'
-          width='100%'
-          height='600'
-        />
-      </Modal>
+      {contextHolder}
       <Form name='uploadFormInfo' {...formProps}>
         <Form.Item label='（附印章）基础能力接入申请表' required>
           <Row>
             <Col span={18}>《{formInfo.applyFileName}》</Col>
             <Col span={6} className='tr'>
               <Space>
-                <Link onClick={() => onPreview(0)}>
-                  {/* <Link href={formInfo.applyFile} target='_blank'> */}
+                <Link href={formInfo.applyFile} target='_blank'>
                   <EyeOutlined style={{ marginRight: 4 }} />
                   预览
                 </Link>
-                <Link href={formInfo.applyFile} target='_blank'>
+                <Link
+                  style={{ cursor: disableDownLoad ? 'no-drop' : 'pointer' }}
+                  onClick={() =>
+                    onDownLoad(formInfo.applyFile, formInfo.applyFileName)
+                  }
+                >
                   <DownloadOutlined style={{ marginRight: 4 }} />
                   下载
                 </Link>
@@ -79,12 +81,16 @@ const UploadFormInfo = ({ formInfo }: { formInfo: TUploadApplyFileParams }) => {
             <Col span={18}>《{formInfo.applyLetterName}》</Col>
             <Col span={6} className='tr'>
               <Space>
-                <Link onClick={() => onPreview(1)}>
-                  {/* <Link href={formInfo.applyFile} target='_blank'> */}
+                <Link href={formInfo.applyLetter} target='_blank'>
                   <EyeOutlined style={{ marginRight: 4 }} />
                   预览
                 </Link>
-                <Link href={formInfo.applyFile} target='_blank'>
+                <Link
+                  style={{ cursor: disableDownLoad ? 'no-drop' : 'pointer' }}
+                  onClick={() =>
+                    onDownLoad(formInfo.applyLetter, formInfo.applyLetterName)
+                  }
+                >
                   <DownloadOutlined style={{ marginRight: 4 }} />
                   下载
                 </Link>
