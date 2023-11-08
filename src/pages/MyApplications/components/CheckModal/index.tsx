@@ -96,7 +96,7 @@ const CheckModal = ({
   /**
    *
    * @param {TSign[]} list 审批抄送人
-   * @param {0|1} type 0-提交审批抄送；1-审批结束抄送
+   * @param {0 | 1} type 0-提交审批抄送；1-审批结束抄送
    * @returns {StepProps[]} 审批抄送节点
    */
   const getCopyItems = (list: TSign[], type: 0 | 1) => {
@@ -111,14 +111,14 @@ const CheckModal = ({
         status: 'process',
         description: (
           <>
-            {list.map(item => {
+            {list.map((item, index) => {
               return (
-                <>
+                <React.Fragment key={index}>
                   <p className={style.flex}>
                     <img src={userAvatar} style={{ marginRight: 10 }} />
                     {item.name}
                   </p>
-                </>
+                </React.Fragment>
               )
             })}
           </>
@@ -148,7 +148,7 @@ const CheckModal = ({
         }
       })
 
-      const index = nodes.findIndex(item => item.isPass)
+      const index = nodes.findIndex(item => !item.isPass)
 
       setCurrent(index)
 
@@ -192,8 +192,11 @@ const CheckModal = ({
         )}
 
         <div className='title'>审批进度</div>
+        {/* 提交审批抄送 */}
         <Steps direction='vertical' items={startCopyItems} />
+        {/* 审批流程 */}
         <Steps direction='vertical' current={current} items={items} />
+        {/* 审批结束抄送 */}
         <Steps direction='vertical' items={endCopyItems} />
       </div>
     </Modal>
