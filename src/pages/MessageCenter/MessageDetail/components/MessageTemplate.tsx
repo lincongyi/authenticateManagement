@@ -9,8 +9,8 @@ const { Link } = Typography
 /**
  * 模板link对应的跳转路径
  */
-export const linkMap: Record<string, string> = {
-  '【审批管理-审批处理】': '',
+const linkMap: Record<string, string> = {
+  '【审批管理】': '',
   '【我的单位信息】': '/app/myAccount/companyInfo',
   '【我的应用】': '/app/myApps',
   '【开发文档】': '/app/devDocument',
@@ -35,7 +35,6 @@ const MessageTemplate = ({ info }: { info: TGetMsgDetail }) => {
             ...__item,
             children: (
               <Tag
-                key={__index}
                 color={
                   ['success', 'processing', 'error', 'default'][
                     __item.children as number
@@ -124,7 +123,7 @@ const MessageTemplate = ({ info }: { info: TGetMsgDetail }) => {
         </Row>
       ))}
 
-      <div className={style.tips}>{formatLink(info.tips)}</div>
+      <div className={style.tips}>{info.tips}</div>
     </>
   )
 }

@@ -11,10 +11,15 @@
   margin-top: 20px;
 }
 
-.tips,
 .content {
   @include font-primary-color;
 
   font-size: 16px;
+  line-height: 24px;
+}
+
+.tips {
+  @include font-secondary-color;
+
   line-height: 24px;
 }
