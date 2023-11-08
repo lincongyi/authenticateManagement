@@ -578,7 +578,7 @@ const MyApplications = () => {
         <Col span={24}>
           <Table
             rowKey='id'
-            className='myApplications-table'
+            className={style['my-applications-table']}
             columns={columns}
             dataSource={dataSource}
             pagination={pagination}

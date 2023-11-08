@@ -1,23 +1,30 @@
-.item {
-  cursor: pointer;
-}
-
-.item:nth-child(2n) {
-  background-color: #f7f8fa;
-}
-
-.content {
-  display: flex;
-  justify-content: space-between;
-  color: #9a9da4;
-
-  &.active {
-    @include font-primary-color;
+.message-list {
+  :global(.ant-list-item) {
+    padding: 16px 20px;
   }
-}
 
-:global(.ant-list .ant-list-item) {
-  padding: 16px 20px;
+  :global(.ant-list-item-meta-title) {
+    margin-bottom: 0;
+    line-height: 26px !important;
+  }
+
+  .item {
+    cursor: pointer;
+  }
+
+  .item:nth-child(2n) {
+    background-color: #f7f8fa;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-between;
+    color: #9a9da4;
+
+    &.active {
+      @include font-primary-color;
+    }
+  }
 }
 
 .pagination-wrap {

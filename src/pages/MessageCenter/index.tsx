@@ -76,6 +76,7 @@ const MessageCenter = () => {
       <List
         itemLayout='horizontal'
         dataSource={messageList}
+        className={style['message-list']}
         renderItem={item => (
           <List.Item className={style.item} onClick={() => onCheck(item.id)}>
             <List.Item.Meta
