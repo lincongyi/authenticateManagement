@@ -253,6 +253,7 @@ const DynamicForm = React.forwardRef<
         value: defaultValueItem?.value
       }
     })
+
     setDataSource(source)
   }, [])
 
@@ -304,11 +305,10 @@ const DynamicForm = React.forwardRef<
       {contextHolder}
       <Form ref={ref} form={form} name={formId.toString()} {...formProps}>
         {formList.map(item => (
-          <>
+          <React.Fragment key={item.field}>
             {/* 单独针对这个表单项进行处理 */}
             {item.cnName !== '接入服务有效期止' && (
               <Form.Item
-                key={item.field}
                 {...{
                   noStyle: ['imageUpload', 'fileUpload'].includes(item.type),
                   name: !['imageUpload', 'fileUpload'].includes(item.type)
@@ -602,7 +602,7 @@ const DynamicForm = React.forwardRef<
                 })()}
               </Form.Item>
             )}
-          </>
+          </React.Fragment>
         ))}
       </Form>
       <Modal
