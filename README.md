@@ -25,17 +25,23 @@ git cz
 
 ### /src
 
-### /api 接口文件
+- #### /api 接口文件
 
-### /assets 项目资源文件
+- #### /assets 项目资源文件
 
-### /components 通用组件
+- #### /components 通用组件
 
-### /pages 项目页面
+- #### /hooks hooks函数
 
-### /store mobx 状态管理
+- #### /pages 项目页面
 
-### /utils 工具函数
+- #### /router 路由
+
+- #### /store mobx 状态管理
+
+- #### /utils 工具函数
+
+### /type ts类型声明文件
 
 ### App.tsx 根组件
 

@@ -1,11 +1,11 @@
 import React, { ComponentType, Suspense, lazy } from 'react'
 import { Navigate, Route } from 'react-router-dom'
 import { Spin } from 'antd'
-import Home from '@pages/Home'
+// import Home from '@pages/Home'
 import Login from '@pages/Login'
 import AppLayout from '@pages/AppLayout'
 import Register from '@pages/Register'
-import {
+import Icon, {
   // HomeOutlined,
   RadarChartOutlined,
   AppstoreOutlined,
@@ -13,6 +13,25 @@ import {
   FileSearchOutlined,
   BellOutlined
 } from '@ant-design/icons'
+
+/**
+ * 我的单位icon svg
+ */
+const companyInfoIcon = () => (
+  <svg
+    width='16px'
+    height='16px'
+    viewBox='0 0 16 16'
+    version='1.1'
+    fill='currentColor'
+  >
+    <path
+      d='M0,15.75 L0,14.25 L1.25,14.25 L1.25,1.25 L10.75,1.25 L10.75,7.25 L14.75,7.25 L14.75,14.25 L16,14.25 L16,15.75 L0,15.75 Z M9.25,2.75 L2.75,2.75 L2.75,14.25 L4.916,14.25 L4.91666667,11.2011757 L6.41666667,11.2011757 L6.416,14.25 L9.25,14.25 L9.25,2.75 Z M13.25,8.75 L10.75,8.75 L10.75,14.25 L13.25,14.25 L13.25,8.75 Z M7.41666667,7.25 L7.41666667,8.75 L3.91666667,8.75 L3.91666667,7.25 L7.41666667,7.25 Z M7.41666667,4.25 L7.41666667,5.75 L3.91666667,5.75 L3.91666667,4.25 L7.41666667,4.25 Z'
+      id='我的单位'
+      fillRule='nonzero'
+    ></path>
+  </svg>
+)
 
 // 从文件系统导入多个模块
 const modules = import.meta.glob([
@@ -57,7 +76,8 @@ const routes: TRoutes[] = [
   },
   {
     path: '/', // 首页
-    element: <Home />
+    // element: <Home />
+    element: <Navigate to='/login' />
   },
   {
     path: '/login', // 登录
@@ -218,6 +238,15 @@ const routes: TRoutes[] = [
           isMenuItem: true,
           icon: React.createElement(SolutionOutlined),
           breadcrumb: '我的申请'
+        }
+      },
+      {
+        path: 'companyInfo', // 我的单位
+        element: lazyLoad('MyAccount/CompanyInfo'),
+        meta: {
+          isMenuItem: true,
+          icon: <Icon component={companyInfoIcon} />,
+          breadcrumb: '我的单位'
         }
       },
       {

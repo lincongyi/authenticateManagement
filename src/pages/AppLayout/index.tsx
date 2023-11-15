@@ -71,6 +71,14 @@ const AppLayout = () => {
   }, [applyCountStore.getTotal(), unreadCountStore.unreadCount])
 
   /**
+   * 屏蔽上面的监听，打开下面的初始化即可渲染默认路由
+   */
+  // useEffect(() => {
+  //   const items = getMenu()
+  //   setMenuItems(items)
+  // }, [])
+
+  /**
    * 导航菜单栏折叠
    */
   const [collapsed, setCollapsed] = useState(false)

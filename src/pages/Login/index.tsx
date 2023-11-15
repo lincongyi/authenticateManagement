@@ -99,7 +99,7 @@ const Login = () => {
   const items: TabsProps['items'] = [
     {
       key: 'account',
-      label: '账号登陆',
+      label: '账号登录',
       children: (
         <>
           <Form
@@ -118,6 +118,7 @@ const Login = () => {
                 size='large'
                 prefix={<UserOutlined className='site-form-item-icon' />}
                 placeholder='请输入账号'
+                autoComplete='new-user'
               />
             </Form.Item>
             <Form.Item
@@ -132,6 +133,7 @@ const Login = () => {
                   visible: passwordVisible,
                   onVisibleChange: setPasswordVisible
                 }}
+                autoComplete='new-password'
               />
             </Form.Item>
 
@@ -166,7 +168,7 @@ const Login = () => {
               </div>
             </Form.Item>
 
-            <Form.Item>
+            <Form.Item noStyle>
               <Button
                 type='primary'
                 htmlType='submit'
@@ -178,22 +180,6 @@ const Login = () => {
               </Button>
             </Form.Item>
           </Form>
-          <Divider />
-          <div className='tc'>
-            <Space>
-              <Button shape='round' size='large' onClick={toApply}>
-                没有账号？<span className='primary-color'>去注册</span>
-              </Button>
-              <Button
-                shape='round'
-                type='primary'
-                size='large'
-                onClick={() => navigate('/register/tour')}
-              >
-                已注册？查看进度
-              </Button>
-            </Space>
-          </div>
         </>
       )
     },
@@ -229,15 +215,31 @@ const Login = () => {
           </div>
           <div className={style['right-side']}>
             <Typography.Title level={3} className='tc'>
-              欢迎来到微警开发平台·机构端
+              欢迎来到微警开放平台·机构端
             </Typography.Title>
             <Tabs
               size='large'
               centered
-              defaultActiveKey='1'
+              defaultActiveKey={!import.meta.env.PROD ? 'account' : 'qrcode'}
               items={items}
               onChange={onChange}
             />
+            <Divider />
+            <div className='tc'>
+              <Space>
+                <Button shape='round' size='large' onClick={toApply}>
+                  没有账号？<span className='primary-color'>去注册</span>
+                </Button>
+                <Button
+                  shape='round'
+                  type='primary'
+                  size='large'
+                  onClick={() => navigate('/register/tour')}
+                >
+                  已注册？查看进度
+                </Button>
+              </Space>
+            </div>
           </div>
         </div>
       </Content>

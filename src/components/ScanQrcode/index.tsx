@@ -42,6 +42,7 @@ const ScanQrcode = ({
    */
   const handleQrcode = async () => {
     const { data } = await loginQrCode()
+    if (!data) return false
     const { qrCodeContent, certToken } = data
     setQrcode({
       qrCodeContent,
@@ -53,7 +54,7 @@ const ScanQrcode = ({
 
   let timer: NodeJS.Timer
   /**
-   * 扫码登录，轮询登录接口
+   * 扫码登录，轮询登录接口，获取登录结果
    */
   const onLoop = (certToken: string) => {
     timer = setInterval(() => {

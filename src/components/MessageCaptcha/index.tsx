@@ -64,6 +64,7 @@ const MessageCaptcha = ({
             showCount
             maxLength={6}
             style={{ width: widthList[0] }}
+            placeholder='请输入短信验证码'
             onBlur={e => callback(e.target.value)}
           />
         </Form.Item>

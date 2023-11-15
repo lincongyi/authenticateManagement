@@ -8,22 +8,16 @@
   position: relative;
   padding: 24px 0;
   color: $light-font-primary-color;
-  text-align: center;
-
-  .back-btn {
-    position: absolute;
-    left: 0;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  .title {
-    font-size: 22px;
-  }
+  font-size: 22px;
 }
 
-.register-box {
-  margin: 0 auto;
-  padding: 30px 150px;
+.section {
   background-color: #fff;
+}
+
+.section-title {
+  padding: 24px;
+  padding-bottom: 0;
+  font-weight: bold;
+  font-size: 18px;
 }

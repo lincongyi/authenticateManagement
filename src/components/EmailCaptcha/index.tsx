@@ -64,6 +64,7 @@ const EmailCaptcha = ({
           <Input
             showCount
             maxLength={6}
+            placeholder='请输入邮箱验证码'
             style={{ width: widthList[0] }}
             onBlur={e => callback(e.target.value)}
           />
