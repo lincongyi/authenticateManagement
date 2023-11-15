@@ -94,7 +94,7 @@ const Login = () => {
         password: 'dabby@2019'
       }
 
-  const [isLoop, setIsLoop] = useState(false) // 是否轮询登录接口
+  const [isLoop, setIsLoop] = useState(import.meta.env.PROD) // 是否轮询登录接口
 
   const items: TabsProps['items'] = [
     {
@@ -230,14 +230,14 @@ const Login = () => {
                 <Button shape='round' size='large' onClick={toApply}>
                   没有账号？<span className='primary-color'>去注册</span>
                 </Button>
-                <Button
+                {/* <Button
                   shape='round'
                   type='primary'
                   size='large'
                   onClick={() => navigate('/register/tour')}
                 >
                   已注册？查看进度
-                </Button>
+                </Button> */}
               </Space>
             </div>
           </div>
