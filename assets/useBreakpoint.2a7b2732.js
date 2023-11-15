@@ -1,0 +1,1 @@
+import{r as o,b1 as a,aO as c,$ as f}from"./index.c56b3141.js";function p(){let s=arguments.length>0&&arguments[0]!==void 0?arguments[0]:!0;const e=o.exports.useRef({}),t=a(),r=c();return f(()=>{const n=r.subscribe(u=>{e.current=u,s&&t()});return()=>r.unsubscribe(n)},[]),e.current}export{p as u};

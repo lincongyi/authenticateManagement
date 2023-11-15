@@ -1,0 +1,1 @@
+import{c as s}from"./index.c56b3141.js";const t=()=>s.get("/access/currentCompanyInfo"),n=()=>s.get("/access/currentUserInfo"),o=r=>s.post("/access/applyUpdateCompanyInfo",r),a=r=>s.post("/retrievePassword",r),c=r=>s.post("/authResult",r),u=r=>s.post("/currentResetPassword",r);export{c as a,u as b,n as c,t as d,o as e,a as r};
