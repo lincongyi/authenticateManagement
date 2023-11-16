@@ -287,7 +287,8 @@ const Access = () => {
     messageApi.success({
       content: `已成功${type ? '提交审核' : '保存草稿'}`,
       duration: 2,
-      onClose: () => navigate(-1)
+      onClose: () =>
+        navigate(`..?appId=${appId}&capabilityId=${capabilityId}&env=${env}`)
     })
   }
 

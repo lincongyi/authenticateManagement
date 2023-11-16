@@ -43,9 +43,12 @@ const AppInfo = () => {
   const [searchParams] = useSearchParams()
 
   const appId = searchParams.get('appId') || myAppStore.appId
+
   const navigate = useNavigate()
 
   const [clientId, setClientId] = useState<string>()
+
+  const [env, setEnv] = useState<TEnv>('sit') // 应用当前环境（active标签）
 
   /**
    * 初始化应用详情
@@ -56,6 +59,12 @@ const AppInfo = () => {
     if (!searchParams.get('appId')) {
       navigate(`../appInfo?appId=${appId}`, { replace: true })
     }
+
+    /** 从基础能力中心跳转过来 **/
+    if (searchParams.get('env') && searchParams.get('capabilityId')) {
+      setEnv(searchParams.get('env') as TEnv)
+    }
+
     ;(async () => {
       const { data } = await getClientId({ id: appId })
       if (!data) return
@@ -77,8 +86,6 @@ const AppInfo = () => {
   }
 
   const [isCollapsed, setIsCollapsed] = useState(true)
-
-  const [env, setEnv] = useState<TEnv>('sit') // 当前active标签
 
   const items: TabsProps['items'] = [
     {
@@ -301,7 +308,7 @@ const AppInfo = () => {
 
       <div className={`${style.section} ${style['env-info']}`}>
         <Tabs
-          defaultActiveKey='sit'
+          activeKey={env}
           items={items}
           onChange={activeKey => onChange(activeKey as TEnv)}
         />

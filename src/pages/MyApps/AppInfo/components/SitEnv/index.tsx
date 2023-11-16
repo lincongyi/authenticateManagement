@@ -4,7 +4,7 @@ import style from '../index.module.scss'
 import { Col, Row, Tabs, message } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'
 import AccessedEnv from '../AccessedEnv'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { appInfoContext } from '../..'
 import { useStore } from '@/stores'
 import CheckModal from '@/pages/MyApplications/components/CheckModal'
@@ -30,10 +30,12 @@ const SitEnv = () => {
 
   const [activeCapability, setActiveCapability] = useState<TGetAppInfoByEnv>() // 当前active基础能力
 
+  const [searchParams] = useSearchParams()
+
   /**
    * 初始化当前应用所拥有的能力信息
    */
-  const fetchAppInfoByEnv = async (capability?: TGetAppInfoByEnv) => {
+  const fetchAppInfoByEnv = async () => {
     const { data } = await getAppInfoByEnv({
       appId,
       appEnv: env
@@ -42,10 +44,11 @@ const SitEnv = () => {
     setAppInfoByEnv(data)
 
     let index = 0
-    if (capability) {
-      const result = data.findIndex(
-        __item => __item.capabilityId === capability.capabilityId
-      )
+
+    const capabilityId = searchParams.get('capabilityId')
+
+    if (capabilityId) {
+      const result = data.findIndex(item => item.capabilityId === +capabilityId)
       if (result !== -1) index = result
     }
 
