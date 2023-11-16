@@ -180,9 +180,13 @@ const AppInfo = () => {
             </Paragraph>
           </Descriptions.Item>
           <Descriptions.Item label='正式 Client Id'>
-            <Paragraph copyable style={{ marginBottom: 0 }}>
-              {myAppStore.envClientId.prod || '-'}
-            </Paragraph>
+            {myAppStore.envClientId.prod ? (
+              <Paragraph copyable style={{ marginBottom: 0 }}>
+                {myAppStore.envClientId.prod}
+              </Paragraph>
+            ) : (
+              '-'
+            )}
           </Descriptions.Item>
           <Descriptions.Item label='应用状态'>
             {(appInfo && getDictionaryItemName('appState', appInfo.state)) ||
@@ -297,7 +301,7 @@ const AppInfo = () => {
 
       <div className={`${style.section} ${style['env-info']}`}>
         <Tabs
-          defaultActiveKey='1'
+          defaultActiveKey='sit'
           items={items}
           onChange={activeKey => onChange(activeKey as TEnv)}
         />

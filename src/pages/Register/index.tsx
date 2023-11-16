@@ -296,8 +296,7 @@ const Register = () => {
                         { required: true },
                         {
                           validator (_, value) {
-                            const pattern = emailPattern
-                            if (pattern.test(value)) {
+                            if (emailPattern.test(value)) {
                               return Promise.resolve()
                             }
                             return Promise.reject(
@@ -372,6 +371,7 @@ const Register = () => {
                         maxLength={20}
                         placeholder='请输入密码'
                         showCount
+                        autoComplete='new-password'
                       />
                     </Form.Item>
                     <Form.Item

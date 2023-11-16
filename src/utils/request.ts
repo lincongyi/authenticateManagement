@@ -67,7 +67,8 @@ request.interceptors.response.use(
     if (!retCode) return response.data
     else {
       const { retMessage } = response.data
-      if (retCode === 6000) return Promise.reject(retMessage)
+      // ['未进行认证','二维码已过期']
+      if ([6000, 6002].includes(retCode)) return Promise.reject(retMessage)
       message.warning({
         content: retMessage,
         onClose: () => {

@@ -11,7 +11,7 @@ import {
   Typography,
   message
 } from 'antd'
-import { fieldNames } from '@utils/index'
+import { emailPattern, fieldNames, phonePattern } from '@utils/index'
 import { observer } from 'mobx-react-lite'
 import { currentCompanyInfo } from '@api/myAccount'
 import { addApp, getAppInfo, updateApp } from '@api/myApp'
@@ -135,6 +135,8 @@ const AppForm = () => {
         {...formProps}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
+        validateTrigger={['onBlur']}
+        autoComplete='off'
       >
         <Form.Item wrapperCol={{ span: 24 }} className='tr'>
           <Affix offsetTop={140}>
@@ -215,17 +217,59 @@ const AppForm = () => {
 
         <Title level={5}>应用单位信息</Title>
         <Divider />
-        <Form.Item label='单位名称' rules={[{ required: true }]}>
+        <Form.Item label='单位名称' required>
           {companyInfo?.companyName}
         </Form.Item>
-        <Form.Item label='管理员姓名' rules={[{ required: true }]}>
-          {companyInfo?.adminName}
+        <Form.Item
+          label='管理员姓名'
+          name='contractor'
+          rules={[{ required: true }]}
+        >
+          <Input
+            placeholder='请输入管理员姓名'
+            showCount
+            maxLength={defaultMaxLength}
+          />
         </Form.Item>
-        <Form.Item label='联系电话' rules={[{ required: true }]}>
-          {companyInfo?.adminPhone}
+        <Form.Item
+          label='联系电话'
+          name='contractorPhone'
+          rules={[
+            { required: true },
+            {
+              validator (_, value) {
+                if (phonePattern.test(value)) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('手机号格式有误，请重新确认'))
+              },
+              validateTrigger: 'onBlur'
+            }
+          ]}
+        >
+          <Input placeholder='请输入管理员联系电话' showCount maxLength={11} />
         </Form.Item>
-        <Form.Item label='联系邮箱' rules={[{ required: true }]}>
-          {companyInfo?.adminEmail}
+        <Form.Item
+          label='联系邮箱'
+          name='contractorEmail'
+          rules={[
+            { required: true },
+            {
+              validator (_, value) {
+                if (emailPattern.test(value)) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('邮箱格式有误，请重新确认'))
+              },
+              validateTrigger: 'onBlur'
+            }
+          ]}
+        >
+          <Input
+            placeholder='请输入管理员联系邮箱'
+            showCount
+            maxLength={defaultMaxLength}
+          />
         </Form.Item>
 
         <Title level={5}>承建单位信息</Title>
@@ -241,17 +285,51 @@ const AppForm = () => {
             maxLength={defaultMaxLength}
           />
         </Form.Item>
-        <Form.Item label='项目负责人' name='projectManager'>
+        <Form.Item
+          label='项目负责人'
+          name='projectManager'
+          rules={[{ required: true }]}
+        >
           <Input
             placeholder='请输入项目负责人'
             showCount
             maxLength={defaultMaxLength}
           />
         </Form.Item>
-        <Form.Item label='负责人联系电话' name='managerPhone'>
+        <Form.Item
+          label='负责人联系电话'
+          name='managerPhone'
+          rules={[
+            { required: true },
+            {
+              validator (_, value) {
+                if (phonePattern.test(value)) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('手机号格式有误，请重新确认'))
+              },
+              validateTrigger: 'onBlur'
+            }
+          ]}
+        >
           <Input placeholder='请输入负责人联系电话' showCount maxLength={11} />
         </Form.Item>
-        <Form.Item label='负责人联系邮箱' name='managerEmail'>
+        <Form.Item
+          label='负责人联系邮箱'
+          name='managerEmail'
+          rules={[
+            { required: true },
+            {
+              validator (_, value) {
+                if (emailPattern.test(value)) {
+                  return Promise.resolve()
+                }
+                return Promise.reject(new Error('邮箱格式有误，请重新确认'))
+              },
+              validateTrigger: 'onBlur'
+            }
+          ]}
+        >
           <Input
             placeholder='请输入负责人联系邮箱'
             showCount
