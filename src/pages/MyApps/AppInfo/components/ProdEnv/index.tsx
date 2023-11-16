@@ -7,6 +7,7 @@ import AccessedEnv from '../AccessedEnv'
 import { appInfoContext } from '../..'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '@/stores'
+import CheckModal from '@/pages/MyApplications/components/CheckModal'
 
 const prodEnvContext = React.createContext<{
   capability: TGetAppInfoByEnv | undefined
@@ -83,13 +84,16 @@ const ProdEnv = () => {
     navigate(`./access?appId=${appId}&capabilityId=${capabilityId}&env=${env}`)
   }
 
+  const [instanceId, setInstanceId] = useState('') // 当前active审批单号
+  const [open, setOpen] = useState(false) // 控制查看Modal显示隐藏
+
   /**
    * 查看审批单
    */
   const onView = () => {
     if (!activeCapability) return
-    const { flowId } = activeCapability
-    navigate(`/app/myApplications?processInstanceId=${flowId}`)
+    setInstanceId(activeCapability.flowId)
+    setOpen(true)
   }
 
   return (
@@ -217,6 +221,9 @@ const ProdEnv = () => {
         </>
       ) : (
         '暂无接入能力'
+      )}
+      {instanceId && (
+        <CheckModal instanceId={instanceId} open={open} setOpen={setOpen} />
       )}
     </>
   )

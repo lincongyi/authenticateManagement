@@ -53,7 +53,7 @@ const CheckModal = ({
   instanceId: string
   open: boolean
   setOpen: Function
-  callback: Function
+  callback?: Function
 }) => {
   const { dictionaryStore } = useGetDictionary()
 
@@ -161,7 +161,7 @@ const CheckModal = ({
   }, [instanceId])
 
   const onCancel = () => {
-    callback()
+    callback && callback()
     setOpen(false)
   }
 
