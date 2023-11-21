@@ -231,7 +231,8 @@ const DynamicForm = React.forwardRef<
     const { publicKey, privateKey } = data
     setKeyPair({ ...keyPair, [field]: { publicKey, privateKey } })
     form.setFieldValue(field, publicKey)
-    saveAsFile(privateKey, '密钥对')
+    const content = `公钥：${publicKey}\n私钥：${privateKey}`
+    saveAsFile(content, '密钥对')
   }
 
   type TDataSource = {
@@ -307,7 +308,7 @@ const DynamicForm = React.forwardRef<
         {formList.map(item => (
           <React.Fragment key={item.field}>
             {/* 单独针对这个表单项进行处理 */}
-            {item.cnName !== '接入服务有效期止' && (
+            {item.cnName !== '接入能力有效期止' && (
               <Form.Item
                 {...{
                   noStyle: ['imageUpload', 'fileUpload'].includes(item.type),
@@ -436,7 +437,7 @@ const DynamicForm = React.forwardRef<
                         <>
                           <Form.Item
                             name={item.field}
-                            label={item.label}
+                            label={item.cnName}
                             style={{ marginBottom: 0 }}
                             rules={[
                               {
@@ -498,7 +499,7 @@ const DynamicForm = React.forwardRef<
                         <>
                           <Form.Item
                             name={item.field}
-                            label={item.label}
+                            label={item.cnName}
                             style={{ marginBottom: 0 }}
                             rules={[
                               {

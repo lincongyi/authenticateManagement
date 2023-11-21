@@ -102,7 +102,7 @@ const DynamicFormInfo = ({ formList }: { formList: TFormList[] }) => {
               {formItems.map(item => (
                 <React.Fragment key={item.field}>
                   {/* 单独针对这个表单项进行处理 */}
-                  {item.cnName !== '接入服务有效期止' && (
+                  {item.cnName !== '接入能力有效期止' && (
                     <Form.Item label={item.cnName}>
                       {formatFormItemValue(item)}
                     </Form.Item>
