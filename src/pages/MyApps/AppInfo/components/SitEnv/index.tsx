@@ -92,8 +92,9 @@ const SitEnv = () => {
   /**
    * 查看审批单
    */
-  const onView = () => {
+  const onView = (stepState: TGetAppInfoByEnv['state']) => {
     if (!activeCapability) return
+    if (state < stepState) return
     setInstanceId(activeCapability.flowId)
     setOpen(true)
   }
@@ -206,7 +207,7 @@ const SitEnv = () => {
                           等待审批
                         </div>
                         {state <= 2 && (
-                          <div className={style.btn} onClick={onView}>
+                          <div className={style.btn} onClick={() => onView(2)}>
                             <i
                               className={`${style['btn-icon']} ${style.step02}`}
                             />
@@ -261,7 +262,7 @@ const SitEnv = () => {
                         </div>
                         <div className={style.name}>等待审批</div>
                         {state <= 4 && (
-                          <div className={style.btn} onClick={onView}>
+                          <div className={style.btn} onClick={() => onView(4)}>
                             <i
                               className={`${style['btn-icon']} ${style.step02}`}
                             />

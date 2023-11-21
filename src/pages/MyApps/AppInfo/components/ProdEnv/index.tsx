@@ -93,8 +93,9 @@ const ProdEnv = () => {
   /**
    * 查看审批单
    */
-  const onView = () => {
+  const onView = (stepState: TGetAppInfoByEnv['state']) => {
     if (!activeCapability) return
+    if (state < stepState) return
     setInstanceId(activeCapability.flowId)
     setOpen(true)
   }
@@ -200,7 +201,7 @@ const ProdEnv = () => {
                         </div>
                         <div className={style.name}>等待审批</div>
                         {state <= 6 && (
-                          <div className={style.btn} onClick={onView}>
+                          <div className={style.btn} onClick={() => onView(6)}>
                             <i
                               className={`${style['btn-icon']} ${style.step02}`}
                             />
