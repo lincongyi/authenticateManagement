@@ -90,6 +90,7 @@ export type TRuleList =
   | 'wmv'
   | 'mpeg4'
   | 'rm'
+  | 'all'
 
 export type TFormContent = {
   type: TFormItemType

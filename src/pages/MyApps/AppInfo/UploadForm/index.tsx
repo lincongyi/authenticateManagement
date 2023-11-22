@@ -10,6 +10,9 @@ import { UploadRequestOption } from 'rc-upload/lib/interface'
 import { upload } from '@/api'
 import { uploadApplyFile } from '@/api/myApp'
 import type { TUploadApplyFileParams } from '@/api/myApp'
+import { useStore } from '@/stores'
+import myAppUploadFormPdfIcon from '@/assets/myApp-uploadForm-pdf-icon.png'
+import myAppUploadFormWordIcon from '@/assets/myApp-uploadForm-word-icon.png'
 
 const UploadForm = () => {
   const [searchParams] = useSearchParams()
@@ -51,8 +54,7 @@ const UploadForm = () => {
   const fileBeforeUpload = (file: RcFile, maxSize: number = 1) => {
     const { name } = file
     const fileType = name.substring(name.lastIndexOf('.') + 1)
-    // const isMatched = ['doc', 'docx', 'pdf', 'png', 'jpg'].includes(fileType)
-    const isMatched = ['pdf'].includes(fileType)
+    const isMatched = ['doc', 'docx', 'pdf', 'png', 'jpg'].includes(fileType)
     if (!isMatched) messageApi.error(`不支持上传${fileType}格式文件`)
     const isExceeded = file.size / 1024 / 1024 < maxSize
     if (!isExceeded) message.error(`图片文件大小<${maxSize}MB`)
@@ -130,6 +132,10 @@ const UploadForm = () => {
     }
   }
 
+  const { themeStore } = useStore()
+
+  const colorPrimary = themeStore.antdThemeColor
+
   return (
     <>
       {contextHolder}
@@ -164,7 +170,8 @@ const UploadForm = () => {
       <div className={style.section}>
         <Form form={form} name='uploadForm' {...formProps}>
           <Form.Item label='申请表下载：'>
-            <div className='flex'>
+            <div className='flex primary-color'>
+              <img src={myAppUploadFormPdfIcon} />
               《基础能力接入申请表.pdf》
               <div className={style.download}>
                 <DownloadOutlined />
@@ -173,8 +180,9 @@ const UploadForm = () => {
             </div>
           </Form.Item>
           <Form.Item label='申请函下载：'>
-            <div className='flex'>
-              《基础能力接入申请函.pdf》
+            <div className='flex primary-color'>
+              <img src={myAppUploadFormWordIcon} />
+              《基础能力接入申请函.docx》
               <div className={style.download}>
                 <DownloadOutlined />
                 下载
@@ -186,7 +194,7 @@ const UploadForm = () => {
             label='（附印章）基础能力接入申请表：'
             extra={
               <>
-                <p>支持文件格式：pdf</p>
+                <p>支持文件格式：doc/docx/pdf/png/jpg</p>
                 <p>支持文件大小：1Mb</p>
               </>
             }
@@ -199,7 +207,12 @@ const UploadForm = () => {
               customRequest={options => fileCustomRequest(options, 0)}
               onRemove={() => onImageRemove(0)}
             >
-              <Button icon={<UploadOutlined />}>上传文件</Button>
+              <Button
+                icon={<UploadOutlined />}
+                style={{ color: colorPrimary, borderColor: colorPrimary }}
+              >
+                上传文件
+              </Button>
             </Upload>
           </Form.Item>
           <Form.Item
@@ -207,7 +220,7 @@ const UploadForm = () => {
             label='（附印章）基础能力接入申请函：'
             extra={
               <>
-                <p>支持文件格式：pdf</p>
+                <p>支持文件格式：doc/docx/pdf/png/jpg</p>
                 <p>支持文件大小：1Mb</p>
               </>
             }
@@ -220,7 +233,12 @@ const UploadForm = () => {
               customRequest={options => fileCustomRequest(options, 1)}
               onRemove={() => onImageRemove(1)}
             >
-              <Button icon={<UploadOutlined />}>上传文件</Button>
+              <Button
+                icon={<UploadOutlined />}
+                style={{ color: colorPrimary, borderColor: colorPrimary }}
+              >
+                上传文件
+              </Button>
             </Upload>
           </Form.Item>
         </Form>

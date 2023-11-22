@@ -153,6 +153,8 @@ const DynamicForm = React.forwardRef<
    * 上传前校验文件
    */
   const fileBeforeUpload = (file: RcFile, item: TFormContent) => {
+    if (item.ruleList.includes('all')) return true
+
     const { name } = file
     const fileType = name.substring(name.lastIndexOf('.') + 1)
     const isMatched = item.ruleList.includes(fileType as TRuleList)
@@ -536,7 +538,8 @@ const DynamicForm = React.forwardRef<
                               offset={4}
                               className='font-secondary-color'
                             >
-                              上传文件只允许{item.ruleList.join()}格式
+                              {!item.ruleList.includes('all') &&
+                                `上传文件只允许${item.ruleList.join()}格式`}
                             </Col>
                             <Col
                               span={20}

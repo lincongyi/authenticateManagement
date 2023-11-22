@@ -132,7 +132,7 @@ const Access = () => {
     } else if (['table'].includes(type)) {
       return item.tableOptions!.map((__item, index) => ({
         label: __item.key,
-        value: value[index].value
+        value: value && value[index] ? value[index].value : undefined
       }))
     } else return value
   }

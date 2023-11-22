@@ -1,4 +1,4 @@
-import { message } from 'antd'
+import { Upload, message } from 'antd'
 import type { RcFile } from 'antd/es/upload/interface'
 
 /**
@@ -102,7 +102,7 @@ const imgBeforeUpload = (file: RcFile, maxSize: number = 2) => {
   if (!isJpgOrPng) message.error('上传图片只允许JPG/PNG格式')
   const isExceeded = file.size / 1024 / 1024 < maxSize
   if (!isExceeded) message.error(`图片文件大小<${maxSize}MB`)
-  return isJpgOrPng && isExceeded
+  return (isJpgOrPng && isExceeded) || Upload.LIST_IGNORE
 }
 
 export const fieldNames = { label: 'dictName', value: 'dictValue' }
