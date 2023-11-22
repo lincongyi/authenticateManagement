@@ -51,7 +51,17 @@ const AppForm = () => {
   useEffect(() => {
     ;(async () => {
       const { data } = await currentCompanyInfo()
+      if (!data) return
       setCompanyInfo(data)
+      /**
+       * 默认填充应用单位信息
+       */
+      const initialValues = {
+        contractor: data.adminName,
+        contractorPhone: data.adminPhone,
+        contractorEmail: data.adminEmail
+      }
+      form.setFieldsValue({ ...form.getFieldsValue(), ...initialValues })
     })()
   }, [])
 

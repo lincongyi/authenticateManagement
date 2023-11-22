@@ -98,6 +98,22 @@ const Login = () => {
 
   const items: TabsProps['items'] = [
     {
+      key: 'qrcode',
+      label: '扫码登录',
+      children: (
+        <div className={style['qrcode-wrap']}>
+          <p className={style.tips}>请使用微警认证App或微信扫描二维码</p>
+          <ScanQrcode
+            callback={(certToken: string) =>
+              onLogin({ loginType: 'qrCode', certToken })
+            }
+            size={200}
+            isLoop={isLoop}
+          />
+        </div>
+      )
+    },
+    {
       key: 'account',
       label: '账号登录',
       children: (
@@ -181,22 +197,6 @@ const Login = () => {
             </Form.Item>
           </Form>
         </>
-      )
-    },
-    {
-      key: 'qrcode',
-      label: '扫码登陆',
-      children: (
-        <div className={style['qrcode-wrap']}>
-          <p className={style.tips}>请使用微警认证App或微信扫描二维码</p>
-          <ScanQrcode
-            callback={(certToken: string) =>
-              onLogin({ loginType: 'qrCode', certToken })
-            }
-            size={200}
-            isLoop={isLoop}
-          />
-        </div>
       )
     }
   ]

@@ -8,6 +8,16 @@
   display: flex;
 }
 
+.capability-tabs {
+  :global(.ant-tabs-tab-active) {
+    background-color: $primary-color !important;
+
+    :global(.ant-tabs-tab-btn) {
+      color: #fff !important;
+    }
+  }
+}
+
 .sit-bar {
   width: 24px;
   height: 216px;

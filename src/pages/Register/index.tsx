@@ -283,7 +283,7 @@ const Register = () => {
                     >
                       <MessageCaptcha
                         form={form}
-                        widthList={[420, 150]}
+                        widthList={[400, 150]}
                         callback={(code: string) =>
                           form.setFieldValue('messageCaptcha', code)
                         }
@@ -318,7 +318,7 @@ const Register = () => {
                     <Form.Item label='邮箱验证码' required>
                       <EmailCaptcha
                         form={form}
-                        widthList={[420, 150]}
+                        widthList={[400, 150]}
                         callback={(code: string) =>
                           form.setFieldValue('emailCaptcha', code)
                         }

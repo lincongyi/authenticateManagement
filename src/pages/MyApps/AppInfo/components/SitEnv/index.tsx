@@ -115,6 +115,7 @@ const SitEnv = () => {
       {contextHolder}
       {appInfoByEnv ? (
         <Tabs
+          className={style['capability-tabs']}
           activeKey={
             activeCapability && activeCapability?.capabilityId.toString()
           }
