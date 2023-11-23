@@ -131,15 +131,18 @@ const AccessedEnv = () => {
     navigate(url)
   }
 
-  const [increaseModalOpen, setIncreaseModalOpen] = useState(false) // 控制申请增加用量Modal显示隐藏
+  const [increaseModalOpen, setIncreaseModalOpen] = useState(false) // 控制增加用量Modal显示隐藏
 
   const [apiId, setApiId] = useState<number>() // 接口id
 
+  const [apiAddNum, setApiAddNum] = useState<number>() // 增加用量
+
   /**
-   * 申请增加用量
+   * 增加用量
    */
-  const onIncreaseUsage = (id: number) => {
-    setApiId(id)
+  const onIncreaseUsage = (values: TGetApiDataResponse) => {
+    setApiId(values.id)
+    setApiAddNum(values.addNum)
     setIncreaseModalOpen(true)
   }
 
@@ -189,8 +192,8 @@ const AccessedEnv = () => {
             开发文档
           </Button>
           {env === 'sit' ? (
-            <Button type='link' onClick={() => onIncreaseUsage(values.id)}>
-              申请增加用量
+            <Button type='link' onClick={() => onIncreaseUsage(values)}>
+              增加用量
             </Button>
           ) : (
             <Button type='link' onClick={() => onWarningSetting(values.id)}>
@@ -344,7 +347,7 @@ const AccessedEnv = () => {
             <div className={style.title}>能力API接入情况</div>
             <Alert
               style={{ margin: '10px 0' }}
-              message='测试环境限制接口每日用量限额，每日可发起3次申请增加用量，次日将重置用量限额'
+              message='测试环境限制接口每日用量限额，每日可发起3次增加用量，次日将重置用量限额'
               type='info'
               showIcon
             />
@@ -393,11 +396,16 @@ const AccessedEnv = () => {
       {apiId && (
         <>
           {env === 'sit' ? (
-            <IncreaseModal
-              id={apiId}
-              open={increaseModalOpen}
-              setOpen={setIncreaseModalOpen}
-            />
+            <>
+              {apiAddNum && (
+                <IncreaseModal
+                  id={apiId}
+                  addNum={apiAddNum}
+                  open={increaseModalOpen}
+                  setOpen={setIncreaseModalOpen}
+                />
+              )}
+            </>
           ) : (
             <WarningModal
               id={apiId}

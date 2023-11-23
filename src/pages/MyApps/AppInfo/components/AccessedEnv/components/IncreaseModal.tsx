@@ -17,10 +17,12 @@ import { useStore } from '@/stores'
 
 const IncreaseModal = ({
   id,
+  addNum,
   open,
   setOpen
 }: {
-  id: number // 申请增加用量接口id
+  id: number // 增加用量接口id
+  addNum: number
   open: boolean
   setOpen: Function
 }) => {
@@ -77,7 +79,7 @@ const IncreaseModal = ({
     <>
       {contextHolder}
       <Modal
-        title='申请增加用量'
+        title='增加用量'
         centered
         open={open}
         width={640}
@@ -86,7 +88,7 @@ const IncreaseModal = ({
       >
         <Divider />
         <Alert
-          message='每日可发起3次申请增加用量，次日将重置用量限额。'
+          message='每日可发起3次增加用量，次日将重置用量限额。'
           type='info'
           showIcon
           style={{ marginBottom: 20 }}
@@ -95,11 +97,13 @@ const IncreaseModal = ({
           form={form}
           name='increase'
           {...formProps}
+          initialValues={{ num: addNum }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
           <Form.Item label='增加用量' name='num' rules={[{ required: true }]}>
             <InputNumber
+              disabled
               placeholder='请输入增加用量值'
               addonAfter='次'
               style={{ width: '100%' }}

@@ -165,7 +165,7 @@ const applyStopApp = (params: {
 }
 
 /**
- * 申请增加用量
+ * 增加用量
  */
 const applyDateNum = (params: {
   apiId: number
@@ -268,6 +268,7 @@ export type TGetApiDataResponse = {
   errorNum: number // 请求失败次数
   projectId: number
   directoryId: number // 接口对应开发文档的目录id
+  addNum: number // 增加用量
 }
 
 /**

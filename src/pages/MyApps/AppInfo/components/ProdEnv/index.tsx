@@ -105,6 +105,7 @@ const ProdEnv = () => {
       {contextHolder}
       {appInfoByEnv ? (
         <Tabs
+          className={style['capability-tabs']}
           activeKey={
             activeCapability && activeCapability?.capabilityId.toString()
           }
