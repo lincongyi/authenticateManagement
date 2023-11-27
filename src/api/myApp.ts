@@ -215,7 +215,7 @@ type TGetApiConfigResponse = {
 }
 
 /**
- * 获取预警设置
+ * 获取预警设置默认值
  */
 const getApiConfig = (params: {
   apiId: number

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { TGetAppInfoByEnv, getAppInfoByEnv } from '@api/myApp'
 import style from '../index.module.scss'
-import { Col, Row, Tabs, message } from 'antd'
+import { Col, Row, Spin, Tabs, message } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'
 import AccessedEnv from '../AccessedEnv'
 import { useNavigate, useSearchParams } from 'react-router-dom'
@@ -17,7 +17,13 @@ const sitEnvContext = React.createContext<{
   fetchAppInfoByEnv: undefined
 })
 
-const SitEnv = () => {
+const SitEnv = ({
+  isLoaded,
+  setLoaded
+}: {
+  isLoaded: boolean
+  setLoaded: Function
+}) => {
   const { env, isEnable } = useContext(appInfoContext)!
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
@@ -42,6 +48,7 @@ const SitEnv = () => {
     })
     if (!data) return
     setAppInfoByEnv(data)
+    setLoaded()
 
     let index = 0
 
@@ -107,7 +114,9 @@ const SitEnv = () => {
     if (state < 3) return
     const clientId = myAppStore.envClientId.sit
     const { capabilityId } = activeCapability!
-    navigate(`./uploadForm?clientId=${clientId}&capabilityId=${capabilityId}`)
+    navigate(
+      `./uploadForm?appId=${appId}&capabilityId=${capabilityId}&env=${env}&clientId=${clientId}`
+    )
   }
 
   return (
@@ -135,6 +144,8 @@ const SitEnv = () => {
             }
           })}
         />
+      ) : !isLoaded ? (
+        <Spin size='large' />
       ) : (
         '没有接入任何基础能力，快去添加接入吧~'
       )}

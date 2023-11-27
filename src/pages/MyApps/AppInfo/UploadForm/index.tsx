@@ -19,6 +19,10 @@ const UploadForm = () => {
 
   const navigate = useNavigate()
 
+  const appId = searchParams.get('appId')
+
+  const env = searchParams.get('env')
+
   const clientId = searchParams.get('clientId')
 
   const capabilityId = Number(searchParams.get('capabilityId'))
@@ -125,7 +129,8 @@ const UploadForm = () => {
       await uploadApplyFile(params)
       messageApi.success({
         content: '提交成功',
-        onClose: () => navigate(-1)
+        onClose: () =>
+          navigate(`..?appId=${appId}&capabilityId=${capabilityId}&env=${env}`)
       })
     } catch (error) {
       console.log(error)

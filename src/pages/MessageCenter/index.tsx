@@ -13,7 +13,7 @@ const MessageCenter = () => {
   const { unreadCountStore } = useStore()
 
   /**
-   * 针对查看详情，返回后重新获取未读消息
+   * 获取未读消息数量
    */
   useEffect(() => {
     ;(async () => {

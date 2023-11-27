@@ -95,13 +95,11 @@ const MyApplications = () => {
     setStateList(list)
   }
 
+  /**
+   * 获取申请数量
+   */
   useEffect(() => {
-    const applyCount = applyCountStore.applyCount
-    if (!applyCount) {
-      initApplyCount()
-    } else {
-      renderApplyCount(applyCount)
-    }
+    initApplyCount()
   }, [])
 
   const [processKeyList, setProcessKeyList] = useState<Option[]>()

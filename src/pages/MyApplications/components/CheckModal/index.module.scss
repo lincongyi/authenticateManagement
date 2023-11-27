@@ -8,9 +8,9 @@
   }
 }
 
-.copy-icon {
-  width: 32px;
-  height: 32px;
-  background-color: $border-color;
-  border-radius: 50%;
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
 }

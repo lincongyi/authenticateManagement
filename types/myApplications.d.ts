@@ -76,6 +76,8 @@ type TApplyDetail = {
   processName: string // 审批单类型
   isNoticeUser: boolean // 是否被查看过
   info: any
+  isStartCopy: boolean // 起始抄送人是否成功抄送
+  isEndCopy: boolean // 结束抄送人是否成功抄送
   endCopyList: TSign[] // 提交审批抄送
   startCopyList: TSign[] // 审批结束抄送
   nodes: TNodes[]

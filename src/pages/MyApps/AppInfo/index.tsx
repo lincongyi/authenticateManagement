@@ -66,15 +66,15 @@ const AppInfo = () => {
     }
 
     ;(async () => {
-      const { data } = await getClientId({ id: appId })
-      if (!data) return
-      const { clientId } = data
+      const { data: clientIdData } = await getClientId({ id: appId })
+      if (!clientIdData) return
+      const { clientId } = clientIdData
       myAppStore.setEnvClientId(clientId)
       setClientId(clientId.sit)
 
-      const info = await getAppInfo({ id: clientId.sit })
-      if (!info.data) return
-      setAppInfo(info.data)
+      const { data: appInfoData } = await getAppInfo({ id: clientId.sit })
+      if (!appInfoData) return
+      setAppInfo(appInfoData)
     })()
   }, [])
 
@@ -85,11 +85,14 @@ const AppInfo = () => {
     navigate(`../appForm?clientId=${clientId}`)
   }
 
-  const [isCollapsed, setIsCollapsed] = useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(true) // 是否折叠（查看全部）
+
+  const [isLoaded, setIsLoaded] = useState(false) // 是否已加载测试or正式环境数据
 
   const items: TabsProps['items'] = [
     {
       key: 'sit',
+      disabled: !isLoaded,
       label: (
         <div className={style['tab-item']}>
           <i
@@ -109,7 +112,7 @@ const AppInfo = () => {
                 isEnable: appInfo?.state !== 3
               }}
             >
-              <SitEnv />
+              <SitEnv isLoaded={isLoaded} setLoaded={() => setIsLoaded(true)} />
             </appInfoContext.Provider>
           )}
         </>
@@ -117,6 +120,7 @@ const AppInfo = () => {
     },
     {
       key: 'prod',
+      disabled: !isLoaded,
       label: (
         <div className={style['tab-item']}>
           <i
@@ -136,7 +140,10 @@ const AppInfo = () => {
                 isEnable: appInfo?.state !== 3
               }}
             >
-              <ProdEnv />
+              <ProdEnv
+                isLoaded={isLoaded}
+                setLoaded={() => setIsLoaded(true)}
+              />
             </appInfoContext.Provider>
           )}
         </>

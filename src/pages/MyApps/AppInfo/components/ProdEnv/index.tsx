@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import style from '../index.module.scss'
-import { Col, Row, Tabs, message } from 'antd'
+import { Col, Row, Spin, Tabs, message } from 'antd'
 import { CheckCircleOutlined } from '@ant-design/icons'
 import { TGetAppInfoByEnv, getAppInfoByEnv } from '@/api/myApp'
 import AccessedEnv from '../AccessedEnv'
@@ -17,7 +17,13 @@ const prodEnvContext = React.createContext<{
   fetchAppInfoByEnv: undefined
 })
 
-const ProdEnv = () => {
+const ProdEnv = ({
+  isLoaded,
+  setLoaded
+}: {
+  isLoaded: boolean
+  setLoaded: Function
+}) => {
   const { env, isEnable } = useContext(appInfoContext)!
 
   const [appInfoByEnv, setAppInfoByEnv] = useState<TGetAppInfoByEnv[]>()
@@ -42,6 +48,7 @@ const ProdEnv = () => {
     })
     if (!data) return
     setAppInfoByEnv(data)
+    setLoaded()
 
     let index = 0
 
@@ -125,6 +132,8 @@ const ProdEnv = () => {
             }
           })}
         />
+      ) : !isLoaded ? (
+        <Spin size='large' />
       ) : (
         '没有接入任何基础能力，快去添加接入吧~'
       )}

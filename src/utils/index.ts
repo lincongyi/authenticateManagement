@@ -37,7 +37,7 @@ const emailPattern = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
  */
 const handleCopy = (content: string | undefined) => {
   if (!content) return
-  const copy = (e: ClipboardEvent) => {
+  const copy = (e: ClipboardEvent): void => {
     e.preventDefault()
     e.clipboardData!.setData('text/plain', content)
     document.removeEventListener('copy', copy)

@@ -271,8 +271,6 @@ const Access = () => {
     })
     if (!confirmed) return
 
-    const isEdit = !!searchParams.get('isEdit') // 是否申请配置修改流程
-
     const params: TAddAppCapabilityFormParams = {
       appId: appId!,
       capabilityId,
@@ -280,6 +278,8 @@ const Access = () => {
       type,
       env: env!
     }
+
+    const isEdit = !!searchParams.get('isEdit') // 是否申请配置修改流程
 
     if (!isEdit) await addAppCapabilityForm(params)
     else await editAppCapabilityForm(params)
