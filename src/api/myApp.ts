@@ -132,6 +132,7 @@ export type TGetAppInfoByEnv = {
     formList: TFormList[]
   }
   flowId: string // 审批单id
+  accessState: 1 | 2 | 3 // 接入状态：1-已接入;2-即将过期;3-已过期;
 }
 
 /**

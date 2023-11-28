@@ -41,6 +41,8 @@ const Access = () => {
 
   const env = searchParams.get('env') as TEnv | null
 
+  const isEdit = !!searchParams.get('isEdit') // 是否申请配置修改流程
+
   if (!appId || !capabilityId || !env) return navigate(-1)
 
   const { myAppStore } = useStore()
@@ -279,8 +281,6 @@ const Access = () => {
       env: env!
     }
 
-    const isEdit = !!searchParams.get('isEdit') // 是否申请配置修改流程
-
     if (!isEdit) await addAppCapabilityForm(params)
     else await editAppCapabilityForm(params)
 
@@ -303,7 +303,7 @@ const Access = () => {
         <div className={style['right-side']}>
           <Affix offsetTop={80}>
             <Space>
-              <Button onClick={() => onSubmit(0)}>保存草稿</Button>
+              {!isEdit && <Button onClick={() => onSubmit(0)}>保存草稿</Button>}
               <Button type='primary' onClick={() => onSubmit(1)}>
                 提交审核
               </Button>

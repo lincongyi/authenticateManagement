@@ -20,7 +20,9 @@ import {
   FileTextOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
-  CopyOutlined
+  CopyOutlined,
+  ExclamationCircleOutlined,
+  CloseCircleOutlined
 } from '@ant-design/icons'
 import { dateFormat, disabledDate, rangePresets } from '@utils/date'
 import LineChart from './components/LineChart'
@@ -105,18 +107,23 @@ const AccessedEnv = () => {
   const [dataSource, setDataSource] = useState<any>() // 能力接口表格数据
 
   /**
+   * 获取能力API接入情况
+   */
+  const fetchApiData = async () => {
+    if (!capability || !clientId) return
+
+    const { data } = await getApiData({
+      capabilityId: capability.capabilityId,
+      clientId
+    })
+    setDataSource(data)
+  }
+
+  /**
    * 初始化渲染能力接口表格数据
    */
   useEffect(() => {
-    ;(async () => {
-      if (!capability || !clientId) return
-
-      const { data } = await getApiData({
-        capabilityId: capability.capabilityId,
-        clientId
-      })
-      setDataSource(data)
-    })()
+    fetchApiData()
   }, [])
 
   /**
@@ -228,171 +235,198 @@ const AccessedEnv = () => {
     setDelayModalOpen(true)
   }
 
+  const accessStateMap = {
+    tagColor: ['success', 'warning', 'error'],
+    content: ['已接入', '即将过期', '已过期'],
+    icon: [
+      <CheckCircleOutlined style={{ marginRight: 4 }} key={1} />,
+      <ExclamationCircleOutlined style={{ marginRight: 4 }} key={2} />,
+      <CloseCircleOutlined style={{ marginRight: 4 }} key={3} />
+    ]
+  }
+
   return (
     <>
-      <Row gutter={[20, 20]}>
-        <Col span={10}>
-          <div className={style.panel}>
-            <div className={style.title}>能力接入信息</div>
-            <div className={style['info-item']}>
-              <div className={style.label}>接入状态</div>
-              <div className={style.value}>
-                <Tag color='green'>
-                  <CheckCircleOutlined style={{ marginRight: 4 }} />
-                  已接入
-                </Tag>
+      {capability && (
+        <Row gutter={[20, 20]}>
+          <Col span={10}>
+            <div className={style.panel}>
+              <div className={style.title}>能力接入信息</div>
+              <div className={style['info-item']}>
+                <div className={style.label}>接入状态</div>
+                <div className={style.value}>
+                  <Tag
+                    color={
+                      accessStateMap.tagColor[
+                        capability.accessState ? capability.accessState - 1 : 0
+                      ]
+                    }
+                  >
+                    {
+                      accessStateMap.icon[
+                        capability.accessState ? capability.accessState - 1 : 0
+                      ]
+                    }
+                    {
+                      accessStateMap.content[
+                        capability.accessState ? capability.accessState - 1 : 0
+                      ]
+                    }
+                  </Tag>
+                </div>
+              </div>
+              <div className={style['info-item']}>
+                <div className={style.label}>Client Secret</div>
+                <div className={style.value}>
+                  {isHide ? '**************' : capability.clientSecret}
+                  <Space>
+                    <div
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setIsHide(!isHide)}
+                    >
+                      {isHide ? (
+                        <EyeOutlined
+                          style={{
+                            color: '#1E55D1',
+                            marginRight: 4
+                          }}
+                        />
+                      ) : (
+                        <EyeInvisibleOutlined
+                          style={{
+                            color: '#1E55D1',
+                            marginRight: 4
+                          }}
+                        />
+                      )}
+                      {isHide ? '查看' : '隐藏'}
+                    </div>
+                    <div
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => handleCopy(capability.clientSecret)}
+                    >
+                      <CopyOutlined
+                        style={{
+                          color: '#1E55D1',
+                          marginRight: 4
+                        }}
+                      />
+                      复制
+                    </div>
+                  </Space>
+                </div>
+              </div>
+              <div className={style['info-item']}>
+                <div className={style.label}>能力访问路径</div>
+                <div className={style.value}>{capability.path}</div>
+              </div>
+              <div className={style['info-item']}>
+                <div className={style.label}>接入时间</div>
+                <div className={style.value}>{capability.addTime}</div>
+              </div>
+              <div className={style['info-item']}>
+                <div className={style.label}>配置更新时间</div>
+                <div className={style.value}>{capability.updateTime}</div>
               </div>
             </div>
-            <div className={style['info-item']}>
-              <div className={style.label}>Client Secret</div>
-              <div className={style.value}>
-                {isHide ? '**************' : capability?.clientSecret}
+          </Col>
+
+          <Col span={14}>
+            <div className={`${style.panel} ${style['flex-column']}`}>
+              <div className={style.title}>
+                能力调用数据
+                <RangePicker
+                  defaultValue={[
+                    dayjs(dateRange[0], dateFormat),
+                    dayjs(dateRange[1], dateFormat)
+                  ]}
+                  presets={rangePresets}
+                  disabledDate={disabledDate}
+                  onChange={onRangeChange}
+                  onOpenChange={onOpenChange}
+                />
+              </div>
+              {callData && callData.total ? (
+                <>
+                  <Alert
+                    style={{ margin: '10px 0' }}
+                    message={
+                      <>
+                        能力调用总量
+                        <span className={style.amount}>{callData?.total}</span>
+                      </>
+                    }
+                    type='info'
+                    showIcon
+                  />
+                  <LineChart
+                    chartData={{
+                      xAxis: callData.dateList,
+                      yAxis: callData.numList
+                    }}
+                  />
+                </>
+              ) : (
+                <div className='flex-center' style={{ flex: 1 }}>
+                  <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                </div>
+              )}
+            </div>
+          </Col>
+
+          <Col span={24}>
+            <div className={style.panel}>
+              <div className={style.title}>能力API接入情况</div>
+              <Alert
+                style={{ margin: '10px 0' }}
+                message='测试环境限制接口每日用量限额，每日可发起3次增加用量，次日将重置用量限额'
+                type='info'
+                showIcon
+              />
+              <Table rowKey='id' columns={columns} dataSource={dataSource} />
+            </div>
+          </Col>
+
+          <Col span={24}>
+            <div className={style.panel}>
+              <div className={style.title}>
+                能力配置信息
                 <Space>
-                  <div
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => setIsHide(!isHide)}
+                  <Button
+                    type='primary'
+                    icon={<EditOutlined />}
+                    ghost
+                    onClick={onEdit}
                   >
-                    {isHide ? (
-                      <EyeOutlined
-                        style={{
-                          color: '#1E55D1',
-                          marginRight: 4
-                        }}
-                      />
-                    ) : (
-                      <EyeInvisibleOutlined
-                        style={{
-                          color: '#1E55D1',
-                          marginRight: 4
-                        }}
-                      />
-                    )}
-                    {isHide ? '查看' : '隐藏'}
-                  </div>
-                  <div
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => handleCopy(capability?.clientSecret)}
+                    申请配置更改
+                  </Button>
+                  <Button
+                    type='primary'
+                    icon={<HistoryOutlined />}
+                    ghost
+                    onClick={onDelay}
                   >
-                    <CopyOutlined
-                      style={{
-                        color: '#1E55D1',
-                        marginRight: 4
-                      }}
-                    />
-                    复制
-                  </div>
+                    申请延期
+                  </Button>
+                  <Button
+                    type='primary'
+                    icon={<FileTextOutlined />}
+                    ghost
+                    onClick={() => toDevDocument()}
+                  >
+                    开发文档
+                  </Button>
                 </Space>
               </div>
-            </div>
-            <div className={style['info-item']}>
-              <div className={style.label}>能力访问路径</div>
-              <div className={style.value}>{capability?.path}</div>
-            </div>
-            <div className={style['info-item']}>
-              <div className={style.label}>接入时间</div>
-              <div className={style.value}>{capability?.addTime}</div>
-            </div>
-            <div className={style['info-item']}>
-              <div className={style.label}>配置更新时间</div>
-              <div className={style.value}>{capability?.updateTime}</div>
-            </div>
-          </div>
-        </Col>
 
-        <Col span={14}>
-          <div className={`${style.panel} ${style['flex-column']}`}>
-            <div className={style.title}>
-              能力调用数据
-              <RangePicker
-                defaultValue={[
-                  dayjs(dateRange[0], dateFormat),
-                  dayjs(dateRange[1], dateFormat)
-                ]}
-                presets={rangePresets}
-                disabledDate={disabledDate}
-                onChange={onRangeChange}
-                onOpenChange={onOpenChange}
-              />
+              {capability && (
+                <DynamicFormInfo formList={capability.form.formList} />
+              )}
             </div>
-            {callData && callData.total ? (
-              <>
-                <Alert
-                  style={{ margin: '10px 0' }}
-                  message={
-                    <>
-                      能力调用总量
-                      <span className={style.amount}>{callData?.total}</span>
-                    </>
-                  }
-                  type='info'
-                  showIcon
-                />
-                <LineChart
-                  chartData={{
-                    xAxis: callData.dateList,
-                    yAxis: callData.numList
-                  }}
-                />
-              </>
-            ) : (
-              <div className='flex-center' style={{ flex: 1 }}>
-                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-              </div>
-            )}
-          </div>
-        </Col>
+          </Col>
+        </Row>
+      )}
 
-        <Col span={24}>
-          <div className={style.panel}>
-            <div className={style.title}>能力API接入情况</div>
-            <Alert
-              style={{ margin: '10px 0' }}
-              message='测试环境限制接口每日用量限额，每日可发起3次增加用量，次日将重置用量限额'
-              type='info'
-              showIcon
-            />
-            <Table rowKey='id' columns={columns} dataSource={dataSource} />
-          </div>
-        </Col>
-
-        <Col span={24}>
-          <div className={style.panel}>
-            <div className={style.title}>
-              能力配置信息
-              <Space>
-                <Button
-                  type='primary'
-                  icon={<EditOutlined />}
-                  ghost
-                  onClick={onEdit}
-                >
-                  申请配置更改
-                </Button>
-                <Button
-                  type='primary'
-                  icon={<HistoryOutlined />}
-                  ghost
-                  onClick={onDelay}
-                >
-                  申请延期
-                </Button>
-                <Button
-                  type='primary'
-                  icon={<FileTextOutlined />}
-                  ghost
-                  onClick={() => toDevDocument()}
-                >
-                  开发文档
-                </Button>
-              </Space>
-            </div>
-
-            {capability && (
-              <DynamicFormInfo formList={capability.form.formList} />
-            )}
-          </div>
-        </Col>
-      </Row>
       {apiId && (
         <>
           {env === 'sit' ? (
@@ -403,6 +437,7 @@ const AccessedEnv = () => {
                   addNum={apiAddNum}
                   open={increaseModalOpen}
                   setOpen={setIncreaseModalOpen}
+                  callback={fetchApiData}
                 />
               )}
             </>

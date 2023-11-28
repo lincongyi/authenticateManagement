@@ -19,12 +19,14 @@ const IncreaseModal = ({
   id,
   addNum,
   open,
-  setOpen
+  setOpen,
+  callback
 }: {
   id: number // 增加用量接口id
   addNum: number
   open: boolean
   setOpen: Function
+  callback: Function
 }) => {
   const { env } = useContext(appInfoContext)!
 
@@ -70,6 +72,7 @@ const IncreaseModal = ({
       duration: 2
     })
     onCancel()
+    callback()
   }
 
   const onFinishFailed = (errorInfo: any) => {

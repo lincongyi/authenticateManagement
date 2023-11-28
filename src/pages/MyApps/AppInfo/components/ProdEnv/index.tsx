@@ -65,8 +65,15 @@ const ProdEnv = ({
     setState(state)
   }
 
+  /**
+   * 监听是否已加载测试or正式环境数据
+   */
   useEffect(() => {
-    fetchAppInfoByEnv()
+    if (env !== 'prod') return
+    // 已加载测试环境下的数据
+    if (!isLoaded && appInfoByEnv) setLoaded()
+    // 未加载测试环境下的数据
+    else if (!isLoaded && !appInfoByEnv) fetchAppInfoByEnv()
   }, [])
 
   /**
@@ -234,7 +241,7 @@ const ProdEnv = ({
           )}
         </>
       ) : (
-        '暂无接入能力'
+        isLoaded && '暂无接入能力'
       )}
       {instanceId && (
         <CheckModal instanceId={instanceId} open={open} setOpen={setOpen} />

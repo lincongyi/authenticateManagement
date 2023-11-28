@@ -156,6 +156,7 @@ const AppInfo = () => {
    */
   const onChange = (key: TEnv) => {
     setEnv(key)
+    setIsLoaded(false)
   }
 
   return (

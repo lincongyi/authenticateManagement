@@ -26,7 +26,10 @@ const UploadFormInfo = ({ formInfo }: { formInfo: TUploadApplyFileParams }) => {
   }
 
   /**
-   * 下载
+   * 下载申请函、表
+   * @param {string} fileName 文件名
+   * @param {string} url 文件路径地址
+   * @returns {void}
    */
   const onDownLoad = async (fileName: string, url: string) => {
     if (disableDownLoad) return messageApi.info('请勿频繁请求')
