@@ -10,9 +10,9 @@ import {
   Radio,
   RadioChangeEvent,
   Space,
+  Spin,
   message
 } from 'antd'
-import type { UploadFile } from 'antd'
 import {
   addAppCapabilityForm,
   editAppCapabilityForm,
@@ -24,11 +24,13 @@ import type {
   TFormContent,
   TFormItemType,
   TFormList,
-  TGetCapabilityResponse
+  TGetCapabilityResponse,
+  TUploadFile
 } from '@/api/ability'
 import DynamicForm from '@/components/DynamicForm'
 import dayjs from 'dayjs'
 import { useStore } from '@/stores'
+import { upload } from '@/api'
 
 const Access = () => {
   const [searchParams] = useSearchParams()
@@ -102,13 +104,13 @@ const Access = () => {
   const [messageApi, messageApiHolder] = message.useMessage()
 
   /**
-   * 预处理选择器、上传图片、上传文件，在表单展示时候的值
+   * 预处理部分类型的表单项，在表单展示时的label值
    * @param {TFormItemType} type 表单项类型
-   * @param {any} value 初始表单项value
    * @returns {any} 处理过的表单项value
    */
-  const formatFormLabelValue = (item: TFormContent, value: any) => {
+  const formatFormLabelValue = (item: TFormContent, value?: any) => {
     const { type } = item
+    value = value || item.value
     if (['radio', 'select'].includes(type)) {
       const { options } = item
       if (!options) return undefined
@@ -150,19 +152,29 @@ const Access = () => {
       return value && dayjs(value).isValid()
         ? dayjs(value).format('YYYY-MM-DD')
         : value
-    } else if (type === 'fileUpload' && value) {
-      const list: UploadFile[] = value.filter(
-        (item: UploadFile) => item.status === 'done'
-      )
-      return list.length ? list : undefined
     } else return value
   }
+
+  const [spinning, setSpinning] = useState(false)
 
   /**
    * 保存草稿 or 提交审核
    */
   const onSubmit = async (type: TAddAppCapabilityFormParams['type']) => {
+    const confirmed = await modal.confirm({
+      title: `${type ? '提交审核' : '保存草稿'}`,
+      content: `${
+        type
+          ? '提交审核后会进入审批阶段，请确认是否提交'
+          : '保存草稿会覆盖上一次保存的内容，是否确认保存？'
+      }`
+    })
+    if (!confirmed) return
+
+    setSpinning(true)
+
     if (!capabilityFormList) return
+
     if (type) {
       try {
         await defaultFormRef.current!.validateFields()
@@ -171,32 +183,75 @@ const Access = () => {
         }
       } catch (error) {
         messageApi.error('请核对表单必填项是否已全部录入')
+        setSpinning(false)
         return false
       }
     }
 
-    const formList: TFormList[] = []
+    const formList: TFormList[] = [] // 需要提交的所有表单的内容
 
     for (let i = 0; i < capabilityFormList?.length; i++) {
       const content: TFormContent[] = JSON.parse(
         capabilityFormList[i].formContent
       )
 
-      const formContent = content.map(item => {
-        return {
-          ...item,
-          value: formatFormItemValue(
-            item.type,
-            accessRefs.current[i].getFieldValue(item.field)
+      const formContent = []
+
+      for (let j = 0; j < content.length; j++) {
+        const { type } = content[j]
+        const item = {
+          ...content[j]
+        }
+        // 如果是图片或者文件类型，需要上传
+        if (['imageUpload', 'fileUpload'].includes(type)) {
+          const fieldValue: TUploadFile[] = accessRefs.current[i].getFieldValue(
+            content[j].field
+          ) // 原始上传图片or文件数组
+          if (!fieldValue) {
+            item.value = undefined
+          } else {
+            const value: TUploadFile[] = [] // 目标上传图片or文件数组
+            for (let k = 0; k < fieldValue.length; k++) {
+              const { file, status, ...rest } = fieldValue[k]
+              if (status === 'done') {
+                if (file) {
+                  // 当前文件未上传
+                  try {
+                    const { data } = await upload(file)
+                    if (!data) return
+                    const { url } = data
+                    const item = {
+                      status,
+                      ...rest,
+                      url
+                    }
+                    value.push(item)
+                  } catch (error) {
+                    setSpinning(false)
+                  }
+                } else {
+                  // 当前文件已上传
+                  value.push(fieldValue[k])
+                }
+              }
+            }
+            item.value = value
+          }
+        } else {
+          item.value = formatFormItemValue(
+            type,
+            accessRefs.current[i].getFieldValue(content[j].field)
           )
         }
-      })
-      let item: TFormList = {
+        formContent.push(item)
+      }
+
+      let formItem: TFormList = {
         formContent: JSON.stringify(formContent),
         formId: capabilityFormList[i].formId,
         formName: capabilityFormList[i].formName
       }
-      // 基础能力信息表单有一块专属的默认表单内容
+      // 针对处理基础能力信息表单中专属的默认表单内容
       if (i === 0) {
         const content: TFormContent[] = JSON.parse(
           capabilityFormList[0].defaultFormContent!
@@ -214,27 +269,22 @@ const Access = () => {
             )
           }
         })
-        item.defaultFormContent = JSON.stringify(defaultFormContent)
+        formItem.defaultFormContent = JSON.stringify(defaultFormContent)
       }
       // 保存草稿不需要传form，提交审核需要传form
       if (type) {
-        const form = content.map(item => {
+        const form = formContent.map(item => {
           const { cnName, dataType, type, field } = item
           return {
             cnName,
             dataType,
             type,
             field,
-            labelValue: formatFormLabelValue(
-              item,
-              accessRefs.current[i].getFieldValue(item.field)
-            ),
-            value: formatFormItemValue(
-              item.type,
-              accessRefs.current[i].getFieldValue(item.field)
-            )
+            labelValue: formatFormLabelValue(item),
+            value: formatFormItemValue(item.type, item.value)
           }
         })
+        // 针对处理基础能力信息表单中专属的默认表单内容
         if (i === 0) {
           const defaultFormContent: TFormContent[] = JSON.parse(
             capabilityFormList[0].defaultFormContent!
@@ -256,22 +306,12 @@ const Access = () => {
               )
             }
           })
-          item.defaultFormList = defaultFormList
+          formItem.defaultFormList = defaultFormList
         }
-        item = { ...item, form }
+        formItem = { ...formItem, form }
       }
-      formList.push(item)
+      formList.push(formItem)
     }
-
-    const confirmed = await modal.confirm({
-      title: `${type ? '提交审核' : '保存草稿'}`,
-      content: `${
-        type
-          ? '提交审核后会进入审批阶段，请确认是否提交'
-          : '保存草稿会覆盖上一次保存的内容，是否确认保存？'
-      }`
-    })
-    if (!confirmed) return
 
     const params: TAddAppCapabilityFormParams = {
       appId: appId!,
@@ -283,6 +323,7 @@ const Access = () => {
 
     if (!isEdit) await addAppCapabilityForm(params)
     else await editAppCapabilityForm(params)
+    setSpinning(false)
 
     messageApi.success({
       content: `已成功${type ? '提交审核' : '保存草稿'}`,
@@ -296,6 +337,12 @@ const Access = () => {
     <>
       {contextHolder}
       {messageApiHolder}
+      <div
+        className={style.mask}
+        style={{ display: spinning ? 'flex' : 'none' }}
+      >
+        <Spin size='large' spinning={spinning} />
+      </div>
       <div className={style.header}>
         <div className={`${style['left-side']} ${style.name}`}>
           {capability?.name}

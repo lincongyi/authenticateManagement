@@ -72,8 +72,6 @@ const DynamicFormDistinction = ({
    * @returns {JSX.Element} label JSX
    */
   const onCompareLabel = (index: number) => {
-    // console.log('formItems', formItems)
-    // console.log('oldFormItems', oldFormItems)
     if (!formItems || !oldFormItems) return
     const { type, cnName } = formItems[index]
     if (['table'].includes(type)) {

@@ -1,5 +1,5 @@
 import { request } from '@utils/request'
-import type { UploadFile } from 'antd'
+import type { UploadFile } from 'antd/es/upload'
 
 export type TGetCapabilityListResponse = {
   id: number
@@ -91,6 +91,8 @@ export type TRuleList =
   | 'mpeg4'
   | 'rm'
   | 'all'
+
+export type TUploadFile = UploadFile & { file?: FormData }
 
 export type TFormContent = {
   type: TFormItemType

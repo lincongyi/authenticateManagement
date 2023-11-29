@@ -84,10 +84,15 @@ const getSecretKey = (): Promise<
   return request.get('/getSecretKey')
 }
 
+export type TUploadResponse = {
+  fileName: string
+  url: string
+}
+
 /**
  * 上传文件
  */
-const upload = (params: FormData): Promise<TResponse> => {
+const upload = (params: FormData): Promise<TResponse<TUploadResponse>> => {
   return request.post('/upload', params)
 }
 

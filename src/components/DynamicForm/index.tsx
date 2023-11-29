@@ -23,9 +23,9 @@ import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import { getBase64, imgBeforeUpload, saveAsFile } from '@/utils'
-import { RcFile, UploadFile } from 'antd/es/upload'
-import type { TFormContent, TRuleList } from '@/api/ability'
-import { getSecretKey, upload } from '@/api'
+import { RcFile } from 'antd/es/upload'
+import type { TFormContent, TRuleList, TUploadFile } from '@/api/ability'
+import { getSecretKey } from '@/api'
 import type { DefaultOptionType } from 'antd/es/select'
 
 const DynamicForm = React.forwardRef<
@@ -48,30 +48,29 @@ const DynamicForm = React.forwardRef<
    */
   useEffect(() => {
     ;(async () => {
+      const formKeyPair: Record<string, { publicKey: string }> = {} // 暂存密钥对
+      const formImageList: Record<string, TUploadFile[]> = {} // 暂存图片
+      const formFileList: Record<string, TUploadFile[]> = {} // 暂存文件
       const formValues: Record<string, any> = formList.reduce(
         (prev: Record<string, any>, next: TFormContent) => {
           if (next.type === 'privateKey' && next.value) {
             // 初始化密钥对
-            setKeyPair({ ...keyPair, [next.field]: { publicKey: next.value } })
+            formKeyPair[next.field] = { publicKey: next.value }
           } else if (['imageUpload'].includes(next.type)) {
             // 初始化上传图片队列
-            setImageList({
-              ...imageList,
-              [next.field]: next.value
-            })
+            formImageList[next.field] = next.value
           } else if (['fileUpload'].includes(next.type)) {
             // 初始化上传文件队列
-            setFileList({
-              ...fileList,
-              [next.field]: next.value
-            })
+            formFileList[next.field] = next.value
           }
+
           let value = next.value
           if (next.type === 'dateTime' && next.value) {
             value = dayjs(next.value)
           } else if (next.type === 'switch' && !next.value) {
             value = false
           }
+
           return {
             ...prev,
             [next.field]: value
@@ -79,11 +78,15 @@ const DynamicForm = React.forwardRef<
         },
         {}
       )
+      // 统一赋值
+      setKeyPair(formKeyPair)
+      setImageList(formImageList)
+      setFileList(formFileList)
       form.setFieldsValue(formValues)
     })()
   }, [])
 
-  const [imageList, setImageList] = useState<Record<string, UploadFile[]>>({}) // 缓存上传图片队列
+  const [imageList, setImageList] = useState<Record<string, TUploadFile[]>>({}) // 缓存上传图片队列
 
   /**
    * 覆盖默认的图片上传行为
@@ -97,20 +100,25 @@ const DynamicForm = React.forwardRef<
       const imageBase64: string = url.substring(
         url.indexOf('base64,') + 'base64,'.length
       )
-      const uid = (options.file as RcFile).uid
-      const item: UploadFile = {
-        uid,
+      const { file } = options
+      const formData = new FormData()
+      formData.append('file', file)
+      const imageItem: TUploadFile = {
+        uid: (options.file as RcFile).uid,
         name: (options.file as File).name,
         status: 'done',
-        url: `data:image/png;base64,${imageBase64}`
+        url: `data:image/png;base64,${imageBase64}`,
+        file: formData
       }
       form.setFieldValue(
         field,
-        imageList[field] ? [...imageList[field], item] : [item]
+        imageList[field] ? [...imageList[field], imageItem] : [imageItem]
       )
       setImageList({
         ...imageList,
-        [field]: imageList[field] ? [...imageList[field], item] : [item]
+        [field]: imageList[field]
+          ? [...imageList[field], imageItem]
+          : [imageItem]
       })
     })
   }
@@ -118,7 +126,7 @@ const DynamicForm = React.forwardRef<
   /**
    * 删除上传图片文件
    */
-  const onImageRemove = (file: UploadFile, field: string) => {
+  const onImageRemove = (file: TUploadFile, field: string) => {
     const { uid } = file
 
     form.setFieldValue(
@@ -140,14 +148,16 @@ const DynamicForm = React.forwardRef<
   /**
    * 图片预览
    */
-  const onImagePreview = (file: UploadFile) => {
+  const onImagePreview = (file: TUploadFile) => {
     setPreviewImage(file.url)
     setPreviewOpen(true)
   }
 
   const [messageApi, contextHolder] = message.useMessage()
 
-  const [fileList, setFileList] = useState<Record<string, UploadFile[]>>({}) // 缓存上传文件队列
+  const [fileList, setFileList] = useState<
+    Record<string, TUploadFile[] | undefined>
+  >({}) // 缓存上传文件队列
 
   /**
    * 上传前校验文件
@@ -162,7 +172,6 @@ const DynamicForm = React.forwardRef<
     return isMatched || Upload.LIST_IGNORE
   }
 
-  let fileItem: UploadFile
   /**
    * 覆盖默认的文件上传行为
    */
@@ -170,59 +179,48 @@ const DynamicForm = React.forwardRef<
     options: UploadRequestOption,
     field: string
   ) => {
-    const formData = new FormData()
     const { file } = options
+    const formData = new FormData()
     formData.append('file', file)
-    try {
-      const { data } = await upload(formData)
-      const { fileName: name, url } = data
-      fileItem = {
-        uid: (options.file as RcFile).uid,
-        name,
-        status: 'done',
-        url
-      }
-    } catch (error) {
-      console.log('error', error)
-      fileItem = {
-        uid: (options.file as RcFile).uid,
-        name: (options.file as RcFile).name,
-        status: 'error',
-        url: ''
-      }
-    } finally {
-      form.setFieldValue(
-        field,
-        fileList[field] ? [...fileList[field], fileItem] : [fileItem]
-      )
-      setFileList({
-        ...fileList,
-        [field]: fileList[field] ? [...fileList[field], fileItem] : [fileItem]
-      })
+    const fileItem = {
+      uid: (options.file as RcFile).uid,
+      name: (options.file as RcFile).name,
+      status: 'done',
+      url: '',
+      file: formData
     }
+    form.setFieldValue(
+      field,
+      fileList[field] ? [...fileList[field]!, fileItem] : [fileItem]
+    )
+    setFileList({
+      ...fileList,
+      [field]: fileList[field] ? [...fileList[field]!, fileItem] : [fileItem]
+    } as Record<string, TUploadFile[] | undefined>)
   }
 
   /**
    * 删除上传文件
    */
-  const onFileRemove = (file: UploadFile, field: string) => {
+  const onFileRemove = (file: TUploadFile, field: string) => {
     const { uid } = file
 
     form.setFieldValue(
       field,
-      fileList[field].filter(item => item.uid !== uid)
+      fileList[field]!.filter(item => item.uid !== uid)
     )
     setFileList({
       ...fileList,
-      [field]: fileList[field].filter(item => item.uid !== uid)
+      [field]: fileList[field]!.filter(item => item.uid !== uid)
     })
 
     // 为了不让Upload组件执行onChange事件
     return false
   }
 
-  const [keyPair, setKeyPair] =
-    useState<Record<string, { publicKey: string; privateKey?: string }>>() // 密钥对
+  const [keyPair, setKeyPair] = useState<
+    Record<string, { publicKey: string; privateKey?: string }>
+  >({}) // 密钥对
 
   /**
    * 生成密钥对
@@ -525,7 +523,7 @@ const DynamicForm = React.forwardRef<
                                 icon={<UploadOutlined />}
                                 disabled={
                                   fileList[item.field] &&
-                                  item.multiple <= fileList[item.field].length
+                                  item.multiple <= fileList[item.field]!.length
                                 }
                               >
                                 上传文件
@@ -581,7 +579,7 @@ const DynamicForm = React.forwardRef<
                                 copyable
                                 style={{ marginBottom: 0 }}
                               >
-                                {keyPair[item.field].publicKey}
+                                {keyPair[item.field]?.publicKey}
                               </Typography.Paragraph>
                             </>
                           )}
