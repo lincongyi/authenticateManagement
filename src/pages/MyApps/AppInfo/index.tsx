@@ -48,7 +48,7 @@ const AppInfo = () => {
 
   const [clientId, setClientId] = useState<string>()
 
-  const [env, setEnv] = useState<TEnv>('sit') // 应用当前环境（active标签）
+  const [env, setEnv] = useState<TEnv>() // 应用当前环境（active标签）
 
   /**
    * 初始化应用详情
@@ -60,9 +60,10 @@ const AppInfo = () => {
       navigate(`../appInfo?appId=${appId}`, { replace: true })
     }
 
-    /** 从基础能力中心跳转过来 **/
-    if (searchParams.get('env') && searchParams.get('capabilityId')) {
+    if (searchParams.get('env')) {
       setEnv(searchParams.get('env') as TEnv)
+    } else {
+      setEnv('sit')
     }
 
     ;(async () => {
@@ -105,14 +106,18 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {appId && appInfo && (
+          {appId && appInfo && env && (
             <appInfoContext.Provider
               value={{
                 env: 'sit',
                 isEnable: appInfo?.state !== 3
               }}
             >
-              <SitEnv isLoaded={isLoaded} setLoaded={() => setIsLoaded(true)} />
+              <SitEnv
+                activeEnv={env}
+                isLoaded={isLoaded}
+                setLoaded={() => setIsLoaded(true)}
+              />
             </appInfoContext.Provider>
           )}
         </>
@@ -133,7 +138,7 @@ const AppInfo = () => {
       ),
       children: (
         <>
-          {appId && appInfo && (
+          {appId && appInfo && env && (
             <appInfoContext.Provider
               value={{
                 env: 'prod',
@@ -141,6 +146,7 @@ const AppInfo = () => {
               }}
             >
               <ProdEnv
+                activeEnv={env}
                 isLoaded={isLoaded}
                 setLoaded={() => setIsLoaded(true)}
               />
@@ -155,6 +161,7 @@ const AppInfo = () => {
    * 切换接入环境
    */
   const onChange = (key: TEnv) => {
+    navigate(`.?appId=${appId}&env=${key}`)
     setEnv(key)
     setIsLoaded(false)
   }
@@ -315,11 +322,13 @@ const AppInfo = () => {
       </div>
 
       <div className={`${style.section} ${style['env-info']}`}>
-        <Tabs
-          activeKey={env}
-          items={items}
-          onChange={activeKey => onChange(activeKey as TEnv)}
-        />
+        {env && (
+          <Tabs
+            activeKey={env}
+            items={items}
+            onChange={activeKey => onChange(activeKey as TEnv)}
+          />
+        )}
       </div>
     </>
   )

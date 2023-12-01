@@ -75,6 +75,7 @@ const DelayModal = ({
           capabilityId: capability.capabilityId,
           clientId
         })
+        if (!data) return
         setDelayInfo(data)
       })()
     }

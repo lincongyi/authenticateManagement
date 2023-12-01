@@ -79,6 +79,7 @@ const CheckModal = ({
    * @returns {StepProps[]} 审批抄送节点
    */
   const getCopyItems = (list: TSign[], isCopyed: boolean) => {
+    if (!list.length) return []
     return [
       {
         title: (
@@ -116,6 +117,8 @@ const CheckModal = ({
     ]
   }
 
+  const [initial, setInitial] = useState<-1 | 0>(-1)
+
   /**
    * 监听传入的审批id变更
    */
@@ -143,6 +146,8 @@ const CheckModal = ({
           description: <ApproverList list={item.sysUsers} />
         }
       })
+
+      if (!startCopyList.length) setInitial(0)
 
       const index = nodes.findIndex(item => !item.isPass)
 
@@ -194,7 +199,7 @@ const CheckModal = ({
         <div className='title'>审批进度</div>
         <Steps
           direction='vertical'
-          initial={-1}
+          initial={initial}
           current={current}
           items={items}
         />

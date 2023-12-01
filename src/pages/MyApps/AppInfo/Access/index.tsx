@@ -105,7 +105,8 @@ const Access = () => {
 
   /**
    * 预处理部分类型的表单项，在表单展示时的label值
-   * @param {TFormItemType} type 表单项类型
+   * @param {TFormContent} item 表单项数据
+   * @param {any} value 初始表单项value
    * @returns {any} 处理过的表单项value
    */
   const formatFormLabelValue = (item: TFormContent, value?: any) => {
@@ -341,7 +342,7 @@ const Access = () => {
         className={style.mask}
         style={{ display: spinning ? 'flex' : 'none' }}
       >
-        <Spin size='large' spinning={spinning} />
+        <Spin size='large' />
       </div>
       <div className={style.header}>
         <div className={`${style['left-side']} ${style.name}`}>

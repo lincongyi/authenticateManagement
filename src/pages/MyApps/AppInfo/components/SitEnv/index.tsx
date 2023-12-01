@@ -18,9 +18,11 @@ const sitEnvContext = React.createContext<{
 })
 
 const SitEnv = ({
+  activeEnv,
   isLoaded,
   setLoaded
 }: {
+  activeEnv: TEnv
   isLoaded: boolean
   setLoaded: Function
 }) => {
@@ -61,20 +63,21 @@ const SitEnv = ({
 
     setActiveCapability(data[index])
 
-    const state = data[index].state
-    setState(state)
+    setState(data[index].state)
   }
 
   /**
    * 监听是否已加载测试or正式环境数据
    */
   useEffect(() => {
-    if (env !== 'sit') return
+    if (activeEnv !== env) return
     // 已加载测试环境下的数据
     if (!isLoaded && appInfoByEnv) setLoaded()
     // 未加载测试环境下的数据
     else if (!isLoaded && !appInfoByEnv) fetchAppInfoByEnv()
   }, [isLoaded])
+
+  const navigate = useNavigate()
 
   /**
    * 切换基础能力标签
@@ -82,11 +85,10 @@ const SitEnv = ({
   const onChange = (capabilityId: string) => {
     const item = appInfoByEnv?.find(item => item.capabilityId === +capabilityId)
     if (!item) return
+    navigate(`.?appId=${appId}&capabilityId=${item.capabilityId}&env=${env}`)
     setActiveCapability(item)
     setState(item.state)
   }
-
-  const navigate = useNavigate()
 
   const [messageApi, contextHolder] = message.useMessage()
 

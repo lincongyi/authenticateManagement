@@ -78,6 +78,7 @@ const UploadForm = () => {
     formData.append('file', file)
     try {
       const { data } = await upload(formData)
+      if (!data) return
       const { fileName: name, url } = data
       fileItem = {
         uid: (options.file as RcFile).uid,
