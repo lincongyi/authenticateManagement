@@ -322,16 +322,20 @@ const Access = () => {
       env: env!
     }
 
-    if (!isEdit) await addAppCapabilityForm(params)
-    else await editAppCapabilityForm(params)
-    setSpinning(false)
-
-    messageApi.success({
-      content: `已成功${type ? '提交审核' : '保存草稿'}`,
-      duration: 2,
-      onClose: () =>
-        navigate(`..?appId=${appId}&capabilityId=${capabilityId}&env=${env}`)
-    })
+    try {
+      if (!isEdit) await addAppCapabilityForm(params)
+      else await editAppCapabilityForm(params)
+      messageApi.success({
+        content: `已成功${type ? '提交审核' : '保存草稿'}`,
+        duration: 2,
+        onClose: () =>
+          navigate(`..?appId=${appId}&capabilityId=${capabilityId}&env=${env}`)
+      })
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setSpinning(false)
+    }
   }
 
   return (

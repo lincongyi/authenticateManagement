@@ -9,6 +9,7 @@ import copyActive from '@/assets/myApplications-copy-active.png'
 import copyDefault from '@/assets/myApplications-copy-default.png'
 import { useGetDictionary } from '@/hooks'
 import ApproverList from './components/ApproverList'
+import { useStore } from '@/stores'
 
 /**
  * 节点title
@@ -23,17 +24,21 @@ const NodeTitle = ({
     isLastNode: boolean
   }
 }) => {
+  const { themeStore } = useStore()
+
+  const colorPrimary = themeStore.antdThemeColor
+
   const isEnded: boolean =
     ![0, 1].includes(item.isPass) || (!item.isPass && item.isLastNode)
 
   return (
-    <div style={{ fontWeight: 'bold' }}>
+    <div className='font-primary-color' style={{ fontWeight: 'bold' }}>
       {item.name}（{item.userCount}人）
       <Typography.Text
         strong
         style={{
           fontSize: 14,
-          color: ['blue', 'gray', 'red', 'orange'][item.isPass]
+          color: [colorPrimary, 'gray', 'red', 'orange'][item.isPass]
         }}
       >
         {['已通过', '审批中', '审批未通过', '撤回'][item.isPass]}
@@ -60,7 +65,11 @@ const CheckModal = ({
 
   const [info, setInfo] = useState<TApplyDetail>()
 
-  const [current, setCurrent] = useState(0)
+  const [current, setCurrent] = useState(0) // 当前节点
+
+  const [status, setStatus] = useState<
+    'wait' | 'process' | 'finish' | 'error'
+  >() // 当前节点状态
 
   /**
    * 审批流程
@@ -85,7 +94,10 @@ const CheckModal = ({
         title: (
           <p style={{ fontWeight: 'bold', color: '#1e2636' }}>
             抄送人（{list.length}人）
-            <span className='primary-color' style={{ fontSize: 14 }}>
+            <span
+              className={isCopyed ? 'primary-color' : style.uncopy}
+              style={{ fontSize: 14 }}
+            >
               {isCopyed ? '已抄送' : '未抄送'}
             </span>
           </p>
@@ -99,7 +111,7 @@ const CheckModal = ({
                   <div className={style['user-item']}>
                     <p className={style.flex}>
                       <img src={userAvatar} style={{ marginRight: 10 }} />
-                      {item.name}
+                      <span className='font-primary-color'>{item.name}</span>
                     </p>
                     <Space>
                       <Typography.Text type='secondary'>
@@ -128,14 +140,7 @@ const CheckModal = ({
       const { data } = await getApplyDetail({ instanceId })
       if (!data) return
       setInfo(data)
-      const {
-        nodes,
-        state,
-        isStartCopy,
-        isEndCopy,
-        startCopyList,
-        endCopyList
-      } = data
+      const { nodes, isStartCopy, isEndCopy, startCopyList, endCopyList } = data
       /**
        * 格式化审批进度数据
        */
@@ -151,8 +156,11 @@ const CheckModal = ({
 
       const index = nodes.findIndex(item => !item.isPass)
 
-      // 1.默认加上起始抄送的步骤；2.如果整个审批已完成，加上结束抄送的步骤
-      setCurrent(index + 1 + (state !== 1 ? 1 : 0))
+      setCurrent(index + 1)
+
+      const currentNode = index !== -1 ? nodes[index] : nodes[0]
+      const { isPass } = currentNode
+      setStatus(isPass === 1 ? 'process' : 'error')
 
       setItems([
         // 起始抄送
@@ -183,7 +191,7 @@ const CheckModal = ({
         </Button>
       ]}
     >
-      <div className='modal-content'>
+      <div className={`modal-content ${style['modal-content']}`}>
         <div className='title'>审批单信息</div>
         {info && <ApprovalBasicInfo info={info} />}
 
@@ -198,9 +206,11 @@ const CheckModal = ({
 
         <div className='title'>审批进度</div>
         <Steps
+          className={style.approve}
           direction='vertical'
           initial={initial}
           current={current}
+          status={status}
           items={items}
         />
       </div>

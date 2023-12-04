@@ -317,8 +317,10 @@ const AccessedEnv = () => {
                 </div>
               </div>
               <div className={style['info-item']}>
-                <div className={style.label}>能力访问路径</div>
-                <div className={style.value}>{capability.path}</div>
+                <div className={style.label}>接入有效期止</div>
+                <div className={style.value}>
+                  {capability.capabilityExpireTime}
+                </div>
               </div>
               <div className={style['info-item']}>
                 <div className={style.label}>接入时间</div>

@@ -14,3 +14,17 @@
   justify-content: space-between;
   margin: 10px 0;
 }
+
+.uncopy {
+  color: #808080;
+}
+
+.approve {
+  :global(.ant-steps-item-wait:not(.ant-steps-item-custom) .ant-steps-item-icon) {
+    background-color: rgb(186 189 193);
+  }
+
+  :global(.ant-steps-item-wait:not(.ant-steps-item-custom) .ant-steps-item-icon >.ant-steps-icon) {
+    color: #fff;
+  }
+}

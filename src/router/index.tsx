@@ -241,7 +241,7 @@ const routes: TRoutes[] = [
         }
       },
       {
-        path: 'companyInfo', // 我的单位
+        path: 'myAccount/companyInfo', // 我的单位
         element: lazyLoad('MyAccount/CompanyInfo'),
         meta: {
           isMenuItem: true,

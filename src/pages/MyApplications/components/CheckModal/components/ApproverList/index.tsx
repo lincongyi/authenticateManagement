@@ -20,7 +20,7 @@ const ApproverList = ({ list }: { list: TSysUser[] }) => {
           <div className={style['user-item']}>
             <p className={style.flex}>
               <img src={userAvatar} style={{ marginRight: 10 }} />
-              {item.nickName}
+              <span className='font-primary-color'>{item.nickName}</span>
               {item.isPassUser &&
                 (item.passState ? (
                   <CloseCircleFilled
