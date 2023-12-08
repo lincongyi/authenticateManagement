@@ -3,36 +3,7 @@ import { Navigate, Route } from 'react-router-dom'
 import { Spin } from 'antd'
 // import Home from '@pages/Home'
 import Login from '@pages/Login'
-import AppLayout from '@pages/AppLayout'
 import Register from '@pages/Register'
-import Icon, {
-  // HomeOutlined,
-  RadarChartOutlined,
-  AppstoreOutlined,
-  SolutionOutlined,
-  FileSearchOutlined,
-  BellOutlined
-} from '@ant-design/icons'
-
-/**
- * 我的单位icon svg
- */
-const companyInfoIcon = () => (
-  <svg
-    width='16px'
-    height='16px'
-    viewBox='0 0 16 16'
-    version='1.1'
-    fill='currentColor'
-  >
-    <path
-      d='M0,15.75 L0,14.25 L1.25,14.25 L1.25,1.25 L10.75,1.25 L10.75,7.25 L14.75,7.25 L14.75,14.25 L16,14.25 L16,15.75 L0,15.75 Z M9.25,2.75 L2.75,2.75 L2.75,14.25 L4.916,14.25 L4.91666667,11.2011757 L6.41666667,11.2011757 L6.416,14.25 L9.25,14.25 L9.25,2.75 Z M13.25,8.75 L10.75,8.75 L10.75,14.25 L13.25,14.25 L13.25,8.75 Z M7.41666667,7.25 L7.41666667,8.75 L3.91666667,8.75 L3.91666667,7.25 L7.41666667,7.25 Z M7.41666667,4.25 L7.41666667,5.75 L3.91666667,5.75 L3.91666667,4.25 L7.41666667,4.25 Z'
-      id='我的单位'
-      fillRule='nonzero'
-    ></path>
-  </svg>
-)
-
 // 从文件系统导入多个模块
 const modules = import.meta.glob([
   '../pages/*/*.tsx',
@@ -61,72 +32,88 @@ const lazyLoad = (module: string) => {
 export type TRoutes = {
   path: string
   element?: JSX.Element
+  elementPath?: string
+  inherent?: boolean // 是否默认加载的路由
   children?: TRoutes[]
   meta?: {
     isMenuItem?: boolean // 是否存在于导航菜单栏
+    iconName?: string
     icon?: JSX.Element
     breadcrumb: string
   }
 }
 
-const routes: TRoutes[] = [
+/**
+ * 基础路由
+ */
+const basicRoutes: TRoutes[] = [
   {
     path: '*', // 未匹配到路由，重定向到首页
-    element: <Navigate to='/' />
+    element: <Navigate to='/' />,
+    inherent: true
   },
   {
     path: '/', // 首页
     // element: <Home />
-    element: <Navigate to='/login' />
+    element: <Navigate to='/login' />,
+    inherent: true
   },
   {
     path: '/login', // 登录
-    element: <Login />
+    element: <Login />,
+    inherent: true
   },
   {
     path: '/register', // 注册
-    element: <Register />
+    element: <Register />,
+    inherent: true
   },
   {
     path: '/register/tour', // 注册引导
-    element: lazyLoad('Register/Tour')
+    elementPath: 'Register/Tour'
   },
   {
     path: '/register/result', // 注册结果
-    element: lazyLoad('Register/Result')
-  },
+    elementPath: 'Register/Result'
+  }
+]
+
+/**
+ * 动态路由
+ */
+const dynamicRoutes = [
   {
     path: '/app', // 布局
-    element: <AppLayout />,
+    elementPath: 'AppLayout',
     children: [
       {
         path: 'myAccount', // 账号信息
-        element: lazyLoad('MyAccount'),
+        elementPath: 'MyAccount',
         children: [
           {
             path: 'companyInfo', // 单位信息
-            element: lazyLoad('MyAccount/CompanyInfo'),
+            elementPath: 'MyAccount/CompanyInfo',
             meta: {
               breadcrumb: '单位信息'
             }
           },
           {
             path: 'companySettings', // 修改单位信息
-            element: lazyLoad('MyAccount/CompanySettings'),
+            elementPath: 'MyAccount/CompanySettings',
             meta: {
               breadcrumb: '修改单位信息'
             }
           },
           {
             path: 'accountInfo', // 账号信息
-            element: lazyLoad('MyAccount/AccountInfo'),
+            elementPath: 'MyAccount/AccountInfo',
             meta: {
               breadcrumb: '账号信息'
             }
           },
           {
             path: 'accountSettings', // 修改账号信息
-            element: lazyLoad('MyAccount/AccountSettings'),
+            elementPath: 'MyAccount/AccountSettings',
             meta: {
               breadcrumb: '修改账号信息'
             }
@@ -135,10 +122,10 @@ const routes: TRoutes[] = [
       },
       // {
       //   path: 'main', // 首页
-      //   element: lazyLoad('Main'),
+      //   elementPath: 'Main,
       //   meta: {
       //     isMenuItem: true,
-      //     icon: React.createElement(HomeOutlined),
+      //     iconName: 'HomeOutlined,
       //     breadcrumb: '首页'
       //   }
       // },
@@ -147,11 +134,11 @@ const routes: TRoutes[] = [
         children: [
           {
             path: '',
-            element: lazyLoad('AppServiceCenter')
+            elementPath: 'AppServiceCenter'
           },
           {
             path: 'introduction',
-            element: lazyLoad('AppServiceCenter/Introduction'),
+            elementPath: 'AppServiceCenter/Introduction',
             meta: {
               breadcrumb: '查看基础能力介绍'
             }
@@ -159,7 +146,7 @@ const routes: TRoutes[] = [
         ],
         meta: {
           isMenuItem: true,
-          icon: React.createElement(RadarChartOutlined),
+          iconName: 'RadarChartOutlined',
           breadcrumb: '基础能力中心'
         }
       },
@@ -168,11 +155,11 @@ const routes: TRoutes[] = [
         children: [
           {
             path: '',
-            element: lazyLoad('DevDocument')
+            elementPath: 'DevDocument'
           },
           {
             path: 'searchDocument',
-            element: lazyLoad('DevDocument/SearchDocument'),
+            elementPath: 'DevDocument/SearchDocument',
             meta: {
               breadcrumb: '搜索'
             }
@@ -180,7 +167,7 @@ const routes: TRoutes[] = [
         ],
         meta: {
           isMenuItem: true,
-          icon: React.createElement(FileSearchOutlined),
+          iconName: 'FileSearchOutlined',
           breadcrumb: '开发文档'
         }
       },
@@ -189,11 +176,11 @@ const routes: TRoutes[] = [
         children: [
           {
             path: '',
-            element: lazyLoad('MyApps/Index')
+            elementPath: 'MyApps/Index'
           },
           {
             path: 'appForm',
-            element: lazyLoad('MyApps/AppForm'),
+            elementPath: 'MyApps/AppForm',
             meta: {
               breadcrumb: '填写应用信息'
             }
@@ -203,18 +190,18 @@ const routes: TRoutes[] = [
             children: [
               {
                 path: '',
-                element: lazyLoad('MyApps/AppInfo')
+                elementPath: 'MyApps/AppInfo'
               },
               {
                 path: 'uploadForm',
-                element: lazyLoad('MyApps/AppInfo/UploadForm'),
+                elementPath: 'MyApps/AppInfo/UploadForm',
                 meta: {
                   breadcrumb: '上传申请表'
                 }
               },
               {
                 path: 'access',
-                element: lazyLoad('MyApps/AppInfo/Access'),
+                elementPath: 'MyApps/AppInfo/Access',
                 meta: {
                   breadcrumb: '接入基础能力'
                 }
@@ -227,25 +214,25 @@ const routes: TRoutes[] = [
         ],
         meta: {
           isMenuItem: true,
-          icon: React.createElement(AppstoreOutlined),
+          iconName: 'AppstoreOutlined',
           breadcrumb: '我的应用'
         }
       },
       {
         path: 'myApplications', // 我的申请
-        element: lazyLoad('MyApplications'),
+        elementPath: 'MyApplications',
         meta: {
           isMenuItem: true,
-          icon: React.createElement(SolutionOutlined),
+          iconName: 'SolutionOutlined',
           breadcrumb: '我的申请'
         }
       },
       {
         path: 'myAccount/companyInfo', // 我的单位
-        element: lazyLoad('MyAccount/CompanyInfo'),
+        elementPath: 'MyAccount/CompanyInfo',
         meta: {
           isMenuItem: true,
-          icon: <Icon component={companyInfoIcon} />,
+          iconName: 'companyInfoIcon',
           breadcrumb: '我的单位'
         }
       },
@@ -254,11 +241,11 @@ const routes: TRoutes[] = [
         children: [
           {
             path: '',
-            element: lazyLoad('MessageCenter')
+            elementPath: 'MessageCenter'
           },
           {
             path: 'messageDetail',
-            element: lazyLoad('MessageCenter/MessageDetail'),
+            elementPath: 'MessageCenter/MessageDetail',
             meta: {
               breadcrumb: '查看消息'
             }
@@ -266,13 +253,43 @@ const routes: TRoutes[] = [
         ],
         meta: {
           isMenuItem: true,
-          icon: React.createElement(BellOutlined),
+          iconName: 'BellOutlined',
           breadcrumb: '消息中心'
         }
       }
     ]
   }
 ]
+
+/**
+ * 生成预渲染路由格式
+ */
+const generateRoute = (routes: TRoutes[]): TRoutes[] => {
+  return routes.map((item: TRoutes) => {
+    if (item.children) {
+      const routeItem: TRoutes = {
+        path: item.path,
+        element: (item.elementPath &&
+          lazyLoad(item.elementPath as string)) as JSX.Element,
+        children: generateRoute(item.children)
+      }
+      return routeItem
+    } else {
+      const { inherent, ...rest } = item
+      if (item.inherent) {
+        return rest
+      } else {
+        const routeItem = {
+          ...item,
+          element: lazyLoad(item.elementPath as string)
+        }
+        return routeItem
+      }
+    }
+  })
+}
+
+const routes = generateRoute([...basicRoutes, ...dynamicRoutes])
 
 /**
  * 渲染路由
@@ -289,4 +306,4 @@ const renderRoute = (routes: TRoutes[]) => {
   })
 }
 
-export { routes, renderRoute }
+export { dynamicRoutes, routes, generateRoute, renderRoute }
