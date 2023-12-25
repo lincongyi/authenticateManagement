@@ -10,10 +10,12 @@
   }
 }
 
-[data-theme='light'] .column-value {
-  color: #595959;
-}
+.column-value {
+  @include useTheme {
+    color: #595959;
+  }
 
-[data-theme='dark'] .column-value {
-  color: $dark-font-primary-color;
+  @include useTheme(dark) {
+    color: $dark-font-primary-color;
+  }
 }

@@ -8,26 +8,6 @@
   border-radius: 4px;
 }
 
-[data-theme='light'] .colunm01 {
-  background-image: linear-gradient(139deg, #fffaf4 0%, #fff4e6 100%);
-}
-
-[data-theme='dark'] .colunm01 {
-  background-image: linear-gradient(to bottom, rgba(246 191 106 / 10%), rgb(222 154 8 / 10%));
-}
-
-[data-theme='light'] .colunm02 {
-  background-image: linear-gradient(139deg, #f3fff1 0%, #e6ffe3 100%);
-}
-
-[data-theme='dark'] .colunm02 {
-  background-image: linear-gradient(to bottom, rgb(118 221 104 / 10%), rgb(38 180 18 / 10%));
-}
-
-.colunm03 {
-  background-image: linear-gradient(148deg, rgb(250 111 111 / 5%) 0%, rgb(242 60 60 / 15%) 100%);
-}
-
 .content {
   padding-right: 32px;
   font-weight: bold;
@@ -36,16 +16,40 @@
   background-position: right center;
 }
 
-.colunm01 .content {
-  color: #f9a007;
+.colunm01 {
+  @include useTheme {
+    background-image: linear-gradient(139deg, #fffaf4 0%, #fff4e6 100%);
+  }
+
+  @include useTheme(dark) {
+    background-image: linear-gradient(to bottom, rgba(246 191 106 / 10%), rgb(222 154 8 / 10%));
+  }
+
+  .content {
+    color: #f9a007;
+  }
 }
 
-.colunm02 .content {
-  color: #12be55;
+.colunm02 {
+  @include useTheme {
+    background-image: linear-gradient(139deg, #f3fff1 0%, #e6ffe3 100%);
+  }
+
+  @include useTheme(dark) {
+    background-image: linear-gradient(to bottom, rgb(118 221 104 / 10%), rgb(38 180 18 / 10%));
+  }
+
+  .content {
+    color: #12be55;
+  }
 }
 
-.colunm03 .content {
-  color: #ff4050;
+.colunm03 {
+  background-image: linear-gradient(148deg, rgb(250 111 111 / 5%) 0%, rgb(242 60 60 / 15%) 100%);
+
+  .content {
+    color: #ff4050;
+  }
 }
 
 @for $i from 1 through 3 {

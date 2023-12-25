@@ -23,19 +23,19 @@ $border: 1px solid rgb(232 233 234 / 100%);
 .title {
   @include font-primary-color;
 
+  @include useTheme {
+    background: $bg-primary-color;
+  }
+
+  @include useTheme(dark) {
+    background: transparent;
+  }
+
   height: 48px;
   padding: 0 20px;
   font-size: 16px;
   line-height: 48px;
   border-bottom: $border;
-}
-
-[data-theme='light'] .title {
-  background: #f3f5f8;
-}
-
-[data-theme='dark'] .title {
-  background: transparent;
 }
 
 .catalog-title {
@@ -107,6 +107,8 @@ $border: 1px solid rgb(232 233 234 / 100%);
   }
 }
 
-[data-theme='dark'] .doc-content pre {
-  background-color: inherit !important;
+.doc-content pre {
+  @include useTheme(dark) {
+    background-color: inherit !important;
+  }
 }

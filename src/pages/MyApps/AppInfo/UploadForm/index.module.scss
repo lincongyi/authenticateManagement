@@ -38,6 +38,14 @@
   .step-item {
     @include font-secondary-color;
 
+    @include useTheme {
+      background-color: #f7faff;
+    }
+
+    @include useTheme(dark) {
+      background-color: transparent;
+    }
+
     display: flex;
     align-items: center;
     padding: 10px 20px;
@@ -62,14 +70,6 @@
     height: 12px;
     background-image: url('@/assets/accountSetting-scan-arrow.png');
   }
-}
-
-[data-theme='light'] .step-item {
-  background-color: #f7faff;
-}
-
-[data-theme='dark'] .step-item {
-  background-color: transparent;
 }
 
 .download {

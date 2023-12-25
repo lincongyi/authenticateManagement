@@ -250,6 +250,14 @@
     border-radius: 4px;
 
     .label {
+      @include useTheme {
+        background-color: #f7f8fa;
+      }
+
+      @include useTheme(dark) {
+        background-color: transparent;
+      }
+
       width: 110px;
       line-height: 50px;
       text-align: center;
@@ -285,12 +293,4 @@
   &.unaccessed-dot {
     background-color: #ffa814;
   }
-}
-
-[data-theme='light'] .panel .label {
-  background-color: #f7f8fa;
-}
-
-[data-theme='dark'] .panel .label {
-  background-color: transparent;
 }
