@@ -17,7 +17,7 @@ const Panel2 = ({
   info: TPannel2Info[]
   getData: Function
 }) => {
-  const [dateRange, setDateRange] = useState<string[]>([
+  const [dateRange, setDateRange] = useState<[string, string]>([
     dayjs().add(-7, 'd').format(dateFormat),
     dayjs().format(dateFormat)
   ])
@@ -26,7 +26,7 @@ const Panel2 = ({
    */
   const onRangeChange = (
     dates: null | (Dayjs | null)[],
-    dateStrings: string[]
+    dateStrings: [string, string]
   ) => {
     setDateRange(dateStrings)
   }

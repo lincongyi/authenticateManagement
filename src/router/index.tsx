@@ -270,7 +270,7 @@ const generateRoute = (routes: TRoutes[]): TRoutes[] => {
       const routeItem: TRoutes = {
         path: item.path,
         element: (item.elementPath &&
-          lazyLoad(item.elementPath as string)) as JSX.Element,
+          lazyLoad(item.elementPath)) as JSX.Element,
         children: generateRoute(item.children)
       }
       return routeItem
@@ -281,7 +281,7 @@ const generateRoute = (routes: TRoutes[]): TRoutes[] => {
       } else {
         const routeItem = {
           ...item,
-          element: lazyLoad(item.elementPath as string)
+          element: lazyLoad(item.elementPath!)
         }
         return routeItem
       }

@@ -16,7 +16,6 @@ import Area from '@components/Area'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import type { RcFile } from 'antd/es/upload/interface'
 import { getBase64, imgBeforeUpload } from '@utils/index'
-import { getProcessByKey } from '@api/index'
 import { applyUpdateCompanyInfo, currentCompanyInfo } from '@api/myAccount'
 
 const { Title } = Typography
@@ -35,7 +34,7 @@ const CompanySettings = () => {
   }
   /* eslint-disable no-template-curly-in-string */
 
-  const [process, setProcess] = useState<TProcess>({
+  const [process] = useState<TProcess>({
     taskId: '',
     state: -1,
     processInstanceId: '',
@@ -47,9 +46,10 @@ const CompanySettings = () => {
     // 初始化表单数据
     ;(async () => {
       const { data: currentInfo } = await currentCompanyInfo()
+      if (!currentInfo) return false
 
       // const { data } = await getProcessByKey({
-      //   userId: currentInfo!.accountNumber,
+      //   userId: currentInfo.accountNumber,
       //   key: 'UPDATE_COMPANY_INFO'
       // })
       // 如果当前任务返回空 or 驳回状态，即可走提交申请流程，否则当前申请审批在审核中，不可重复提交申请

@@ -1,4 +1,10 @@
 .tag {
+  @include useTheme(dark) {
+    color: #bdbdbd;
+    background-color: rgb(30 85 210 / 10%);
+    border-color: rgb(48 48 48 / 100%);
+  }
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -8,7 +14,6 @@
   font-size: 16px;
   background-repeat: no-repeat;
   background-position: 30px;
-
 
   &::after {
     position: absolute;
@@ -35,14 +40,4 @@
     font-weight: bold;
     font-size: 28px;
   }
-}
-
-[data-theme='light'] .tag {
-
-}
-
-[data-theme='dark'] .tag {
-  color: #bdbdbd;
-  background-color: rgb(30 85 210 / 10%);
-  border-color: rgb(48 48 48 / 100%);
 }
